@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品详情 | 跳舞兰</title>
+<meta name="description" content="跳舞兰花束详情，含花材清单与养护方法。深圳同城 2 小时达。">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--white:#fff;--paper:#f1efeb;--ink:#1a1a1a;--gray-7:#666;--gray-a:#999;--line:#e5e5e5;--line-light:#ebe9e5}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--white);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC",sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{display:block;width:100%}
+  button{font-family:inherit;cursor:pointer}
+
+  .hd-top{padding:13px 40px 0;display:flex;justify-content:flex-end;gap:24px;font-size:12px;color:#666}
+  .hd-top a:hover{color:#1a1a1a}
+  .hd-brand{padding:20px 24px 26px;text-align:center}
+  .hd-brand h1{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:400;letter-spacing:.5em;text-indent:.5em;line-height:1;color:#1a1a1a}
+  .hd-brand .en{display:block;margin-top:9px;font-size:10px;letter-spacing:.42em;text-transform:uppercase;color:#999}
+  .hd-nav{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:0 10px}
+  .hd-nav ul{display:flex;justify-content:center;list-style:none}
+  .hd-nav a{display:block;padding:15px 18px;font-size:13px;color:#666;white-space:nowrap}
+  .hd-nav a:hover{color:#1a1a1a}
+
+  .pdp{max-width:1560px;margin:0 auto;padding:40px;display:grid;grid-template-columns:1fr 480px;gap:64px;align-items:start}
+  .gallery{position:sticky;top:20px}
+  .gallery img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#e8e6e2}
+
+  .info{padding-top:8px}
+  .vendor{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-7);margin-bottom:14px}
+  h1{font-size:52px;font-weight:400;letter-spacing:-.01em;line-height:1.08;margin-bottom:20px}
+  .price{font-size:18px;margin-bottom:8px}
+  .price .was{color:var(--gray-a);text-decoration:line-through;margin-left:10px;font-size:15px}
+  .tax-note{font-size:13px;color:var(--gray-7);line-height:1.7;margin-bottom:32px}
+
+  .field{margin-bottom:28px}
+  .field > .label{font-size:14px;color:var(--ink);margin-bottom:10px;display:block}
+  .qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:4px;height:46px}
+  .qty button{width:46px;height:44px;background:none;border:0;font-size:16px;color:var(--gray-7)}
+  .qty button:hover{color:var(--ink)}
+  .qty button:disabled{color:#ddd;cursor:not-allowed}
+  .qty .n{width:56px;text-align:center;font-size:15px}
+  .hint{font-size:14px;color:var(--ink);margin-bottom:24px;line-height:1.6}
+
+  .sizes{display:flex;gap:10px;flex-wrap:wrap}
+  .size{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:14px;color:var(--ink);transition:all .15s;display:flex;align-items:center;justify-content:center}
+  .size:hover{border-color:var(--gray-a)}
+  .size.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .buy-actions{margin:28px 0 32px}
+  .buy-actions button{display:block;width:100%;padding:17px;font-size:15px;letter-spacing:.02em;border-radius:4px;transition:all .18s}
+  .btn-add{background:#fff;color:var(--ink);border:1px solid var(--ink);margin-bottom:10px}
+  .btn-add:hover{background:var(--paper)}
+  .btn-buy{background:var(--ink);color:#fff;border:1px solid var(--ink)}
+  .btn-buy:hover{opacity:.85}
+
+  .ship{padding:18px;background:var(--paper);display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+  .ship .r{display:flex;gap:8px;font-size:13px;color:var(--gray-7);line-height:1.8}
+  .ship .r .i{color:var(--gray-a);flex:0 0 14px}
+
+  details{border-top:1px solid var(--line)}
+  details:last-of-type{border-bottom:1px solid var(--line)}
+  summary{padding:18px 0;font-size:14px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"⌄";font-size:14px;color:var(--gray-a)}
+  details[open] summary::after{content:"⌃"}
+  .body{padding-bottom:20px;font-size:14px;color:var(--gray-7);line-height:1.9}
+  .body p{margin-bottom:8px}
+  .body .mats{display:flex;flex-wrap:wrap;gap:4px 14px}
+  .body .mat{font-size:13px}
+
+  /* 加载/错误 */
+  .loading{padding:120px 40px;text-align:center;color:var(--gray-a);font-size:14px}
+  .err{max-width:600px;margin:80px auto;padding:40px;text-align:center;border:1px solid var(--line)}
+  .err h2{font-size:20px;font-weight:400;margin-bottom:12px}
+  .err p{font-size:14px;color:var(--gray-7);margin-bottom:24px;line-height:1.8}
+  .err button{padding:12px 32px;background:var(--ink);color:#fff;border:0;border-radius:4px;font-size:14px}
+
+  .site-footer{background:#f1efeb;border-top:1px solid var(--line);padding:56px 0 0;margin-top:60px}
+  .ft-row{display:flex;padding:0 40px 44px;max-width:1560px;margin:0 auto;overflow-x:auto}
+  .ft-brand{flex:0 0 auto;padding-right:48px;margin-right:48px;border-right:1px solid #ddd9d2;min-width:200px}
+  .ft-brand h4{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:400;letter-spacing:.4em;text-indent:.4em;line-height:1;margin-bottom:10px}
+  .ft-brand .en{font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:#999}
+  .ft-brand .slogan{margin-top:20px;font-size:11px;line-height:2;color:#888}
+  .ft-col{flex:0 0 auto;padding-right:48px;min-width:110px}
+  .ft-col:last-child{padding-right:0}
+  .ft-col h5{font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:#999;margin-bottom:14px}
+  .ft-col a{display:block;font-size:12px;line-height:2.4;color:#555;white-space:nowrap}
+  .ft-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 40px;border-top:1px solid #ddd9d2;max-width:1560px;margin:0 auto;flex-wrap:wrap}
+  .ft-bottom .cr{font-size:10px;color:#999}
+  .social{display:flex;gap:9px}
+  .social a{width:28px;height:28px;border:1px solid #ddd9d2;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#777}
+
+  @media (max-width:1100px){
+    .pdp{grid-template-columns:1fr 400px;gap:40px;padding:24px}
+    h1{font-size:42px}
+  }
+  @media (max-width:899px){
+    .pdp{grid-template-columns:1fr;gap:0;padding:0}
+    .gallery{position:static}
+    .info{padding:28px 20px 60px}
+    h1{font-size:36px}
+    .hd-top{padding:10px 16px 0;font-size:10px}
+    .hd-brand{padding:14px 16px 18px}
+    .hd-brand h1{font-size:18px;letter-spacing:.4em;text-indent:.4em}
+    .hd-nav{overflow-x:auto;scrollbar-width:none}
+    .hd-nav ul{justify-content:flex-start}
+    .hd-nav a{padding:12px 14px;font-size:11.5px}
+    .ft-row{flex-wrap:wrap;padding:0 20px 32px;gap:28px}
+    .ft-brand{border-right:0;padding-right:0;margin-right:0;width:100%}
+    .ft-brand .slogan{display:none}
+    .ft-col{padding-right:0;min-width:calc(50% - 14px)}
+    .ft-bottom{padding:18px 20px;flex-direction:column;align-items:flex-start;gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-top"><a href="#">Contact</a><a href="login.html">Login</a></div>
+  <div class="hd-brand">
+    <a href="index.html"><h1>跳舞兰</h1><span class="en">Tiao Wu Lan</span></a>
+  </div>
+  <nav class="hd-nav">
+    <ul>
+      <li><a href="shop.html">全部花束</a></li>
+      <li><a href="#">日常</a></li>
+      <li><a href="#">告白</a></li>
+      <li><a href="#">生日</a></li>
+      <li><a href="flower-language.html">花语</a></li>
+      <li><a href="about.html">关于</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div id="app">
+  <div class="loading" id="loading">加载中…</div>
+</div>
+
+<footer class="site-footer">
+  <div class="ft-row">
+    <div class="ft-brand">
+      <h4>跳舞兰</h4>
+      <div class="en">Tiao Wu Lan</div>
+      <div class="slogan">Living With<br>Flowers Every Day</div>
+    </div>
+    <div class="ft-col">
+      <h5>Shop</h5>
+      <a href="shop.html">全部花束</a>
+      <a href="#">日常</a>
+      <a href="#">告白</a>
+      <a href="#">生日</a>
+    </div>
+    <div class="ft-col">
+      <h5>Help</h5>
+      <a href="help-delivery.html">配送范围</a>
+      <a href="help-returns.html">售后政策</a>
+      <a href="help-faq.html">常见问题</a>
+    </div>
+    <div class="ft-col">
+      <h5>About</h5>
+      <a href="about.html">品牌故事</a>
+      <a href="flower-language.html">花语百科</a>
+      <a href="#">企业合作</a>
+    </div>
+    <div class="ft-col">
+      <h5>Contact</h5>
+      <a href="mailto:hello@tiaowulan.com">hello@tiaowulan.com</a>
+      <a href="contact.html">400-000-0000</a>
+      <a href="#">9:00 – 21:00</a>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div class="cr">© 深圳市跳舞兰科技有限公司 &nbsp;·&nbsp; 粤ICP备 00000000 号</div>
+    <div class="social"><a href="#">ig</a><a href="#">wx</a><a href="#">xhs</a><a href="#">dy</a></div>
+  </div>
+</footer>
+
+<script src="api.js"></script>
+<script>
+(function(){
+  const app = document.getElementById('app');
+
+  // 从 URL 拿商品 ID，默认 TW-001
+  const params = new URLSearchParams(location.search);
+  const productId = params.get('id') || 'TW-001';
+
+  let product = null;
+  let qty = 1;
+  let size = 'L';
+
+  /* ── 渲染 ── */
+  function render() {
+    const price = API.money(product.price);
+    const orig = product.original_price && parseFloat(product.original_price) > parseFloat(product.price)
+      ? `<span class="was">¥${API.money(product.original_price)}</span>` : '';
+
+    const mats = (product.flowers || []).map(f => `<span class="mat">${f}</span>`).join('');
+
+    app.innerHTML = `
+      <div class="pdp">
+
+        <div class="gallery">
+          <img src="${product.cover}" alt="${product.name}" onerror="this.style.background='#e8e6e2'">
+        </div>
+
+        <div class="info">
+
+          <div class="vendor">Tiao Wu Lan</div>
+          <h1>${product.name}</h1>
+
+          <div class="price">¥${price}${orig}</div>
+          <div class="tax-note">含税。配送费在下单时计算。</div>
+
+          <div class="field">
+            <span class="label">数量</span>
+            <div class="qty">
+              <button id="minus" disabled>−</button>
+              <span class="n" id="qtyNum">1</span>
+              <button id="plus">+</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="hint">图示为 <strong style="font-weight:400">标准款</strong>。</div>
+            <span class="label">尺寸</span>
+            <div class="sizes">
+              <button class="size on" data-size="L">L</button>
+              <button class="size" data-size="M">M</button>
+              <button class="size" data-size="S">S</button>
+              <button class="size" data-size="XS">XS</button>
+            </div>
+          </div>
+
+          <div class="buy-actions">
+            <button class="btn-add" id="btnAdd">加入购物袋</button>
+            <button class="btn-buy" id="btnBuy">立即购买 · ¥${price}</button>
+          </div>
+
+          <div class="ship">
+            <div class="r"><span class="i">◷</span><span>深圳同城 2 小时达 · 16:00 前下单当日送达</span></div>
+            <div class="r"><span class="i">⊞</span><span>满 ¥199 免运费 · 不满收 ¥15</span></div>
+            <div class="r"><span class="i">♡</span><span>含保鲜剂 · 常温可养 5–7 天</span></div>
+          </div>
+
+          <details open>
+            <summary>花材清单</summary>
+            <div class="body"><div class="mats">${mats || '当日现配'}</div></div>
+          </details>
+
+          <details>
+            <summary>规格尺寸</summary>
+            <div class="body">
+              <p><strong>商品编号</strong>　${product.id}</p>
+              <p><strong>花束直径</strong>　约 30 cm</p>
+              <p><strong>整体高度</strong>　约 45 cm</p>
+              <p><strong>附赠</strong>　贺卡 · 保鲜剂 · 养护说明卡</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>养护方法</summary>
+            <div class="body">
+              <p><strong>换水</strong>　每天一次，水浑了立刻换</p>
+              <p><strong>剪根</strong>　每次换水时斜剪根部 1–2cm</p>
+              <p><strong>避光</strong>　不要暴晒，不要对着空调出风口</p>
+              <p><strong>保鲜剂</strong>　按说明兑水，能延长 2–3 天</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>配送与售后</summary>
+            <div class="body">
+              <p><strong>深圳同城</strong>　2 小时达，16:00 前下单当日送达</p>
+              <p><strong>其他城市</strong>　次日达</p>
+              <p><strong>运费</strong>　满 ¥199 免运费</p>
+              <p>收到花如有破损、不新鲜、与描述不符，24 小时内拍照联系我们。</p>
+            </div>
+          </details>
+
+        </div>
+      </div>
+    `;
+
+    bindEvents();
+  }
+
+  /* ── 绑定事件 ── */
+  function bindEvents() {
+    const minus = document.getElementById('minus');
+    const plus = document.getElementById('plus');
+    const qtyNum = document.getElementById('qtyNum');
+
+    minus.addEventListener('click', () => {
+      qty = Math.max(1, qty - 1);
+      qtyNum.textContent = qty;
+      minus.disabled = qty <= 1;
+    });
+
+    plus.addEventListener('click', () => {
+      qty = Math.min(99, qty + 1);
+      qtyNum.textContent = qty;
+      minus.disabled = false;
+    });
+
+    document.querySelectorAll('.size').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.size').forEach(x => x.classList.remove('on'));
+        el.classList.add('on');
+        size = el.dataset.size;
+      });
+    });
+
+    document.getElementById('btnAdd').addEventListener('click', () => {
+      TWL.addToCart({
+        id: product.id,
+        name: product.name,
+        spec: product.subtitle || '',
+        price: parseFloat(product.price),
+        qty: qty,
+        img: product.cover,
+      });
+      setTimeout(() => location.href = 'cart.html', 600);
+    });
+
+    document.getElementById('btnBuy').addEventListener('click', () => {
+      // 立即购买：直接放一件进购物袋然后去结算
+      TWL.addToCart({
+        id: product.id,
+        name: product.name,
+        spec: product.subtitle || '',
+        price: parseFloat(product.price),
+        qty: qty,
+        img: product.cover,
+      });
+      setTimeout(() => location.href = 'checkout.html', 400);
+    });
+  }
+
+  /* ── 加载 ── */
+  async function load() {
+    try {
+      product = await API.getProduct(productId);
+      render();
+    } catch (e) {
+      app.innerHTML = `
+        <div class="err">
+          <h2>商品加载失败</h2>
+          <p>${e.message}<br><br>商品编号：<code>${productId}</code></p>
+          <button onclick="location.href='shop.html'">返回全部花束</button>
+        </div>
+      `;
+    }
+  }
+
+  load();
+})();
+</script>
+
+<script>
+/* ═══ 购物袋（共用）═══ */
+(function(){
+  window.TWL = {
+    getCart() { try { return JSON.parse(localStorage.getItem('twl_cart') || '[]'); } catch { return []; } },
+    setCart(items) { localStorage.setItem('twl_cart', JSON.stringify(items)); this.updateBadge(); },
+    addToCart(item) {
+      const items = this.getCart();
+      const exist = items.find(i => i.id === item.id);
+      if (exist) exist.qty += item.qty || 1;
+      else items.push({ ...item, qty: item.qty || 1 });
+      this.setCart(items);
+      API.toast('已加入购物袋');
+    },
+    count() { return this.getCart().reduce((s, i) => s + i.qty, 0); },
+    updateBadge() {
+      const n = this.count();
+      document.querySelectorAll('.bag-count').forEach(el => {
+        el.textContent = n;
+        el.style.display = n > 0 ? 'inline' : 'none';
+      });
+    }
+  };
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>跳舞兰 · 页面清单</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#fff;--paper:#f6f4ef;--paper-light:#faf9f6;
+    --ink:#141414;--gray-7:#6e6a63;--gray-a:#a39e95;
+    --gray-d:#dedad3;--gray-e:#ece9e3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--paper-light);color:var(--ink);
+    font-family:'Inter',-apple-system,"PingFang SC",sans-serif;
+    font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased;
+    padding:40px 24px 80px;
+  }
+  a{color:inherit;text-decoration:none}
+
+  .head{max-width:960px;margin:0 auto 40px}
+  .head h1{
+    font-family:'Noto Serif SC',serif;font-size:22px;font-weight:400;
+    letter-spacing:.26em;text-indent:.26em;margin-bottom:10px;
+  }
+  .head .en{
+    font-family:'Cormorant Garamond',serif;font-size:10px;
+    letter-spacing:.36em;text-transform:uppercase;color:var(--gray-a);
+    margin-bottom:16px;
+  }
+  .head p{font-size:12px;color:var(--gray-7);line-height:2;max-width:620px}
+
+  .group{max-width:960px;margin:0 auto 36px}
+  .group-head{
+    display:flex;align-items:baseline;gap:12px;
+    margin-bottom:12px;padding-bottom:9px;
+    border-bottom:1px solid var(--gray-d);
+  }
+  .group-head h2{
+    font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:500;
+    letter-spacing:.24em;text-transform:uppercase;
+  }
+  .group-head .n{font-size:10px;color:var(--gray-a)}
+
+  .row{
+    display:flex;align-items:center;gap:16px;
+    padding:16px 18px;
+    background:#fff;border:1px solid var(--gray-d);
+    margin-bottom:1px;
+    transition:background .2s,border-color .2s;
+  }
+  .row:hover{background:var(--paper);border-color:var(--gray-a)}
+  .row .no{
+    font-family:'Cormorant Garamond',serif;font-size:15px;
+    color:var(--gray-a);flex:0 0 28px;
+  }
+  .row .info{flex:1;min-width:0}
+  .row .info .t{font-size:13px;margin-bottom:2px}
+  .row .info .t b{
+    font-family:'Cormorant Garamond',serif;font-weight:400;
+    color:var(--gray-a);font-size:11px;margin-left:6px;letter-spacing:.1em;
+  }
+  .row .info .d{font-size:10.5px;color:var(--gray-a);line-height:1.8}
+  .row .go{
+    flex:0 0 auto;
+    padding:7px 16px;
+    border:1px solid var(--ink);
+    font-size:10px;letter-spacing:.1em;
+    white-space:nowrap;
+    transition:all .2s;
+  }
+  .row:hover .go{background:var(--ink);color:#fff}
+
+  .note{
+    max-width:960px;margin:36px auto 0;padding:16px 18px;
+    border:1px solid var(--gray-d);background:var(--paper);
+    font-size:11px;color:var(--gray-7);line-height:2;
+  }
+  .note b{color:var(--ink);font-weight:500}
+
+  @media (max-width:600px){
+    body{padding:24px 14px 60px}
+    .row{padding:14px;gap:12px}
+    .row .info .d{display:none}
+    .row .go{padding:6px 12px;font-size:9.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>页面清单</h1>
+  <div class="en">All Pages · 21</div>
+  <p>
+    点击每行「打开」在新窗口查看。全部宽屏结构，手机自动适配。<br>
+    纯白 + 近黑 + 浅米，不用彩色。
+  </p>
+</div>
+
+<!-- ═══════ 核心流程 ═══════ -->
+<div class="group">
+  <div class="group-head">
+    <h2>Core Flow</h2>
+    <span class="n">7 页 · 从浏览到下单</span>
+  </div>
+
+  <a href="../../prototype/luxe/index.html" target="_blank" class="row">
+    <span class="no">01</span>
+    <div class="info">
+      <div class="t">首页 <b>INDEX</b></div>
+      <div class="d">品牌叙事 · 大图 · 分类入口 · 横向页脚</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/shop.html" target="_blank" class="row">
+    <span class="no">02</span>
+    <div class="info">
+      <div class="t">全部花束 <b>SHOP</b></div>
+      <div class="d">2 列大图 · 筛选 · 无加购按钮</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/product.html" target="_blank" class="row">
+    <span class="no">03</span>
+    <div class="info">
+      <div class="t">商品详情 <b>PRODUCT</b></div>
+      <div class="d">1:1 大图 · 花语 · 花材清单 · 底部操作</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/cart.html" target="_blank" class="row">
+    <span class="no">04</span>
+    <div class="info">
+      <div class="t">购物袋 <b>CART</b></div>
+      <div class="d">商品列表 · 数量调整 · 小计</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/checkout.html" target="_blank" class="row">
+    <span class="no">05</span>
+    <div class="info">
+      <div class="t">确认订单 <b>CHECKOUT</b></div>
+      <div class="d">游客风险提示横幅 · 收花人表单 · 费用明细</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/pay.html" target="_blank" class="row">
+    <span class="no">06</span>
+    <div class="info">
+      <div class="t">支付 <b>PAY</b></div>
+      <div class="d">大字金额 · 支付方式 · 倒计时</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/order-success.html" target="_blank" class="row">
+    <span class="no">07</span>
+    <div class="info">
+      <div class="t">下单成功 <b>SUCCESS</b></div>
+      <div class="d">订单号保存提示 · 状态时间线 · 订单详情</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+</div>
+
+<!-- ═══════ 账户 ═══════ -->
+<div class="group">
+  <div class="group-head">
+    <h2>Account</h2>
+    <span class="n">5 页 · 用户体系</span>
+  </div>
+
+  <a href="../../prototype/luxe/login.html" target="_blank" class="row">
+    <span class="no">08</span>
+    <div class="info">
+      <div class="t">登录 <b>LOGIN</b></div>
+      <div class="d">手机号 + 验证码 · 可跳过继续游客下单</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/orders.html" target="_blank" class="row">
+    <span class="no">09</span>
+    <div class="info">
+      <div class="t">我的订单 <b>ORDERS</b></div>
+      <div class="d">状态筛选 · 订单卡片 · 底部快捷入口</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/order-detail.html" target="_blank" class="row">
+    <span class="no">10</span>
+    <div class="info">
+      <div class="t">订单详情 <b>ORDER</b></div>
+      <div class="d">完整时间线 · 收花人 · 金额 · 售后入口</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/address.html" target="_blank" class="row">
+    <span class="no">11</span>
+    <div class="info">
+      <div class="t">地址簿 <b>ADDRESS</b></div>
+      <div class="d">地址列表 · 默认标记 · 增删改</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/after-sale.html" target="_blank" class="row">
+    <span class="no">12</span>
+    <div class="info">
+      <div class="t">申请售后 <b>AFTER-SALE</b></div>
+      <div class="d">问题类型 · 描述 · 上传图片</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+</div>
+
+<!-- ═══════ 内容 ═══════ -->
+<div class="group">
+  <div class="group-head">
+    <h2>Content</h2>
+    <span class="n">5 页 · SEO / GEO 落地</span>
+  </div>
+
+  <a href="../../prototype/luxe/flower-language.html" target="_blank" class="row">
+    <span class="no">13</span>
+    <div class="info">
+      <div class="t">花语百科 <b>FLOWER LANGUAGE</b></div>
+      <div class="d">分类筛选 · 圆形缩略图 · 列表</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/flower-language-detail.html" target="_blank" class="row">
+    <span class="no">14</span>
+    <div class="info">
+      <div class="t">花语详情 <b>ARTICLE</b></div>
+      <div class="d">花语引用块 · 适合谁 · 养护 · FAQ · JSON-LD</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/about.html" target="_blank" class="row">
+    <span class="no">15</span>
+    <div class="info">
+      <div class="t">关于 <b>ABOUT</b></div>
+      <div class="d">品牌故事 · 我们做什么 · 我们不做的事</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/contact.html" target="_blank" class="row">
+    <span class="no">16</span>
+    <div class="info">
+      <div class="t">联系 <b>CONTACT</b></div>
+      <div class="d">联系方式 · 四类咨询入口 · 回复时效</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/search.html" target="_blank" class="row">
+    <span class="no">17</span>
+    <div class="info">
+      <div class="t">搜索 <b>SEARCH</b></div>
+      <div class="d">搜索框 · 热门词 · 结果网格</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+</div>
+
+<!-- ═══════ 帮助 ═══════ -->
+<div class="group">
+  <div class="group-head">
+    <h2>Help</h2>
+    <span class="n">3 页 · 减少客服压力</span>
+  </div>
+
+  <a href="../../prototype/luxe/help-delivery.html" target="_blank" class="row">
+    <span class="no">18</span>
+    <div class="info">
+      <div class="t">配送范围 <b>DELIVERY</b></div>
+      <div class="d">时效 · 截止时间 · 运费 · 签收规则</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/help-returns.html" target="_blank" class="row">
+    <span class="no">19</span>
+    <div class="info">
+      <div class="t">售后政策 <b>RETURNS</b></div>
+      <div class="d">能退什么 · 怎么申请 · 时效 · 不能退的情况</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+
+  <a href="../../prototype/luxe/help-faq.html" target="_blank" class="row">
+    <span class="no">20</span>
+    <div class="info">
+      <div class="t">常见问题 <b>FAQ</b></div>
+      <div class="d">下单 · 花材 · 支付 · 账号 · 售后</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+</div>
+
+<!-- ═══════ 后台 ═══════ -->
+<div class="group">
+  <div class="group-head">
+    <h2>Admin</h2>
+    <span class="n">1 页 · 运营后台</span>
+  </div>
+
+  <a href="../../prototype/luxe/admin.html" target="_blank" class="row">
+    <span class="no">21</span>
+    <div class="info">
+      <div class="t">数据看板 <b>ADMIN</b></div>
+      <div class="d">白底侧栏 · 5 组导航 · 数据卡片 · 订单表</div>
+    </div>
+    <span class="go">打开</span>
+  </a>
+</div>
+
+<div class="note">
+  <b>怎么看</b><br>
+  · 点「打开」→ 新窗口显示完整页面<br>
+  · 看手机效果：把浏览器窗口拖到 375px 左右<br>
+  · 或者按 F12 打开开发者工具，切到手机模式<br>
+  · 所有图片已内嵌在 HTML 里，不依赖外部文件
+</div>
+
+</body>
+</html>

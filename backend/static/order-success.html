@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>下单成功 | 跳舞兰</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--white:#fff;--paper:#f1efeb;--ink:#1a1a1a;--gray-7:#666;--gray-a:#999;--line:#e5e5e5;--line-light:#ebe9e5}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--white);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC",sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{display:block;width:100%}
+  button{font-family:inherit;cursor:pointer}
+
+  .hd-top{padding:13px 40px 0;display:flex;justify-content:flex-end;gap:24px;font-size:12px;color:#666}
+  .hd-top a:hover{color:#1a1a1a}
+  .hd-brand{padding:20px 24px 26px;text-align:center}
+  .hd-brand h1{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:400;letter-spacing:.5em;text-indent:.5em;line-height:1;color:#1a1a1a}
+  .hd-brand .en{display:block;margin-top:9px;font-size:10px;letter-spacing:.42em;text-transform:uppercase;color:#999}
+  .hd-nav{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:0 10px}
+  .hd-nav ul{display:flex;justify-content:center;list-style:none}
+  .hd-nav a{display:block;padding:15px 18px;font-size:13px;color:#666;white-space:nowrap;transition:color .2s}
+  .hd-nav a:hover{color:#1a1a1a}
+
+  /* 主布局 */
+  .res-wrap{
+    display:grid;
+    grid-template-columns:1.35fr 1fr;
+    gap:80px;
+    max-width:1320px;
+    margin:0 auto;
+    padding:64px 40px 100px;
+    align-items:start;
+  }
+
+  /* 左 */
+  .res-left h1{
+    font-size:48px;font-weight:400;letter-spacing:-.015em;
+    margin-bottom:10px;
+    display:flex;align-items:center;gap:16px;
+  }
+  .res-left h1 .mark{
+    width:44px;height:44px;flex:0 0 44px;
+    border:1px solid #1a1a1a;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:19px;
+  }
+  .res-left .no{
+    font-size:13px;color:#999;font-family:monospace;
+    margin-bottom:44px;
+  }
+
+  /* 时间线 */
+  .timeline-title{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:#999;margin-bottom:20px;
+  }
+  .step{
+    display:flex;gap:20px;padding-bottom:28px;position:relative;
+  }
+  .step:last-child{padding-bottom:0}
+  .step::before{
+    content:"";position:absolute;left:8px;top:20px;bottom:0;
+    width:1px;background:var(--line);
+  }
+  .step:last-child::before{display:none}
+  .step .dot{
+    width:17px;height:17px;flex:0 0 17px;border-radius:50%;
+    border:1px solid var(--line);background:#fff;
+    position:relative;z-index:1;margin-top:2px;
+  }
+  .step.done .dot{background:#1a1a1a;border-color:#1a1a1a}
+  .step.now .dot{border-color:#1a1a1a;box-shadow:inset 0 0 0 4px #fff,inset 0 0 0 10px #1a1a1a}
+  .step .txt .t{font-size:15px;margin-bottom:3px}
+  .step:not(.done):not(.now) .txt .t{color:#bbb}
+  .step .txt .d{font-size:12px;color:#999;line-height:1.8}
+
+  /* 右 */
+  .res-right{position:sticky;top:40px}
+
+  .guest-card{
+    border:1px solid var(--line);background:var(--paper);
+    padding:24px;margin-bottom:20px;
+  }
+  .guest-card .t{
+    font-size:15px;margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .guest-card .t .dot{
+    width:18px;height:18px;border:1px solid #1a1a1a;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;flex:0 0 18px;
+  }
+  .guest-card p{font-size:13px;line-height:1.9;color:#555;margin-bottom:14px}
+  .guest-card .code{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 14px;background:#fff;border:1px solid var(--line);
+    margin-bottom:14px;
+  }
+  .guest-card .code .v{font-family:monospace;font-size:13px;color:#1a1a1a}
+  .guest-card .code .c{font-size:11px;color:#666;text-decoration:underline}
+  .guest-card .act{display:flex;gap:8px}
+  .guest-card .act a{
+    flex:1;text-align:center;padding:10px;font-size:12px;border-radius:4px;
+  }
+  .guest-card .act .go{background:#1a1a1a;color:#fff}
+  .guest-card .act .skip{border:1px solid var(--line);background:#fff;color:#666}
+
+  .detail-card{
+    border:1px solid var(--line);
+    padding:28px;
+  }
+  .detail-card h2{
+    font-size:14px;font-weight:400;letter-spacing:.06em;
+    padding-bottom:16px;border-bottom:1px solid var(--line);
+    margin-bottom:18px;
+  }
+  .drow{
+    display:flex;justify-content:space-between;gap:16px;
+    padding:9px 0;font-size:13px;
+  }
+  .drow .k{color:#666;flex:0 0 72px}
+  .drow .v{text-align:right;color:#1a1a1a;line-height:1.7}
+  .drow .v.price{font-size:20px}
+
+  .actions{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+  .actions a{
+    padding:15px;text-align:center;font-size:14px;border-radius:4px;
+  }
+  .actions .primary{background:#1a1a1a;color:#fff}
+  .actions .ghost{border:1px solid var(--line);color:#1a1a1a}
+
+  /* 页脚 */
+  .site-footer{background:#f1efeb;border-top:1px solid var(--line);padding:56px 0 0}
+  .ft-row{display:flex;padding:0 40px 44px;max-width:1560px;margin:0 auto;overflow-x:auto}
+  .ft-brand{flex:0 0 auto;padding-right:48px;margin-right:48px;border-right:1px solid #ddd9d2;min-width:200px}
+  .ft-brand h4{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:400;letter-spacing:.4em;text-indent:.4em;color:#1a1a1a;line-height:1;margin-bottom:10px}
+  .ft-brand .en{font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:#999}
+  .ft-brand .slogan{margin-top:20px;font-size:11px;line-height:2;color:#888}
+  .ft-col{flex:0 0 auto;padding-right:48px;min-width:110px}
+  .ft-col:last-child{padding-right:0}
+  .ft-col h5{font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:#999;margin-bottom:14px}
+  .ft-col a{display:block;font-size:12px;line-height:2.4;color:#555;white-space:nowrap}
+  .ft-col a:hover{color:#1a1a1a}
+  .ft-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 40px;border-top:1px solid #ddd9d2;max-width:1560px;margin:0 auto;flex-wrap:wrap}
+  .ft-bottom .cr{font-size:10px;color:#999}
+  .social{display:flex;gap:9px}
+  .social a{width:28px;height:28px;border:1px solid #ddd9d2;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#777}
+  .social a:hover{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+
+  @media (max-width:1024px){
+    .res-wrap{grid-template-columns:1fr 380px;gap:48px;padding:48px 24px 80px}
+    .res-left h1{font-size:36px}
+  }
+  @media (max-width:860px){
+    .res-wrap{grid-template-columns:1fr;gap:0;padding:0 0 60px}
+    .res-left{padding:40px 20px 0}
+    .res-left h1{font-size:30px}
+    .res-left h1 .mark{width:36px;height:36px;flex:0 0 36px;font-size:16px}
+    .res-right{position:static;padding:0 20px}
+    .detail-card{border-left:0;border-right:0;padding:24px 0;border-bottom:0}
+    .hd-top{padding:10px 16px 0;font-size:10px}
+    .hd-brand{padding:14px 16px 18px}
+    .hd-brand h1{font-size:18px;letter-spacing:.4em;text-indent:.4em}
+    .hd-nav{overflow-x:auto;scrollbar-width:none}
+    .hd-nav ul{justify-content:flex-start}
+    .hd-nav a{padding:12px 14px;font-size:11.5px}
+    .ft-row{flex-wrap:wrap;padding:0 20px 32px;gap:28px}
+    .ft-brand{border-right:0;padding-right:0;margin-right:0;width:100%}
+    .ft-brand .slogan{display:none}
+    .ft-col{padding-right:0;min-width:calc(50% - 14px)}
+    .ft-bottom{padding:18px 20px;flex-direction:column;align-items:flex-start;gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-top"><a href="#">Contact</a><a href="#">Login</a></div>
+  <div class="hd-brand">
+    <a href="index.html"><h1>跳舞兰</h1><span class="en">Tiao Wu Lan</span></a>
+  </div>
+  <nav class="hd-nav">
+    <ul>
+      <li><a href="shop.html">全部花束</a></li>
+      <li><a href="#">日常</a></li>
+      <li><a href="#">告白</a></li>
+      <li><a href="#">生日</a></li>
+      <li><a href="flower-language.html">花语</a></li>
+      <li><a href="about.html">关于</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="res-wrap" id="app">
+  <div class="loading">加载订单…</div>
+</div>
+
+<script>
+(function(){
+  const params = new URLSearchParams(location.search);
+  const orderNo = params.get('order_no') || localStorage.getItem('twl_last_order');
+  const app = document.getElementById('app');
+
+  if (!orderNo) {
+    app.innerHTML = '<div style="padding:120px 40px;text-align:center;color:#999">没有找到订单</div>';
+    return;
+  }
+
+  const STATUS_ORDER = ['pending_payment', 'paid', 'preparing', 'delivering', 'delivered', 'completed'];
+  const STATUS_LABEL = {
+    pending_payment: '待支付',
+    paid: '已支付',
+    preparing: '配花中',
+    delivering: '配送中',
+    delivered: '已送达',
+    completed: '已完成',
+    cancelled: '已取消',
+  };
+
+  function fmtTime(t) {
+    if (!t) return '—';
+    return String(t).replace('T', ' ').slice(0, 16);
+  }
+
+  function render(o) {
+    const curIdx = STATUS_ORDER.indexOf(o.status);
+
+    // 时间线
+    const steps = STATUS_ORDER.slice(1, 6).map((s, i) => {
+      const idx = i + 1;
+      let cls = '';
+      if (idx < curIdx) cls = 'done';
+      else if (idx === curIdx) cls = 'now';
+      const tl = (o.timeline || []).find(t => t.status === s);
+      const time = tl ? fmtTime(tl.time) : '—';
+      return `
+        <div class="step ${cls}">
+          <div class="dot"></div>
+          <div class="txt">
+            <div class="t">${STATUS_LABEL[s] || s}</div>
+            <div class="d">${time}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // 商品
+    const items = (o.items || []).map(it => `
+      <div class="drow"><span class="k">${it.product_name}</span><span class="v">×${it.qty}</span></div>
+    `).join('');
+
+    app.innerHTML = `
+      <div class="res-left">
+        <h1><span class="mark">✓</span>下单成功</h1>
+        <div class="no">${o.order_no}</div>
+
+        <div class="timeline-title">订单进度</div>
+        ${steps}
+      </div>
+
+      <div class="res-right">
+
+        <div class="guest-card">
+          <div class="t"><span class="dot">!</span>请保存好订单号</div>
+          <p>这是你查询订单的唯一凭据。换设备或清缓存后无法再看到。</p>
+          <div class="code">
+            <span class="v">${o.order_no}</span>
+            <span class="c" id="copyBtn">复制</span>
+          </div>
+          <div class="act">
+            <a href="login.html" class="go">登录并绑定</a>
+            <a href="#" class="skip" id="skipBtn">我已截图</a>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h2>订单详情</h2>
+          ${items}
+          <div class="drow"><span class="k">收花人</span><span class="v">${o.receiver} ${String(o.phone || '').replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}</span></div>
+          <div class="drow"><span class="k">地址</span><span class="v">${o.address_detail || '—'}</span></div>
+          <div class="drow"><span class="k">送达</span><span class="v">${o.delivery_date || '今日'} ${o.delivery_slot || ''}</span></div>
+          ${o.card_message ? `<div class="drow"><span class="k">贺卡</span><span class="v">${o.card_message}</span></div>` : ''}
+          <div class="drow"><span class="k">实付</span><span class="v price">¥${API.money(o.pay_amount)}</span></div>
+
+          <div class="actions">
+            <a href="order-detail.html?order_no=${encodeURIComponent(o.order_no)}" class="primary">查看订单</a>
+            <a href="shop.html" class="ghost">继续逛逛</a>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    // 复制
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      navigator.clipboard?.writeText(o.order_no).then(() => API.toast('订单号已复制'));
+    });
+
+    document.getElementById('skipBtn').addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector('.guest-card').style.display = 'none';
+      API.toast('已确认保存');
+    });
+  }
+
+  (async () => {
+    try {
+      const o = await API.getOrder(orderNo);
+      render(o);
+    } catch (e) {
+      app.innerHTML = `<div style="padding:120px 40px;text-align:center;color:#999">订单加载失败：${e.message}</div>`;
+    }
+  })();
+})();
+</script>
+
+</body>
+</html>

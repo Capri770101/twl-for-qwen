@@ -1,0 +1,251 @@
+/* ═══════════════════════════════════════════════════════
+   跳舞兰 H5 · 共享样式  v3（纯白 + 黑 + 浅米，不用彩色）
+   所有页面引用这一个文件，保证视觉一致
+   ═══════════════════════════════════════════════════════ */
+
+:root{
+  --white:#ffffff;
+  --paper:#f6f4ef;          /* 浅米，用于分区 */
+  --paper-light:#faf9f6;    /* 更浅的米 */
+  --ink:#141414;            /* 近黑 */
+  --accent:#141414;         /* 强调色 = 黑（不用彩色） */
+  --accent-soft:#f0efec;    /* 极浅灰底 */
+  --gray-7:#6e6a63;
+  --gray-a:#a39e95;
+  --gray-d:#dedad3;
+  --gray-e:#ece9e3;
+  --warn:#6e6a63;
+  --warn-bg:#f6f4ef;
+  --warn-border:#dedad3;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+body{
+  background:var(--white);
+  color:var(--ink);
+  font-family:'Inter',-apple-system,"PingFang SC",sans-serif;
+  font-weight:300;
+  line-height:1.9;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%}
+button{font-family:inherit;cursor:pointer}
+
+/* ═══════ 顶部条 ═══════ */
+.topbar{
+  padding:12px 18px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-7);
+}
+.topbar .r{display:flex;gap:18px}
+.topbar a{transition:color .2s}
+.topbar a:hover{color:var(--ink)}
+
+/* ═══════ Logo ═══════ */
+.brand{padding:14px 20px 24px;text-align:center}
+.brand h1{
+  font-family:'Noto Serif SC',serif;font-size:20px;font-weight:400;
+  letter-spacing:.48em;text-indent:.48em;line-height:1;
+}
+.brand .en{
+  display:block;margin-top:8px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:9.5px;letter-spacing:.42em;text-transform:uppercase;color:var(--gray-a);
+}
+
+/* ═══════ 主导航 ═══════ */
+.mainnav{
+  border-top:1px solid var(--gray-d);border-bottom:1px solid var(--gray-d);
+  padding:0 10px;overflow-x:auto;scrollbar-width:none;
+}
+.mainnav::-webkit-scrollbar{display:none}
+.mainnav ul{display:flex;justify-content:center;list-style:none;min-width:max-content}
+.mainnav a{
+  display:block;padding:14px 16px;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gray-7);white-space:nowrap;transition:color .2s;
+}
+.mainnav a:hover,.mainnav a.on{color:var(--ink)}
+
+/* ═══════ 公告栏 ═══════ */
+.announce{
+  background:var(--paper);color:var(--gray-7);
+  text-align:center;padding:10px 16px;
+  font-size:9.5px;letter-spacing:.18em;
+  border-bottom:1px solid var(--gray-d);
+}
+
+/* ═══════ 页头 ═══════ */
+.page-head{
+  padding:52px 26px 40px;text-align:center;border-bottom:1px solid var(--gray-d);
+}
+.page-head .kicker{
+  font-size:9px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--gray-a);margin-bottom:20px;
+}
+.page-head h2{
+  font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;
+  letter-spacing:.02em;margin-bottom:16px;
+}
+.page-head p{
+  font-size:12px;line-height:2.2;color:var(--gray-7);max-width:460px;margin:0 auto;
+}
+
+/* ═══════ 按钮 ═══════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 32px;
+  background:var(--ink);color:#fff;
+  font-size:12px;letter-spacing:.12em;
+  border:1px solid var(--ink);
+  transition:opacity .2s;
+}
+.btn:hover{opacity:.85}
+.btn-block{display:flex;width:100%}
+.btn-ghost{background:#fff;color:var(--ink);border-color:var(--gray-d)}
+.btn-ghost:hover{background:var(--paper)}
+.btn-sm{padding:9px 18px;font-size:10.5px}
+
+/* ═══════ 表单 ═══════ */
+.form-group{border-bottom:1px solid var(--gray-e)}
+.form-group .label{
+  font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gray-a);padding:20px 0 10px;
+}
+.field{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:14px;padding:13px 0;border-top:1px solid var(--gray-e);font-size:13px;
+}
+.field:first-of-type{border-top:0}
+.field .k{color:var(--gray-7);font-size:12px;white-space:nowrap;min-width:56px}
+.field .v{flex:1;text-align:right;color:var(--ink)}
+.field input,.field textarea{
+  width:100%;border:0;background:transparent;font:inherit;font-size:13px;
+  text-align:right;color:var(--ink);outline:none;resize:none;
+}
+.field input::placeholder,.field textarea::placeholder{color:var(--gray-a)}
+
+/* ═══════ 提示框（改用灰调，不用黄色）═══════ */
+.alert{
+  margin:20px 0;
+  padding:16px 18px;
+  border:1px solid var(--gray-d);
+  background:var(--paper);
+  font-size:12px;
+  line-height:2;
+}
+.alert.warn{
+  border-color:var(--gray-d);
+  background:var(--paper);
+  color:var(--gray-7);
+}
+.alert.warn .t{
+  font-weight:500;margin-bottom:8px;color:var(--ink);
+  display:flex;align-items:center;gap:6px;
+}
+.alert.warn ul{margin:0 0 12px 16px;font-size:11.5px;line-height:2}
+.alert.warn li{margin-bottom:2px}
+.alert .actions{display:flex;gap:8px;margin-top:12px}
+.alert .actions .btn,.alert .actions .btn-ghost{padding:8px 16px;font-size:10.5px}
+
+/* ═══════ 状态标签 ═══════ */
+.pill{
+  display:inline-block;padding:2px 8px;font-size:9px;letter-spacing:.05em;
+  border:1px solid var(--gray-d);color:var(--gray-7);
+}
+.pill.wait{border-color:var(--gray-d);color:var(--gray-7);background:var(--paper)}
+.pill.doing{border-color:var(--gray-d);color:var(--ink);background:var(--paper)}
+.pill.done{border-color:var(--gray-d);color:var(--ink);background:var(--paper)}
+.pill.cancel{border-color:var(--gray-e);color:var(--gray-a);background:var(--paper-light)}
+
+/* ═══════ 金额 ═══════ */
+.price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;letter-spacing:.02em;
+}
+.price .cur{font-size:11px;margin-right:1px}
+.price .was{
+  font-size:11px;color:var(--gray-a);
+  text-decoration:line-through;margin-left:8px;
+}
+.green{color:var(--ink)}
+
+/* ═══════ 底部固定操作栏 ═══════ */
+.dock{
+  position:fixed;bottom:0;left:0;right:0;z-index:80;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(16px);
+  border-top:1px solid var(--gray-d);
+  padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:12px;
+}
+.dock .sum{flex:1}
+.dock .sum .lbl{font-size:9px;letter-spacing:.16em;color:var(--gray-a);margin-bottom:1px}
+.dock .sum .amt{
+  font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink);
+}
+.dock .btn{flex:0 0 auto;min-width:140px}
+body.has-dock{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+
+/* ═══════ 页脚（浅米底，深灰字，不用彩色）═══════ */
+footer{
+  background:var(--paper);
+  color:var(--gray-7);
+  padding:52px 0 0;
+  border-top:1px solid var(--gray-d);
+}
+.foot-row{display:flex;gap:0;padding:0 26px 40px;overflow-x:auto;scrollbar-width:none}
+.foot-row::-webkit-scrollbar{display:none}
+.foot-brand{
+  flex:0 0 auto;padding-right:36px;margin-right:36px;
+  border-right:1px solid var(--gray-d);min-width:170px;
+}
+.foot-brand h4{
+  font-family:'Noto Serif SC',serif;font-size:15px;font-weight:400;
+  letter-spacing:.4em;text-indent:.4em;color:var(--ink);line-height:1;margin-bottom:9px;
+}
+.foot-brand .en{
+  font-family:'Cormorant Garamond',serif;font-size:9px;
+  letter-spacing:.32em;text-transform:uppercase;color:var(--gray-a);
+}
+.foot-brand .slogan{margin-top:18px;font-size:10px;line-height:2;color:var(--gray-7)}
+.foot-col{flex:0 0 auto;padding-right:40px;min-width:105px}
+.foot-col:last-child{padding-right:0}
+.foot-col h5{
+  font-family:'Cormorant Garamond',serif;font-size:11px;font-weight:500;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--gray-a);margin-bottom:14px;
+}
+.foot-col a{
+  display:block;font-size:10.5px;line-height:2.5;color:var(--gray-7);
+  white-space:nowrap;transition:color .2s;
+}
+.foot-col a:hover{color:var(--ink)}
+.foot-bottom{
+  display:flex;justify-content:space-between;align-items:center;gap:20px;
+  padding:20px 26px;border-top:1px solid var(--gray-d);flex-wrap:wrap;
+}
+.foot-bottom .cr{font-size:9px;letter-spacing:.1em;color:var(--gray-a)}
+.social{display:flex;gap:9px}
+.social a{
+  width:27px;height:27px;border:1px solid var(--gray-d);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:8.5px;
+  color:var(--gray-7);transition:all .25s;
+}
+.social a:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ═══════ 通用间距 ═══════ */
+.px{padding-left:20px;padding-right:20px}
+.mt-20{margin-top:20px}
+.mt-30{margin-top:30px}
+.mt-40{margin-top:40px}
+.text-center{text-align:center}
+.muted{color:var(--gray-a)}
+.small{font-size:11px;line-height:2}
+
+/* ═══════ 响应式 ═══════ */
+@media (min-width:820px){
+  .page-head h2{font-size:44px}
+}

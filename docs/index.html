@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档索引 | 跳舞兰</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#fff;--paper:#f1efeb;--paper-light:#faf9f6;
+    --ink:#1a1a1a;--gray-7:#666;--gray-a:#999;
+    --line:#e5e5e5;--line-light:#ebe9e5;
+    --ok:#3d6b47;--warn:#8a6420;--bad:#8a3c3c;--info:#345f80;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper-light);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC",sans-serif;font-weight:400;line-height:1.75;-webkit-font-smoothing:antialiased;padding:0 0 100px}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 40px}
+
+  .head{background:#fff;border-bottom:1px solid var(--line);padding:76px 40px 64px;text-align:center}
+  .head h1{font-size:46px;font-weight:400;letter-spacing:-.02em;line-height:1.1;margin-bottom:14px}
+  .head .sub{font-size:14px;color:var(--gray-7);margin-bottom:30px}
+  .head .meta{display:inline-flex;gap:32px;font-size:12px;color:var(--gray-a);border-top:1px solid var(--line);padding-top:20px}
+  .head .meta b{color:var(--ink);font-weight:500}
+
+  .sec{padding:56px 0 0}
+  .sec h2{font-size:24px;font-weight:400;letter-spacing:-.01em;margin-bottom:6px;padding-left:2px}
+  .sec .lead{font-size:13.5px;color:var(--gray-7);margin-bottom:22px;padding-left:2px}
+
+  .list{background:#fff;border:1px solid var(--line)}
+  .item{
+    display:flex;align-items:center;gap:18px;
+    padding:20px 24px;
+    border-bottom:1px solid var(--line-light);
+    transition:background .15s;
+  }
+  .item:last-child{border-bottom:0}
+  a.item:hover{background:var(--paper-light)}
+
+  .item .ico{
+    flex:0 0 40px;height:40px;
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;color:var(--gray-7);
+  }
+  .item .ico.html{border-color:#c8dae8;color:var(--info);background:#f5f9fc}
+  .item .ico.md{border-color:#c8d8c8;color:var(--ok);background:#f5faf6}
+
+  .item .info{flex:1;min-width:0}
+  .item .info .t{font-size:15px;margin-bottom:3px}
+  .item .info .d{font-size:12.5px;color:var(--gray-a);line-height:1.7}
+
+  .item .meta{flex:0 0 auto;font-size:11px;color:var(--gray-a);text-align:right;white-space:nowrap}
+
+  .item .arrow{flex:0 0 20px;text-align:right;font-size:14px;color:var(--gray-a)}
+  a.item:hover .arrow{color:var(--ink)}
+
+  .tag{display:inline-block;padding:1px 7px;font-size:10px;border:1px solid var(--line);color:var(--gray-7);margin-left:8px;vertical-align:middle}
+  .tag.hot{border-color:#d5b0b0;color:var(--bad);background:#faf0f0}
+  .tag.new{border-color:#a8c0d8;color:var(--info);background:#f0f6fa}
+
+  .note{padding:18px 22px;font-size:13px;line-height:1.9;border-left:2px solid var(--ink);background:var(--paper);margin:18px 0}
+  .note b{font-weight:500}
+
+  .tree{
+    background:#fff;border:1px solid var(--line);
+    padding:24px 26px;
+    font-family:monospace;font-size:12.5px;line-height:2.1;
+    color:#444;overflow-x:auto;white-space:pre;
+  }
+  .tree .c{color:var(--gray-a)}
+
+  .foot{margin-top:64px;padding-top:32px;border-top:1px solid var(--line);font-size:12px;color:var(--gray-a);text-align:center;line-height:2}
+
+  @media (max-width:768px){
+    .wrap{padding:0 20px}
+    .head{padding:52px 20px 44px}
+    .head h1{font-size:30px}
+    .head .meta{flex-direction:column;gap:8px}
+    .sec h2{font-size:20px}
+    .item{padding:16px 18px;gap:14px}
+    .item .ico{flex:0 0 34px;height:34px;font-size:11px}
+    .item .info .t{font-size:14px}
+    .item .meta{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>文档索引</h1>
+  <div class="sub">跳舞兰 H5 电商系统</div>
+  <div class="meta">
+    <span>文档 <b>7</b> 份</span>
+    <span>分类 <b>4</b> 组</span>
+    <span>更新 <b>2026-10-21</b></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 快速开始 ═══ -->
+<div class="sec">
+  <h2>快速开始</h2>
+  <div class="lead">第一次接手，按顺序看这三个。</div>
+
+  <div class="list">
+    <a href="03-交付/项目状态总结.html" class="item">
+      <div class="ico html">H</div>
+      <div class="info">
+        <div class="t">1. 项目状态总结<span class="tag new">先看这个</span></div>
+        <div class="d">现在做到哪了、100 项测试结果、业务闭环、上线路径</div>
+      </div>
+      <div class="meta">22KB</div>
+      <div class="arrow">→</div>
+    </a>
+
+    <a href="01-需求/任务书.md" class="item">
+      <div class="ico md">M</div>
+      <div class="info">
+        <div class="t">2. 任务书<span class="tag hot">最权威</span></div>
+        <div class="d">要做什么、为什么这么做。所有需求的最终依据</div>
+      </div>
+      <div class="meta">28KB · 12 章</div>
+      <div class="arrow">→</div>
+    </a>
+
+    <a href="04-原型/页面清单.html" class="item">
+      <div class="ico html">H</div>
+      <div class="info">
+        <div class="t">3. 页面清单</div>
+        <div class="d">21 个页面入口，点开就能看效果</div>
+      </div>
+      <div class="meta">11KB</div>
+      <div class="arrow">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ 01 需求 ═══ -->
+<div class="sec">
+  <h2>01 · 需求</h2>
+  <div class="lead">定义「做什么」。</div>
+
+  <div class="list">
+    <a href="01-需求/任务书.md" class="item">
+      <div class="ico md">M</div>
+      <div class="info">
+        <div class="t">任务书<span class="tag hot">最高优先级</span></div>
+        <div class="d">项目定位、页面架构、用户体系、SEO/GEO 要求、验收标准。与其他文档冲突时以此为准</div>
+      </div>
+      <div class="meta">28KB · 12 章</div>
+      <div class="arrow">→</div>
+    </a>
+
+    <a href="01-需求/前端协作协议.md" class="item">
+      <div class="ico md">M</div>
+      <div class="info">
+        <div class="t">前端协作协议</div>
+        <div class="d">前后端接口约定、字段格式、错误码、鉴权方式</div>
+      </div>
+      <div class="meta">12KB</div>
+      <div class="arrow">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ 02 技术 ═══ -->
+<div class="sec">
+  <h2>02 · 技术</h2>
+  <div class="lead">定义「怎么做」。</div>
+
+  <div class="list">
+    <a href="02-技术/工程书.md" class="item">
+      <div class="ico md">M</div>
+      <div class="info">
+        <div class="t">工程书<span class="tag new">工程文档</span></div>
+        <div class="d">技术选型、架构设计、数据库表结构、接口清单、外部服务适配器、部署要求。面向项目本身</div>
+      </div>
+      <div class="meta">30KB</div>
+      <div class="arrow">→</div>
+    </a>
+
+    <a href="02-技术/前端开发方案.md" class="item">
+      <div class="ico md">M</div>
+      <div class="info">
+        <div class="t">前端开发方案</div>
+        <div class="d">页面架构、用户体系、技术方案、后端接口需求、排期、验收标准</div>
+      </div>
+      <div class="meta">15KB · 7 章</div>
+      <div class="arrow">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ 03 交付 ═══ -->
+<div class="sec">
+  <h2>03 · 交付</h2>
+  <div class="lead">做完了什么，怎么验证。</div>
+
+  <div class="list">
+    <a href="03-交付/项目状态总结.html" class="item">
+      <div class="ico html">H</div>
+      <div class="info">
+        <div class="t">项目状态总结<span class="tag new">最新</span></div>
+        <div class="d">
+          完成度打分 · 12 项新增功能 · 4 项技术债已还 · 100 项测试全部通过 · 业务闭环 · 上线路径 · 测试命令
+        </div>
+      </div>
+      <div class="meta">22KB</div>
+      <div class="arrow">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ 04 原型 ═══ -->
+<div class="sec">
+  <h2>04 · 原型</h2>
+  <div class="lead">页面效果。</div>
+
+  <div class="list">
+    <a href="04-原型/页面清单.html" class="item">
+      <div class="ico html">H</div>
+      <div class="info">
+        <div class="t">页面清单</div>
+        <div class="d">21 个页面按模块分组，点「打开」在新窗口看</div>
+      </div>
+      <div class="meta">11KB</div>
+      <div class="arrow">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ 上下文 ═══ -->
+<div class="sec">
+  <h2>项目上下文</h2>
+  <div class="lead">背景、决策记录、踩过的坑。</div>
+
+  <div class="list">
+    <a href="工作上下文.md" class="item">
+      <div class="ico md">M</div>
+      <div class="info">
+        <div class="t">工作上下文</div>
+        <div class="d">项目背景、关键决策及原因、走过的弯路、用户偏好</div>
+      </div>
+      <div class="meta">20KB</div>
+      <div class="arrow">→</div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ 目录结构 ═══ -->
+<div class="sec">
+  <h2>项目目录结构</h2>
+
+  <div class="tree">跳舞兰/
+├── docs/                              <span class="c">← 所有文档（7 份）</span>
+│   ├── index.html                     <span class="c">本文档索引</span>
+│   ├── 工作上下文.md
+│   ├── 01-需求/
+│   │   ├── 任务书.md                   <span class="c">最权威的需求定义</span>
+│   │   └── 前端协作协议.md
+│   ├── 02-技术/
+│   │   ├── 工程书.md
+│   │   └── 前端开发方案.md
+│   ├── 03-交付/
+│   │   └── 项目状态总结.html
+│   └── 04-原型/
+│       └── 页面清单.html
+│
+├── prototype/luxe/                    <span class="c">← 21 个页面</span>
+│   ├── index.html  shop.html  product.html  cart.html
+│   ├── checkout.html  pay.html  order-success.html
+│   ├── login.html  orders.html  order-detail.html
+│   ├── address.html  after-sale.html
+│   ├── flower-language.html  flower-language-detail.html
+│   ├── about.html  contact.html  search.html
+│   ├── help-delivery.html  help-returns.html  help-faq.html
+│   ├── admin.html
+│   └── _backup/                       <span class="c">改版前备份</span>
+│
+├── backend/                           <span class="c">← 后端代码</span>
+│   ├── app/                           <span class="c">应用（三层架构）</span>
+│   ├── static/                        <span class="c">部署用的前端副本</span>
+│   ├── tests/                         <span class="c">20 个单元测试</span>
+│   ├── alembic/                       <span class="c">数据库迁移</span>
+│   └── .env.example                   <span class="c">环境变量模板</span>
+│
+├── assets/                            <span class="c">← 图片素材</span>
+├── gen/                               <span class="c">← 生成脚本 + 测试脚本</span>
+│   ├── full_test.py                   <span class="c">62 项全流程测试</span>
+│   ├── security_test.py               <span class="c">18 项安全测试</span>
+│   └── ...                            <span class="c">各种生成/修复脚本</span>
+│
+└── frontend/                          <span class="c">← Next.js 脚手架（未使用）</span></div>
+
+  <div class="note">
+    <b>整理原则：</b>文档进 <code>docs/</code>，页面进 <code>prototype/luxe/</code>，代码进 <code>backend/</code>。
+    三者不混，找东西不用翻。
+  </div>
+</div>
+
+<!-- ═══ 文档规范 ═══ -->
+<div class="sec">
+  <h2>文档规范</h2>
+  <div class="lead">以后加文档按这个来。</div>
+
+  <div class="list">
+    <div class="item">
+      <div class="ico">1</div>
+      <div class="info">
+        <div class="t">只留有效的</div>
+        <div class="d">中间态（整改过程、版本对比）、测试态（一次性测试报告）不进 docs。内容并入正式文档，原文件删掉</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="ico">2</div>
+      <div class="info">
+        <div class="t">归到对的分类</div>
+        <div class="d">需求 → 01 · 技术 → 02 · 交付 → 03 · 原型 → 04 · 背景 → 根目录</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="ico">3</div>
+      <div class="info">
+        <div class="t">格式选择</div>
+        <div class="d">需求和工程 → <code>.md</code>（能 diff、好改）；交付和原型 → <code>.html</code>（能带样式、好读）</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="ico">4</div>
+      <div class="info">
+        <div class="t">中文命名</div>
+        <div class="d"><code>项目状态总结.html</code> 比 <code>status_v2.html</code> 好。直接说清楚是什么，不搞缩写</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="ico">5</div>
+      <div class="info">
+        <div class="t">改了就改，别留副本</div>
+        <div class="d">文档没有「版本 2」，直接改原文。历史在 git 里，不靠文件名</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  跳舞兰 H5 电商系统 · 文档索引<br>
+  2026-10-21 · 7 份文档 · 154 KB
+</div>
+
+</div>
+
+</body>
+</html>

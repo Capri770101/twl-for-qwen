@@ -1,0 +1,5 @@
+# v1 版本 API 包
+
+from app.api.v1.router import api_router
+
+__all__ = ["api_router"]
