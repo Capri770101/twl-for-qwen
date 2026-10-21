@@ -286,7 +286,7 @@ FRONTEND_DIR = PROJECT_ROOT / "frontend"
 FRONTEND_DIR.mkdir(exist_ok=True)
 
 # 用户上传目录（运行时数据，留在 backend 下）
-UPLOAD_DIR = BACKEND_DIR / "static" / "uploads"
+UPLOAD_DIR = BACKEND_DIR / "storage" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 # 先挂 uploads（子路径要在 / 之前挂，否则被拦截）

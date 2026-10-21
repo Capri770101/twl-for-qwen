@@ -27,7 +27,7 @@ def get_storage() -> BaseStorage:
 
     # 默认本地
     backend_dir = Path(__file__).resolve().parent.parent.parent.parent
-    return LocalStorage(backend_dir / "static" / "uploads")
+    return LocalStorage(backend_dir / "storage" / "uploads")
 
 
 __all__ = ["BaseStorage", "StorageResult", "LocalStorage", "get_storage"]

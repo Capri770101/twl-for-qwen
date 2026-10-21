@@ -159,7 +159,7 @@ http://127.0.0.1:8000/admin.html       后台
    python embed_luxe.py
    ```
 
-2. **不要直接在 `backend/static/` 改** —— 那里只有 uploads，页面以 `frontend/` 为准
+2. **不要直接在 `backend/storage/` 改** —— 那里只有 uploads，页面以 `frontend/` 为准
 
 3. **加新页面**：
    - 在 `frontend/` 建 HTML

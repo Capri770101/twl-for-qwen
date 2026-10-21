@@ -68,37 +68,36 @@ backend/
 │   ├── env.py
 │   └── versions/
 │
-├── static/
-│   └── uploads/                用户上传的文件（运行时产生）
+├── scripts/                    后端脚本
+│   └── seed.py                 灌商品数据（有就更新，没有就新增）
 │
+├── storage/                    运行时数据
+│   └── uploads/                用户上传的图片
+│
+├── .venv/                      虚拟环境（不提交）
 ├── .env                        环境变量（不提交，有密码）
 ├── .env.example                模板
 ├── alembic.ini                 迁移配置
 ├── pyproject.toml              依赖和打包
-└── seed.py                     灌测试数据
+└── README.md                   本文档
 ```
 
 ---
 
-## 架构
+## 关于 `.venv`
 
-**三层结构 + 端口-适配器。**
+**放在 `backend/` 里是对的。**
 
-```
-api/           接请求、验参数、调 Service
-  ↓
-services/      业务逻辑、状态流转、事务边界
-  ↓
-repositories/  只负责跟数据库打交道
-```
+原因：
+- `backend/` 有 `pyproject.toml`，是一个独立的 Python 包
+- 虚拟环境就是给这个包装依赖的
+- 换项目不会冲突
 
-**为什么要分：**
+**其他位置都不合适：**
+- 项目根 `/.venv` —— 根目录不是 Python 项目
+- 全局环境 —— 项目之间会冲突
 
-- 业务逻辑不掺 SQL，好读
-- 换数据库只改 repositories 一层
-- 能单独测业务（不启数据库）
-
-**适配器：** 外部依赖（支付、短信、存储）都抽成接口，改配置就能换实现，不改代码。
+**注意：** `.venv` 在 `.gitignore` 里，不进仓库。复制项目到别的机器要重建。
 
 ---
 
@@ -119,7 +118,7 @@ copy .env.example .env
 .venv\Scripts\alembic upgrade head
 
 # 4. 灌数据
-.venv\Scripts\python seed.py
+.venv\Scripts\python scripts\seed.py
 
 # 5. 启动
 $env:PYTHONUTF8="1"
@@ -160,7 +159,7 @@ $env:PYTHONUTF8="1"
 
 **PostgreSQL 18。**
 
-10 张表：
+11 张表：
 
 ```
 products          商品
@@ -183,6 +182,22 @@ alembic revision --autogenerate -m "说明"
 alembic upgrade head
 alembic downgrade -1        # 回退一步
 ```
+
+---
+
+## 脚本
+
+### `scripts/seed.py` —— 灌商品数据
+
+```bash
+.venv\Scripts\python scripts\seed.py
+```
+
+**行为：按 ID 查，有就更新、没有就新增（upsert）**
+
+不会删除重建，因为订单表引用了商品 ID。
+
+可以重复跑，结果一致。
 
 ---
 
@@ -267,6 +282,30 @@ HMAC-SHA256 签名，格式 `user_id.expire.sig`。
 
 ---
 
+## 静态资源托管
+
+**后端负责提供前端页面和用户上传的文件。**
+
+```
+http://127.0.0.1:8000/                 → frontend/index.html
+http://127.0.0.1:8000/shop.html        → frontend/shop.html
+http://127.0.0.1:8000/js/api.js        → frontend/js/api.js
+http://127.0.0.1:8000/images/xx.png    → frontend/images/xx.png
+http://127.0.0.1:8000/uploads/xx.png   → backend/storage/uploads/xx.png
+http://127.0.0.1:8000/api/v1/...       → 接口
+```
+
+**挂载顺序**（`main.py` 末尾）：
+
+```python
+app.mount("/uploads", ...)   # 先挂子路径
+app.mount("/", ...)          # 再挂兜底
+```
+
+**部署时**可以用 Nginx 直接托管前端，后端只提供 `/api` 和 `/uploads`。
+
+---
+
 ## 部署
 
 ```bash
@@ -285,12 +324,24 @@ server {
     listen 443 ssl http2;
     server_name h5.tiaowulan.com;
 
+    # 前端静态文件（直接托管，不经过后端）
     location / {
+        root /var/www/twl/frontend;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 后端接口
+    location /api/ {
         proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # 用户上传的文件
+    location /uploads/ {
+        alias /var/www/twl/backend/storage/uploads/;
     }
 }
 ```

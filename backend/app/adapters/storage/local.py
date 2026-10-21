@@ -3,7 +3,7 @@
 # 本地磁盘存储。开发环境用。
 #
 # 【存在哪】
-#   backend/static/uploads/
+#   backend/storage/uploads/
 #
 # 【访问路径】
 #   /uploads/xxxxx.jpg

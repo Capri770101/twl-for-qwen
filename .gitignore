@@ -65,8 +65,8 @@ pnpm-debug.log*
 # ────────────────────────────────────────────────────────────
 
 # 用户上传的图片（每次部署后重新积累）
-backend/static/uploads/*
-!backend/static/uploads/.gitkeep
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
 
 # 日志
 *.log

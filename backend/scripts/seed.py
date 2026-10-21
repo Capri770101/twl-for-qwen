@@ -4,16 +4,21 @@
 #
 # 【什么时候用】
 #   1. 第一次部署（数据库是空的）
-#   2. 想重置商品数据
+#   2. 想更新商品信息（改价格、改名、换图）
 #
 # 【怎么跑】
 #   cd backend
-#   .venv\Scripts\python.exe seed.py
+#   .venv\Scripts\python.exe scripts\seed.py
 #
-# 【注意】
-# - 会先删除同 ID 的商品再插入，所以可以重复跑
-# - 不会删订单（订单是真实数据）
-# - 前提：数据库表已经建好（先跑 alembic upgrade head）
+# 【怎么处理已有数据】
+# 用「有就更新，没有就新增」的方式（upsert），不删除重建。
+#
+# 为什么不像以前那样「先删再插」：
+#   订单表引用了商品 ID，删商品会触发外键约束，
+#   而且会把真实订单的历史商品信息一起搞坏。
+#
+# 【前提】
+# 数据库表已经建好（先跑 alembic upgrade head）
 # ============================================================
 
 import asyncio
@@ -21,10 +26,10 @@ import sys
 from decimal import Decimal
 from pathlib import Path
 
-# 把项目根目录加到路径
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+# 把 backend 目录加到路径（脚本在 backend/scripts/ 下）
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from sqlalchemy import delete, select
+from sqlalchemy import select
 
 from app.core.database import AsyncSessionLocal, check_database_connection
 from app.core.logging import get_logger, setup_logging
@@ -152,35 +157,70 @@ PRODUCTS = [
 
 
 async def seed() -> None:
-    """【干什么】执行数据初始化"""
+    """
+    【干什么】把商品数据写入数据库。
+
+    【怎么处理已有数据】
+    按 ID 查：
+    - 有 → 更新字段（价格、名称、图片等）
+    - 没有 → 新增
+
+    【为什么不删了重建】
+    订单表引用了商品 ID（外键约束 RESTRICT），
+    删商品会报错，而且会把历史订单的商品信息搞坏。
+    """
 
     # 先检查数据库能不能连上
     if not await check_database_connection():
         logger.error("数据库连不上，请检查 .env 配置")
         sys.exit(1)
 
-    async with AsyncSessionLocal() as session:
-        # 逐个商品：先删同 ID 的，再插入
-        for data in PRODUCTS:
-            # 删除已有的
-            await session.execute(delete(Product).where(Product.id == data["id"]))
+    created = 0
+    updated = 0
 
-            # 插入新的
-            product = Product(
-                id=data["id"],
-                name=data["name"],
-                subtitle=data["subtitle"],
-                price=Decimal(data["price"]),
-                original_price=Decimal(data["original_price"]) if data["original_price"] else None,
-                cover=data["cover"],
-                flowers=data["flowers"],
-                meaning=data["meaning"],
-                category=data["category"],
-                status=ProductStatus.ON.value,
-                stock=999,
-                sort_order=data["sort_order"],
+    async with AsyncSessionLocal() as session:
+        for data in PRODUCTS:
+            # 先查有没有
+            result = await session.execute(
+                select(Product).where(Product.id == data["id"])
             )
-            session.add(product)
+            product = result.scalar_one_or_none()
+
+            if product:
+                # ── 已存在：更新字段 ──
+                product.name = data["name"]
+                product.subtitle = data["subtitle"]
+                product.price = Decimal(data["price"])
+                product.original_price = (
+                    Decimal(data["original_price"]) if data["original_price"] else None
+                )
+                product.cover = data["cover"]
+                product.flowers = data["flowers"]
+                product.meaning = data["meaning"]
+                product.category = data["category"]
+                product.sort_order = data["sort_order"]
+                # 注意：不改 stock（库存是真实数据）
+                updated += 1
+            else:
+                # ── 不存在：新增 ──
+                product = Product(
+                    id=data["id"],
+                    name=data["name"],
+                    subtitle=data["subtitle"],
+                    price=Decimal(data["price"]),
+                    original_price=(
+                        Decimal(data["original_price"]) if data["original_price"] else None
+                    ),
+                    cover=data["cover"],
+                    flowers=data["flowers"],
+                    meaning=data["meaning"],
+                    category=data["category"],
+                    status=ProductStatus.ON.value,
+                    stock=999,
+                    sort_order=data["sort_order"],
+                )
+                session.add(product)
+                created += 1
 
         await session.commit()
 
@@ -188,8 +228,8 @@ async def seed() -> None:
         result = await session.execute(select(Product))
         count = len(list(result.scalars().all()))
 
-    logger.info("数据初始化完成", product_count=count)
-    print(f"\n[seed] 商品 {count} 个已写入")
+    logger.info("数据初始化完成", created=created, updated=updated, total=count)
+    print(f"\n[seed] 新增 {created} 个，更新 {updated} 个，共 {count} 个商品")
     print("[seed] 完成\n")
 
 
