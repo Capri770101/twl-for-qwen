@@ -1,0 +1,57 @@
+# robots.txt · 跳舞兰
+# https://h5.tiaowulan.com
+
+# ── 所有爬虫 ──
+User-agent: *
+Allow: /
+
+# 后台不进搜索
+Disallow: /admin.html
+
+# 接口不抓
+Disallow: /api/
+
+# 用户上传的文件不单独抓（在商品页里已经有了）
+Disallow: /uploads/
+
+# 购物流程页（状态页，收录无意义）
+Disallow: /cart.html
+Disallow: /checkout.html
+Disallow: /pay.html
+Disallow: /order-success.html
+Disallow: /orders.html
+Disallow: /order-detail.html
+Disallow: /address.html
+Disallow: /after-sale.html
+Disallow: /login.html
+
+# 搜索结果页（避免收录空结果）
+Disallow: /search.html
+
+# ── 百度 ──
+User-agent: Baiduspider
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+Disallow: /cart.html
+Disallow: /checkout.html
+Disallow: /pay.html
+
+# ── 谷歌 ──
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+# ── 必应 ──
+User-agent: bingbot
+Allow: /
+Disallow: /admin.html
+Disallow: /api/
+
+# ── 微信 ──
+User-agent: WeChat
+Allow: /
+
+# ── Sitemap ──
+Sitemap: https://h5.tiaowulan.com/sitemap.xml

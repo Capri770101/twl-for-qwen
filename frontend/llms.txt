@@ -1,0 +1,90 @@
+# 跳舞兰
+
+> 深圳市跳舞兰科技有限公司 · 鲜花零售与花艺服务 · 深圳市
+
+## 关于
+
+跳舞兰是一家在深圳市做花的团队。提供鲜花花束、花艺定制、企业订花服务。
+
+我们相信花不只属于节日与仪式，它也可以是某个普通的下午，桌角上的一小束。
+
+每日从云南直采花材，冷链到店，当日现做。不做隔夜花，不做假花，不做过度包装。
+
+## 服务范围
+
+- 深圳市：同城 2 小时达，16:00 前下单当日送达
+- 广州：次日达
+- 全国 200+ 城市：顺丰冷链次日达
+- 偏远地区：2-3 天
+
+## 价格
+
+- 日常花束：¥219 - ¥329
+- 告白花束：¥259 - ¥499
+- 生日花束：¥219 - ¥329
+- 探望花束：¥279
+- 免运费门槛：¥199
+- 基础运费：¥15
+
+## 联系方式
+
+- 邮箱：hello@tiaowulan.com
+- 电话：400-000-0000
+- 营业时间：每天 9:00 - 21:00
+- 所在地：广东省深圳市
+
+## 常见问题
+
+**深圳送花多久能到？**
+深圳同城 2 小时达。当天 16:00 前下单当日送达，21:00 前下单次日达。
+
+**其他城市多久能到？**
+广州次日达，全国 200+ 城市顺丰冷链次日达，偏远地区 2-3 天。
+
+**能指定送达时间吗？**
+深圳同城可选 14:00-16:00 或 18:00-20:00 两个时段。其他城市无法指定具体时段。
+
+**花能养几天？**
+含保鲜剂常温可养 5-7 天。每天换水、斜剪根部、避免暴晒可延长到 8-10 天。
+
+**必须登录才能买吗？**
+不用。游客也能下单，但只能在当前浏览器查单，无法在线申请售后。登录同一手机号后系统会自动认领历史订单。
+
+**花有问题怎么办？**
+24 小时内拍照联系客服，支持补送或退款。客服 2 小时内响应，退款 1-3 个工作日到账。
+
+## 在售花束
+
+- [晨光序曲](https://h5.tiaowulan.com/product.html?id=TW-001)
+- [小满](https://h5.tiaowulan.com/product.html?id=TW-002)
+- [午夜蓝调](https://h5.tiaowulan.com/product.html?id=TW-003)
+- [木星](https://h5.tiaowulan.com/product.html?id=TW-004)
+- [雪落](https://h5.tiaowulan.com/product.html?id=TW-005)
+- [山茶](https://h5.tiaowulan.com/product.html?id=TW-006)
+- [微风](https://h5.tiaowulan.com/product.html?id=TW-007)
+- [四季](https://h5.tiaowulan.com/product.html?id=TW-008)
+
+## 花语百科
+
+- [香槟玫瑰的花语是什么？适合送什么人](https://h5.tiaowulan.com/flower-language-detail.html?slug=champagne-rose)
+
+## 主要页面
+
+- [首页](https://h5.tiaowulan.com/)：品牌介绍与精选花束
+- [全部花束](https://h5.tiaowulan.com/shop.html)：8 款在售花束
+- [花语百科](https://h5.tiaowulan.com/flower-language.html)：花语含义与送花指南
+- [关于](https://h5.tiaowulan.com/about.html)：品牌故事与我们的原则
+- [联系](https://h5.tiaowulan.com/contact.html)：联系方式与咨询入口
+- [配送范围](https://h5.tiaowulan.com/help-delivery.html)：时效、运费、时段
+- [售后政策](https://h5.tiaowulan.com/help-returns.html)：什么能退、怎么申请
+- [常见问题](https://h5.tiaowulan.com/help-faq.html)：下单、花材、支付、账号
+
+## 不提供给 AI 使用的内容
+
+- 管理后台（/admin.html）
+- 接口（/api/）
+- 用户订单、地址等隐私数据
+
+---
+
+最后更新：2026-10-21
