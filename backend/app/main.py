@@ -149,6 +149,11 @@ app = FastAPI(
 # 【生产环境要收紧】
 # .env 里把 CORS_ORIGINS 改成自己的域名，不要用 *
 # ════════════════════════════════════════════════════════════
+# ── GZip 压缩 ──
+# HTML 531KB 压缩后约 60KB，首屏快 3 倍
+from fastapi.middleware.gzip import GZipMiddleware
+app.add_middleware(GZipMiddleware, minimum_size=500)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -299,8 +304,29 @@ app.include_router(pages_router)
 # 先挂 uploads（子路径要在 / 之前挂，否则被拦截）
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
+# ── 自定义 StaticFiles，加缓存头 ──
+#
+# 【为什么】
+# 图片、JS、CSS 变的不频繁，浏览器可以缓存。
+# HTML 要经常更新，不能长缓存。
+class CachedStaticFiles(StaticFiles):
+    """给静态文件加 Cache-Control"""
+
+    async def get_response(self, path: str, scope):
+        resp = await super().get_response(path, scope)
+
+        if path.endswith((".html", ".txt", ".xml")):
+            # HTML / sitemap / robots：不缓存，改了立刻生效
+            resp.headers["Cache-Control"] = "public, max-age=0, must-revalidate"
+        else:
+            # 图片 / JS / CSS：缓存 7 天
+            resp.headers["Cache-Control"] = "public, max-age=604800"
+
+        return resp
+
+
 # 再挂前端根目录（兜底）
-app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+app.mount("/", CachedStaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 
 
 # ════════════════════════════════════════════════════════════
