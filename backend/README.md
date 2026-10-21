@@ -48,6 +48,10 @@ backend/
 │   │   ├── user.py             用户 + 地址
 │   │   └── content.py          文章 + 配置
 │   ├── schemas/                请求/响应格式（Pydantic）
+│   ├── web/                    服务端渲染（SSR）
+│   │   ├── render.py           渲染函数
+│   │   └── routes.py           4 个 SSR 路由
+│   ├── mcp_server.py           MCP Server（给 AI 智能体用）
 │   ├── adapters/               外部服务适配器
 │   │   ├── payment/            支付网关
 │   │   ├── fulfillment/        履约系统
@@ -212,6 +216,43 @@ cd ..\scripts
 python full_test.py         # 62 项全流程
 python security_test.py     # 18 项安全
 ```
+
+---
+
+## MCP Server（给 AI 用）
+
+**9 个工具，让 AI 智能体直接操作业务。**
+
+```bash
+.venv\Scripts\python.exe -m app.mcp_server
+```
+
+| 类别 | 工具 |
+|---|---|
+| 查询 | `search_flowers` `get_product` `check_delivery` `list_categories` |
+| 交易 | `create_order` `query_order` `create_ticket` |
+| 内容 | `get_flower_meaning` `list_articles` |
+
+**协议验证：**
+```
+initialize  ✓ server: tiaowulan 1.30.0, protocol 2024-11-05
+tools/list  ✓ 9 个工具
+```
+
+### 一个必须知道的坑
+
+**MCP 里没有 `get_db` 依赖，写操作必须手动 `commit`。**
+
+```python
+async with AsyncSessionLocal() as db:
+    svc = order_service.OrderService(db)
+    order = await svc.create_order(payload)
+    await db.commit()   # ← 必须，否则数据不落库
+```
+
+**原因：** service 层只 `flush` 不 `commit`；commit 是 `get_db` 依赖在 FastAPI 请求结束时做的。MCP 不走 FastAPI，所以没人提交。
+
+**完整接入文档见** → `docs/02-技术/MCP接入.md`
 
 ---
 

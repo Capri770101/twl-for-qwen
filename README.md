@@ -1,8 +1,22 @@
 # 跳舞兰 H5 电商系统
 
-深圳市跳舞兰科技有限公司的花艺电商网站。
+深圳市跳舞兰科技有限公司的花艺电商系统。
 
-以品牌官网为主体、内容平台为支撑、购物渠道为落地。
+**定位：可交付的完整业务系统** —— 打通「用户下单 → 支付 → 后台履约 → 售后」全闭环，并预留 AI 智能体接入能力（MCP）。
+
+---
+
+## 这个项目是什么
+
+| 维度 | 说明 |
+|---|---|
+| **交付形态** | 完整可运行的系统，不是演示 Demo |
+| **业务闭环** | 已打通，134 项测试全通过 |
+| **数据状态** | 商品/配送/联系方式为示例数据，老板接手后替换 |
+| **AI 接入** | MCP Server 已就绪，9 个工具，可接千问/Claude/Cursor |
+| **上线状态** | 未上线（等 ICP 备案 + 真实数据） |
+
+**⚠ 当前 `DEMO_MODE=true`** —— 前台顶部显示「演示环境」提示，下单不会真实扣款。接手后改 `.env` 即可关闭。
 
 ---
 
@@ -17,13 +31,12 @@
 ### 手动启动
 
 ```bash
-# 1. 后端
 cd backend
 python -m venv .venv
 .venv\Scripts\pip install -e .
 copy .env.example .env          # 然后填数据库密码
 .venv\Scripts\alembic upgrade head
-.venv\Scripts\python seed.py
+.venv\Scripts\python scripts\seed.py
 $env:PYTHONUTF8="1"
 .venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
@@ -43,7 +56,48 @@ $env:PYTHONUTF8="1"
 UPDATE users SET is_admin = TRUE WHERE phone = '你的手机号';
 ```
 
-开发环境验证码会自动填入，不需要真实短信。
+开发环境验证码会自动填入（从 `/auth/send-code` 返回的 `dev_code`），不需要真实短信。
+
+---
+
+## 业务闭环（这是核心）
+
+### 用户侧
+
+```
+浏览商品 → 看详情 → 查配送 → 加入购物袋 → 填地址 → 下单 → 支付 → 查订单 → 申请售后
+```
+
+### 后台侧
+
+```
+登录 → 看订单列表 → 逐单推进状态 → 处理工单 → 回复用户 → 看数据统计
+```
+
+### 订单状态机
+
+```
+待支付 ──支付──→ 已支付 ──→ 配花中 ──→ 配送中 ──→ 已送达 ──→ 已完成
+   │
+   └──→ 已取消
+```
+
+**白名单约束**：非法流转（跳步、回退）返回 409。
+
+### 闭环实测
+
+```bash
+cd scripts
+python test_loop.py
+```
+
+**21 项全部通过：**
+
+| 环节 | 项数 | 内容 |
+|---|---|---|
+| 用户侧 | 9 | 浏览、详情、配送、下单、查单、支付、回调、状态、幂等 |
+| 后台侧 | 6 | 登录、订单列表、统计、推进 4 步、非法流转拒绝 |
+| 售后 | 4 | 提工单、后台可见、回复、状态变更 |
 
 ---
 
@@ -75,7 +129,8 @@ UPDATE users SET is_admin = TRUE WHERE phone = '你的手机号';
 │   ├── help-faq.html          常见问题
 │   ├── admin.html             管理后台
 │   ├── js/api.js              接口封装
-│   └── images/                商品图
+│   ├── images/                商品图（WebP）
+│   └── robots.txt / sitemap.xml / llms.txt
 │
 ├── backend/                   后端（FastAPI + PostgreSQL）
 │   ├── app/                   应用代码
@@ -85,43 +140,50 @@ UPDATE users SET is_admin = TRUE WHERE phone = '你的手机号';
 │   │   ├── models/            数据库模型
 │   │   ├── schemas/           请求/响应格式
 │   │   ├── adapters/          外部服务适配器
-│   │   └── core/              配置、日志、异常
+│   │   ├── web/               SSR 渲染
+│   │   ├── core/              配置、日志、异常
+│   │   └── mcp_server.py      MCP Server（给 AI 用）
 │   ├── tests/                 单元测试（20 个）
 │   ├── alembic/               数据库迁移
-│   └── static/uploads/        用户上传的文件
+│   ├── scripts/seed.py        灌数据
+│   └── storage/uploads/       用户上传的文件
+│
+├── content/                   内容源文件（Markdown）
+│   ├── README.md              写作规范
+│   ├── 选题清单.md             75 篇选题规划
+│   ├── 花语/                  7 篇
+│   ├── 养护/                  3 篇
+│   └── 场景/                  5 篇
 │
 ├── docs/                      文档
 │   ├── index.html             文档索引
 │   ├── 01-需求/               任务书、前端协作协议
-│   ├── 02-技术/               工程书、前端开发方案
-│   ├── 03-交付/               项目状态总结
-│   └── 04-原型/               页面清单
+│   ├── 02-技术/               工程书、前端开发方案、MCP接入
+│   ├── 03-交付/               项目状态总结、阶段总结
+│   ├── 04-原型/               页面清单
+│   └── 05-交付/               接手清单
 │
 ├── assets/                    设计素材（原图）
-│   ├── products/              商品原图
-│   └── hero/                  首页大图
-│
 ├── scripts/                   脚本
-│   ├── start.ps1              启动脚本
-│   ├── full_test.py           62 项全流程测试
-│   ├── security_test.py       18 项安全测试
-│   └── embed_luxe.py          图片内嵌工具
+│   ├── start.ps1              启动
+│   ├── test_loop.py           业务闭环测试（21 项）
+│   ├── test_mcp.py            MCP 工具测试（13 项）
+│   ├── full_test.py           全流程测试（62 项）
+│   ├── security_test.py       安全测试（18 项）
+│   ├── audit_seo.py           SEO 综合测评
+│   ├── check_crawl.py         爬虫可读性
+│   ├── check_paths.py         路径可移植性
+│   ├── check_perf.py          性能测评
+│   ├── import_content.py      Markdown 导入
+│   ├── gen_site_files.py      生成 sitemap/llms
+│   ├── apply_seo.py           注入 meta
+│   └── reset_demo.py          清空演示数据
 │
 ├── 启动.bat                   双击启动
 ├── .env.example               环境变量模板
 ├── .gitignore
 └── README.md                  本文档
 ```
-
-**目录职责：**
-
-| 目录 | 只放什么 | 不放什么 |
-|---|---|---|
-| `frontend/` | 页面、JS、图片 | 后端代码、文档 |
-| `backend/` | 后端代码、迁移、测试 | 前端页面、文档 |
-| `docs/` | 所有文档 | 代码 |
-| `assets/` | 设计原图 | 前端用的压缩图 |
-| `scripts/` | 脚本 | 业务代码 |
 
 ---
 
@@ -138,6 +200,7 @@ PostgreSQL 18      数据库
 Alembic 1.20       迁移
 Pydantic 2.14      数据校验
 structlog 26.1     日志
+MCP SDK 1.30       AI 智能体接入
 ```
 
 ### 前端
@@ -169,28 +232,136 @@ repositories/  只跟数据库打交道
 
 | 能力 | 开发环境 | 生产环境 | 状态 |
 |---|---|---|---|
-| 支付 | mock | 微信/支付宝 | 未接 |
-| 履约 | mock | 真实配送系统 | 未接 |
-| 短信 | mock | 阿里云/腾讯云 | 空壳 |
+| 支付 | mock | 微信/支付宝 | 待接入 |
+| 履约 | mock | 真实配送系统 | 待接入 |
+| 短信 | mock | 阿里云/腾讯云 | 骨架已写 |
 | 缓存 | memory | Redis | 代码完整 |
-| 存储 | local | 阿里云 OSS | 空壳 |
+| 存储 | local | 阿里云 OSS | 骨架已写 |
+
+### SSR（服务端渲染）
+
+**为什么需要：** 页面是静态 HTML + JS 渲染，搜索引擎爬虫不执行 JS，看到的是空壳。
+
+**实测：** 改造前爬虫可读性 3/7，改造后 7/7。
+
+**做法：** 后端给 4 个页面加 SSR 路由（商城/商品详情/花语列表/花语详情），读模板 + 查数据 + 注入内容。
+
+**用户无感** —— JS 加载后接管交互。
+
+---
+
+## AI 接入（MCP）
+
+**两层 GEO：**
+
+| 方式 | AI 能做什么 |
+|---|---|
+| `llms.txt` | **读**到你的内容（被动） |
+| **MCP Server** | **操作**你的系统（主动） |
+
+### 9 个工具
+
+| 类别 | 工具 |
+|---|---|
+| 查询 | `search_flowers` `get_product` `check_delivery` `list_categories` |
+| 交易 | `create_order` `query_order` `create_ticket` |
+| 内容 | `get_flower_meaning` `list_articles` |
+
+### 启动
+
+```bash
+cd backend
+.venv\Scripts\python.exe -m app.mcp_server
+```
+
+**接入 AI 客户端的配置见** → [MCP 接入文档](docs/02-技术/MCP接入.md)
 
 ---
 
 ## 测试
 
 ```bash
-# 单元测试（20 个，不需要服务）
-cd backend
-.venv\Scripts\python -m pytest tests/ -q
+cd scripts
 
-# 集成测试（需服务在跑）
-cd ../scripts
-python full_test.py         # 62 项全流程
-python security_test.py     # 18 项安全
+# 业务闭环（21 项，需服务在跑）
+python test_loop.py
+
+# 全流程（62 项，需服务在跑）
+python full_test.py
+
+# 安全（18 项，需服务在跑）
+python security_test.py
+
+# SEO 测评
+python audit_seo.py
+
+# MCP 工具（13 项，不需要服务）
+cd ../backend && .venv\Scripts\python.exe ..\scripts\test_mcp.py
+
+# 单元测试（20 个）
+.venv\Scripts\python.exe -m pytest tests/ -q
 ```
 
-**当前结果：20/20 · 62/62 · 18/18，全部通过。**
+**当前结果：**
+
+```
+业务闭环      21 / 21   ✓
+MCP 工具      13 / 13   ✓
+全流程        62 / 62   ✓
+安全          18 / 18   ✓
+单元          20 / 20   ✓
+──────────────────────────
+合计         134 / 134
+```
+
+---
+
+## SEO / GEO
+
+| 指标 | 结果 |
+|---|---|
+| Lighthouse Performance | **98** |
+| Lighthouse SEO | **100** |
+| Lighthouse Accessibility | **100** |
+| Lighthouse Best Practices | **96** |
+| 爬虫可读性 | 7 / 7 |
+| 结构化数据 | 12 种 schema |
+| sitemap | 31 个 URL |
+| llms.txt | 4.7KB |
+
+**核心指标：**
+
+| 指标 | 实测 | 标准 |
+|---|---|---|
+| FCP | 0.8s | < 1.8s |
+| LCP | 2.4s | < 2.5s |
+| TBT | 0ms | < 200ms |
+| CLS | 0.041 | < 0.1 |
+| 接口 P95 | 13–16ms | < 500ms |
+
+---
+
+## 内容
+
+**15 篇已发布**（花语 7 / 养护 3 / 场景 5），71 个 FAQ。
+
+| 类型 | 目标 | 现状 |
+|---|---|---|
+| 花语百科 | 30 篇 | 7 篇 |
+| 养护指南 | 15 篇 | 3 篇 |
+| 送花指南 | 20 篇 | 5 篇 |
+| 本地内容 | 10 篇 | 0 篇（需真实配送范围） |
+| 节日专题 | 按节日 | 0 篇 |
+
+**写作规范见** → [content/README.md](content/README.md)
+**选题清单见** → [content/选题清单.md](content/选题清单.md)
+
+**导入新文章：**
+```bash
+cd scripts
+python import_content.py
+python gen_site_files.py   # 更新 sitemap
+```
 
 ---
 
@@ -199,79 +370,61 @@ python security_test.py     # 18 项安全
 | 文档 | 内容 |
 |---|---|
 | [文档索引](docs/index.html) | 所有文档的入口 |
+| [阶段总结](docs/03-交付/阶段总结.html) | **对照任务书 36 项验收，含差距分析** |
+| [接手清单](docs/05-交付/接手清单.md) | **老板接手操作手册** |
+| [MCP 接入](docs/02-技术/MCP接入.md) | AI 客户端配置 |
 | [任务书](docs/01-需求/任务书.md) | 需求定义（最权威） |
 | [工程书](docs/02-技术/工程书.md) | 技术实现 |
 | [前端开发方案](docs/02-技术/前端开发方案.md) | 前端设计 |
 | [前端协作协议](docs/01-需求/前端协作协议.md) | 接口约定 |
-| [项目状态总结](docs/03-交付/项目状态总结.html) | 当前进度 |
+| [项目状态总结](docs/03-交付/项目状态总结.html) | 完成度明细 |
 | [页面清单](docs/04-原型/页面清单.html) | 21 页预览入口 |
-
----
-
-## 当前状态
-
-| 层面 | 状态 |
-|---|---|
-| 前端页面 | 21 页，全部完成 |
-| 后端接口 | 46+ 个，全部实测通过 |
-| 前后端联调 | 已打通，同端口部署 |
-| 单元测试 | 20 个，全通过 |
-| 全流程测试 | 62 项，全通过 |
-| 安全测试 | 18 项，全通过 |
-| SEO / GEO 技术层 | 已完成（21 页 meta + JSON-LD + sitemap + llms.txt） |
-| 内容 | 1 篇花语（目标 75 篇） |
-| 部署上线 | 未开始（等 ICP 备案） |
-
----
-
-## ⚠ 这是交付演示版，不是生产站
-
-**系统本身是完整的、可用的。** 但里面的**数据是示例数据**：
-
-| 项目 | 状态 |
-|---|---|
-| 8 个商品 | 示例数据（is_demo=true），老板接手后清空重灌 |
-| 配送规则 | 未配置，页面显示「待配置」 |
-| 支付 | Mock，点一下"支付成功"，不真实扣款 |
-| 短信 | Mock，验证码打到日志，不发真短信 |
-
-**DEMO_MODE=true 时**，前台顶部会显示「演示环境 · 商品与配送信息为示例数据」的提示。
-
-**为什么要这么做：** 演示数据可以编，但服务承诺（比如「2 小时达」）不能编 —— 那是虚假宣传。
-
-**接手后的操作步骤见** → [接手清单](docs/05-交付/接手清单.md)
 
 ---
 
 ## 待办
 
-### 需要外部申请
+### 必须做（业务闭环补强）
 
-- [ ] ICP 备案（7–20 天，不可压缩）
-- [ ] 短信签名 + 模板（1–2 天）
+- [ ] 后台商品新增/编辑表单（现在只有列表）
+- [ ] 退款流程（现在只有售后工单，没有退款）
+
+### 需要外部条件
+
+- [ ] ICP 备案（7–20 天，所有上线工作的前置）
 - [ ] 微信支付商户号（备案后才能申请）
+- [ ] 短信签名 + 模板（1–2 天）
 
-### 需要开发
+### 需要真实数据
 
-- [ ] 补 `AliyunSms.send_code`（约 20 行）
-- [ ] 补 `OssStorage.save`（约 10 行）
-- [ ] 新建 `WechatPayment`（约 100 行）
-- [ ] 退款流程
-- [ ] 物流轨迹
-- [ ] 后台订单状态推进
-
-### 需要内容
-
-- [ ] 20 篇花语文章（现在 1 篇）
+- [ ] 真实商品清单（现在是 8 个示例）
+- [ ] 真实配送规则（现在全部 null）
+- [ ] 真实联系方式（现在全是占位）
 - [ ] 真实花艺摄影（现在全是 AI 图）
-- [ ] 全站 meta / OG / JSON-LD
-- [ ] llms.txt + sitemap.xml
+
+### 内容
+
+- [ ] 60 篇（花语 23 + 养护 12 + 场景 15 + 本地 10）
+
+### 可选
+
+- [ ] 物流轨迹
+- [ ] 发票
+- [ ] 数据库连接管理后台
+- [ ] 数据源接入（映射层）
 
 ---
 
 ## 环境变量
 
 见 `.env.example`，有详细注释。
+
+**演示模式：**
+
+```ini
+DEMO_MODE=true    # 显示演示提示，下单不扣款
+DEMO_MODE=false   # 正常运营
+```
 
 **生产环境必改（启动时自动检查，不合规拒绝启动）：**
 
@@ -284,6 +437,7 @@ SMS_PROVIDER        不能是 mock
 STORAGE_PROVIDER    不能是 local
 PAYMENT_PROVIDER    不能是 mock
 ADMIN_PHONES        必须清空
+DEMO_MODE           false
 ```
 
 ---
