@@ -19,7 +19,9 @@
 from fastapi import APIRouter, Query
 
 from app.api.deps import DbDep, ProductServiceDep
+from app.api.deps import AdminDep
 from app.repositories import ProductRepository
+from app.core.exceptions import ConflictError
 from app.schemas import (
     ApiResponse,
     DeliveryAvailability,
@@ -150,11 +152,12 @@ async def get_categories(service: ProductServiceDep):
 @router.post(
     "/admin",
     summary="【后台】新建商品",
-    description="TODO: 上线前必须加管理员鉴权",
+    description="需要管理员权限",
 )
 async def create_product(
     data: ProductCreate,
     db: DbDep,
+    admin: AdminDep,
 ):
     """
     【干什么】新建一个商品。
@@ -164,8 +167,14 @@ async def create_product(
     from app.models import Product
     import uuid
 
+    # 自定义 ID 时检查重复
+    if data.id:
+        existing = await ProductRepository(db).get_by_id(data.id)
+        if existing:
+            raise ConflictError(f"商品编号 {data.id} 已存在")
+
     product = Product(
-        id="TW" + uuid.uuid4().hex[:8].upper(),
+        id=data.id or ("TW" + uuid.uuid4().hex[:8].upper()),
         name=data.name,
         subtitle=data.subtitle,
         price=data.price,
@@ -190,12 +199,13 @@ async def create_product(
 @router.put(
     "/admin/{product_id}",
     summary="【后台】修改商品",
-    description="TODO: 上线前必须加管理员鉴权",
+    description="需要管理员权限",
 )
 async def update_product(
     product_id: str,
     data: ProductUpdate,
     db: DbDep,
+    admin: AdminDep,
 ):
     """
     【干什么】修改商品（只改传上来的字段）。
@@ -217,9 +227,9 @@ async def update_product(
 @router.delete(
     "/admin/{product_id}",
     summary="【后台】删除商品",
-    description="TODO: 上线前必须加管理员鉴权",
+    description="需要管理员权限",
 )
-async def delete_product(product_id: str, db: DbDep):
+async def delete_product(product_id: str, db: DbDep, admin: AdminDep):
     """
     【干什么】删除商品。
 

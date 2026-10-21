@@ -504,7 +504,7 @@
       <div class="panel-page" id="page-products">
         <div class="page-title">
           <div><h2>花束列表</h2><p>共 8 件 · 6 件在售</p></div>
-          <button class="btn">+ 新建花束</button>
+          <button class="btn" onclick="openProductForm()">+ 新建花束</button>
         </div>
         <div class="box">
           <table>
@@ -991,8 +991,11 @@ async function loadProducts() {
         <td>${p.name}</td>
         <td>¥${API.money(p.price)}</td>
         <td>${p.category || '—'}</td>
-        <td><span class="pill ${p.is_active === false ? 'cancel' : 'done'}">${p.is_active === false ? '下架' : '在售'}</span></td>
-        <td><span class="act">编辑</span></td>
+        <td><span class="pill ${p.status === 'off' ? 'cancel' : 'done'}">${p.status === 'off' ? '下架' : '在售'}</span></td>
+        <td>
+          <span class="act" onclick="openProductForm('${p.id}')">编辑</span>
+          <span class="act" onclick="deleteProduct('${p.id}', '${p.name}')">删除</span>
+        </td>
       </tr>
     `).join('');
 
@@ -1002,11 +1005,131 @@ async function loadProducts() {
     `;
 
     const ph = document.querySelector('#page-products .page-title p');
-    if (ph) ph.textContent = `共 ${list.length} 件 · ${list.filter(p => p.is_active !== false).length} 件在售`;
+    if (ph) ph.textContent = `共 ${list.length} 件 · ${list.filter(p => p.status !== 'off').length} 件在售`;
   } catch (e) {
     console.warn('商品加载失败', e);
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   商品表单
+
+   【新建】openProductForm()
+   【编辑】openProductForm('TW-001')
+   ═══════════════════════════════════════════════════════ */
+window.openProductForm = async function (productId) {
+  const modal = document.getElementById('productModal');
+  const form = document.getElementById('productForm');
+  form.reset();
+  document.getElementById('pmError').style.display = 'none';
+
+  if (productId) {
+    // 编辑模式
+    document.getElementById('pmTitle').textContent = '编辑花束';
+    document.getElementById('pmMode').value = 'edit';
+    document.getElementById('pmId').value = productId;
+    document.getElementById('pmId').readOnly = true;
+    document.getElementById('pmIdHint').textContent = '编号不可修改';
+
+    try {
+      const p = await API.getProduct(productId);
+      document.getElementById('pmName').value = p.name || '';
+      document.getElementById('pmSubtitle').value = p.subtitle || '';
+      document.getElementById('pmPrice').value = p.price || '';
+      document.getElementById('pmOriginalPrice').value = p.original_price || '';
+      document.getElementById('pmStock').value = p.stock ?? 999;
+      document.getElementById('pmCategory').value = p.category || 'daily';
+      document.getElementById('pmStatus').value = p.status || 'on';
+      document.getElementById('pmSortOrder').value = p.sort_order ?? 0;
+      document.getElementById('pmCover').value = p.cover || '';
+      document.getElementById('pmFlowers').value = (p.flowers || []).join('\n');
+      document.getElementById('pmMeaning').value = p.meaning || '';
+      document.getElementById('pmDescription').value = p.description || '';
+    } catch (e) {
+      API.toast('加载商品失败：' + e.message, 'error');
+      return;
+    }
+  } else {
+    // 新建模式
+    document.getElementById('pmTitle').textContent = '新建花束';
+    document.getElementById('pmMode').value = 'create';
+    document.getElementById('pmId').readOnly = false;
+    document.getElementById('pmIdHint').textContent = '创建后不可修改';
+    document.getElementById('pmStock').value = 999;
+    document.getElementById('pmSortOrder').value = 0;
+  }
+
+  modal.style.display = 'block';
+};
+
+window.closeProductForm = function () {
+  document.getElementById('productModal').style.display = 'none';
+};
+
+window.submitProduct = async function (e) {
+  e.preventDefault();
+
+  const errBox = document.getElementById('pmError');
+  errBox.style.display = 'none';
+
+  const mode = document.getElementById('pmMode').value;
+  const id = document.getElementById('pmId').value.trim();
+
+  const flowersRaw = document.getElementById('pmFlowers').value;
+  const flowers = flowersRaw
+    .split('\n')
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  const payload = {
+    name: document.getElementById('pmName').value.trim(),
+    subtitle: document.getElementById('pmSubtitle').value.trim() || null,
+    price: document.getElementById('pmPrice').value,
+    original_price: document.getElementById('pmOriginalPrice').value || null,
+    stock: parseInt(document.getElementById('pmStock').value, 10) || 0,
+    category: document.getElementById('pmCategory').value,
+    status: document.getElementById('pmStatus').value,
+    sort_order: parseInt(document.getElementById('pmSortOrder').value, 10) || 0,
+    cover: document.getElementById('pmCover').value.trim() || null,
+    flowers: flowers.length ? flowers : null,
+    meaning: document.getElementById('pmMeaning').value.trim() || null,
+    description: document.getElementById('pmDescription').value.trim() || null,
+  };
+
+  try {
+    if (mode === 'create') {
+      payload.id = id;
+      await API.createProduct(payload);
+      API.toast('花束已创建');
+    } else {
+      await API.updateProduct(id, payload);
+      API.toast('已保存');
+    }
+
+    closeProductForm();
+    await loadProducts();
+    await loadDashboard();
+  } catch (err) {
+    errBox.textContent = '保存失败：' + err.message;
+    errBox.style.display = 'block';
+  }
+};
+
+/* 删除商品 */
+window.deleteProduct = async function (productId, name) {
+  if (!confirm(`确认删除「${name}」？\n\n删除后不可恢复。如果有订单引用这个商品，会删除失败。`)) {
+    return;
+  }
+
+  try {
+    await API.deleteProduct(productId);
+    API.toast('已删除');
+    await loadProducts();
+  } catch (e) {
+    API.toast('删除失败：' + e.message, 'error');
+  }
+};
+
 
 
 /* 加载工单 */
@@ -1140,6 +1263,131 @@ if (sessionStorage.getItem(KEY) === '1') {
   };
 })();
 </script>
+
+
+<!-- ═══ 商品表单弹窗 ═══ -->
+<div id="productModal" style="display:none;position:fixed;inset:0;z-index:9999;
+     background:rgba(0,0,0,.4);overflow-y:auto;padding:40px 20px">
+  <div style="max-width:720px;margin:0 auto;background:#fff;border-radius:8px;
+              padding:32px 36px;position:relative">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <h2 id="pmTitle" style="font-size:17px;font-weight:500;margin:0">新建花束</h2>
+      <span onclick="closeProductForm()"
+            style="cursor:pointer;font-size:20px;color:#999;line-height:1">×</span>
+    </div>
+
+    <form id="productForm" onsubmit="submitProduct(event)" style="display:grid;gap:16px">
+      <input type="hidden" id="pmMode" value="create">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">商品编号 *</div>
+          <input id="pmId" required placeholder="TW-009"
+                 style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+          <div id="pmIdHint" style="font-size:11px;color:#999;margin-top:4px">创建后不可修改</div>
+        </label>
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">名称 *</div>
+          <input id="pmName" required placeholder="晨光序曲"
+                 style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+        </label>
+      </div>
+
+      <label style="display:block">
+        <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">副标题</div>
+        <input id="pmSubtitle" placeholder="香槟玫瑰 20 枝 · 满天星"
+               style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+      </label>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">售价（元）*</div>
+          <input id="pmPrice" type="number" step="0.01" min="0" required
+                 style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+        </label>
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">原价（元）</div>
+          <input id="pmOriginalPrice" type="number" step="0.01" min="0"
+                 style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+        </label>
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">库存 *</div>
+          <input id="pmStock" type="number" min="0" value="999" required
+                 style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+        </label>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">分类 *</div>
+          <select id="pmCategory"
+                  style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+            <option value="daily">日常</option>
+            <option value="love">告白</option>
+            <option value="birthday">生日</option>
+            <option value="sympathy">探望</option>
+            <option value="business">商务</option>
+          </select>
+        </label>
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">状态 *</div>
+          <select id="pmStatus"
+                  style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+            <option value="on">上架</option>
+            <option value="off">下架</option>
+          </select>
+        </label>
+        <label style="display:block">
+          <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">排序（越小越前）</div>
+          <input id="pmSortOrder" type="number" value="0"
+                 style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+        </label>
+      </div>
+
+      <label style="display:block">
+        <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">封面图 URL</div>
+        <input id="pmCover" placeholder="/images/01_chenguang.webp"
+               style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+        <div style="font-size:11px;color:#999;margin-top:4px">
+          图片放在 frontend/images/ 下，用 /images/xxx.webp 引用
+        </div>
+      </label>
+
+      <label style="display:block">
+        <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">花材清单（一行一个）</div>
+        <textarea id="pmFlowers" rows="4" placeholder="香槟玫瑰 ×20&#10;满天星&#10;尤加利叶"
+                  style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;
+                         font-size:13px;font-family:inherit;resize:vertical"></textarea>
+      </label>
+
+      <label style="display:block">
+        <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">花语</div>
+        <textarea id="pmMeaning" rows="2" placeholder="香槟色介于热恋与克制之间"
+                  style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;
+                         font-size:13px;font-family:inherit;resize:vertical"></textarea>
+      </label>
+
+      <label style="display:block">
+        <div style="font-size:12px;color:#6f6a61;margin-bottom:6px">商品描述</div>
+        <textarea id="pmDescription" rows="3"
+                  style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;
+                         font-size:13px;font-family:inherit;resize:vertical"></textarea>
+      </label>
+
+      <div id="pmError" style="display:none;padding:10px 14px;background:#fbeae7;color:#b34a3a;
+           border-radius:4px;font-size:13px"></div>
+
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+        <button type="button" onclick="closeProductForm()"
+                style="padding:9px 22px;background:#fff;border:1px solid #e5e2dc;
+                       border-radius:4px;font-size:13px;cursor:pointer">取消</button>
+        <button type="submit"
+                style="padding:9px 22px;background:#1a1a1a;color:#fff;border:none;
+                       border-radius:4px;font-size:13px;cursor:pointer">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 </body>
 </html>

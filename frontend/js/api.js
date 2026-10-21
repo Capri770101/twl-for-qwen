@@ -145,6 +145,27 @@ const API = (() => {
       return request('/admin/orders' + (qs ? '?' + qs : ''));
     },
 
+    /* ── 后台：商品 CRUD ── */
+    async createProduct(payload) {
+      return request('/products/admin', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+
+    async updateProduct(id, payload) {
+      return request('/products/admin/' + encodeURIComponent(id), {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+    },
+
+    async deleteProduct(id) {
+      return request('/products/admin/' + encodeURIComponent(id), {
+        method: 'DELETE',
+      });
+    },
+
     async adminProducts() {
       return request('/admin/products');
     },

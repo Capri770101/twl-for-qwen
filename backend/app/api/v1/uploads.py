@@ -15,6 +15,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from app.adapters.storage import get_storage
 from app.api.deps import CurrentUserDep
+from app.api.deps import AdminDep
 from app.core.config import settings
 from app.schemas.common import ApiResponse
 
@@ -32,6 +33,7 @@ ALLOWED_MIME = {
 @router.post("", response_model=ApiResponse[dict], summary="上传图片")
 async def upload_image(
     user: CurrentUserDep,
+    admin: AdminDep,
     file: UploadFile = File(...),
 ) -> ApiResponse[dict]:
     """

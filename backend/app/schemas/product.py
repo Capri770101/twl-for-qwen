@@ -58,6 +58,12 @@ class ProductQuery(BaseSchema):
 class ProductCreate(BaseSchema):
     """后台新建商品时的请求体"""
 
+
+    id: str | None = Field(
+        None,
+        max_length=32,
+        description="商品编号。留空则自动生成 TW+8位大写",
+    )
     name: str = Field(..., min_length=1, max_length=100, description="商品名称")
     subtitle: str | None = Field(None, max_length=200, description="副标题")
     price: Decimal = Field(..., ge=0, description="售价（元）")
