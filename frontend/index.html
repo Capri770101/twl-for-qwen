@@ -959,6 +959,20 @@ details,summary{border-color:#ebe9e5 !important}
       min-height:clamp(420px, 68vh, 700px) !important;
     }
   }
+
+  /* ── 头图通栏 ─────────────────────────────────────────
+     .hero 同时挂在两个 max-width 列表里（1320 / 1520），
+     宽屏上左右会各留一段空白，图片铺不到边。这里把限制解掉。 */
+  .hero.hero-img{
+    max-width:none !important;
+    width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+  .hero.hero-img .hero-bg{
+    width:100%;
+    max-width:100%;
+  }
 </style>
 
 
