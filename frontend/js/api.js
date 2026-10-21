@@ -337,10 +337,17 @@ window.TWL = {
 
     document.body.appendChild(bar);
 
-    // 给 body 留出空间，避免遮挡
-    document.body.style.paddingTop = "34px";
+    // 给 body 留出空间，避免遮挡。
+    // 必须按实际高度算：窄屏上这行字会换行，固定 34px 会让 header 顶部被盖住
+    // （实测 390 宽时这条高 55px，正好压住右上角的「联系/登录」）。
+    const reserve = () => {
+      document.body.style.paddingTop = bar.offsetHeight + "px";
+    };
+    reserve();
+    window.addEventListener("resize", reserve);
 
     document.getElementById("__demo-close").addEventListener("click", () => {
+      window.removeEventListener("resize", reserve);
       bar.remove();
       document.body.style.paddingTop = "0";
       sessionStorage.setItem("twl_demo_dismissed", "1");

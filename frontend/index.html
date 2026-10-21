@@ -570,36 +570,39 @@ details,summary{border-color:#ebe9e5 !important}
 <body>
 
 <header class="site-header">
-  <div class="hd-top">
-    <a href="#">Contact</a>
-    <a href="#">Login</a>
+  <div class="hd-bar">
+    <nav class="hd-nav">
+      <ul>
+        <li><a href="shop.html">全部花束</a></li>
+        <li><a href="shop.html?category=daily">日常</a></li>
+        <li><a href="shop.html?category=love">告白</a></li>
+        <li><a href="shop.html?category=birthday">生日</a></li>
+        <li><a href="flower-language.html">花语</a></li>
+        <li><a href="about.html">关于</a></li>
+      </ul>
+    </nav>
+    <div class="hd-top">
+      <a href="contact.html">联系</a>
+      <a href="login.html">登录</a>
+    </div>
   </div>
-  <div class="hd-brand">
-    <a href="index.html">
-      <div class="logo">跳舞兰</div>
-      <span class="en">Tiao Wu Lan</span>
-    </a>
-  </div>
-  <nav class="hd-nav">
-    <ul>
-      <li><a href="shop.html">全部花束</a></li>
-      <li><a href="#">日常</a></li>
-      <li><a href="#">告白</a></li>
-      <li><a href="#">生日</a></li>
-      <li><a href="flower-language.html">花语</a></li>
-      <li><a href="about.html">关于</a></li>
-    </ul>
-  </nav>
 </header>
 
 <main>
 
-<section class="hero">
-  <div class="kicker">Shenzhen</div>
-  <h1>Living With<br>Flowers Every Day</h1>
-  <div class="sub">
-    与花共度的每一天<br>
-    把自然的美，带进日常的空间
+<section class="hero hero-img">
+  <img class="hero-bg" src="/images/hero-00006.webp" alt="花艺工作台上刚扎好的一束白玫瑰，旁边放着剪刀与麻绳">
+  <a class="hero-logo" href="index.html">
+    <span class="logo">跳舞兰</span>
+    <span class="en">Tiao Wu Lan</span>
+  </a>
+  <div class="hero-inner">
+    <div class="kicker">Shenzhen</div>
+    <h1>Living With<br>Flowers Every Day</h1>
+    <div class="sub">
+      与花共度的每一天<br>
+      把自然的美，带进日常的空间
+    </div>
   </div>
 </section>
 
@@ -616,11 +619,6 @@ details,summary{border-color:#ebe9e5 !important}
     让花重新回到生活里，像它本来该有的样子。
   </p>
 </section>
-
-<figure class="figure">
-  <img src="/images/hero_workshop.webp" alt="花艺工作台">
-  <div class="cap">Living with Flowers Every Day</div>
-</figure>
 
 <section class="duo">
   <div class="txt">
@@ -782,6 +780,185 @@ details,summary{border-color:#ebe9e5 !important}
   }
   .hero h1{font-size:76px}
 }
+
+  /* ── 首屏紧凑 + 通栏图 ──────────────────────────────
+     标题下面直接接图，压掉顶部多余留白；图片撑满视口宽度，
+     不再受 1320/1520 的容器限制。                              */
+  .hero{padding-top:52px !important;padding-bottom:40px !important;border-bottom:0 !important}
+
+  .figure{
+    max-width:none !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    width:100% !important;
+  }
+  .figure img{width:100%;aspect-ratio:21/9;max-height:74vh;object-fit:cover}
+
+  @media (min-width:820px){
+    .hero{padding-top:64px !important;padding-bottom:48px !important}
+  }
+  @media (min-width:1024px){
+    .hero{padding-top:74px !important;padding-bottom:54px !important}
+  }
+  @media (min-width:1440px){
+    .hero{padding-top:86px !important;padding-bottom:60px !important}
+  }
+  @media (max-width:768px){
+    /* 手机上 21:9 只有一条窄缝，花看不清，改成 4:3 */
+    .figure img{aspect-ratio:4/3;max-height:none}
+  }
+
+  /* ── 首屏：图作背景，文字叠在图上 ─────────────────────
+     图铺满整个 hero，文字层浮在上面。字数不多，压在
+     画面上方那片干净的墙面上最清楚。                        */
+  .hero-img{
+    position:relative;
+    padding:0 !important;
+    min-height:clamp(440px, 64vh, 780px);
+    display:flex;
+    align-items:flex-start;
+    justify-content:flex-start;
+    overflow:hidden;
+    border-bottom:0 !important;
+  }
+  .hero-img .hero-bg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center 42%;
+    z-index:0;
+  }
+  .hero-img .hero-inner{
+    position:relative;
+    z-index:1;
+    text-align:left;
+    /* 顶部留出 logo 的位置（logo 在图片右上角，约 80px 高） */
+    padding:clamp(60px,9vh,110px) 24px 40px clamp(32px,6vw,100px);
+    max-width:min(600px, 56%);
+    /* 图上压字，一层极淡的白晕，保证在任何底子上都能读 */
+    text-shadow:0 1px 22px rgba(255,255,255,.85), 0 0 44px rgba(255,255,255,.55);
+  }
+  .hero-img .kicker{color:var(--ink);opacity:.85}
+  /* 字号收到 60px 以内：两行放得下，整块落在干净墙面上，不碰桌面与花 */
+  .hero-img h1{font-size:clamp(30px, 4.1vw, 58px) !important;line-height:1.18 !important;color:var(--ink)}
+  .hero-img .sub{color:var(--ink);opacity:.85}
+  @media (max-width:768px){
+    .hero-img{justify-content:center;min-height:72vh}
+    .hero-img .hero-inner{text-align:center;max-width:100%;padding:72px 20px 0}
+    /* 竖屏只看得到横图中间一条，把取景框右移到花上 */
+    .hero-img .hero-bg{object-position:62% 48%}
+  }
+
+  /* ── 导航栏白底，图片从它下面开始 ─────────────────────
+     logo 已从 header 移到图片右上角（.hero-logo）。
+     导航与「联系/登录」合并成同一行：导航居中，右侧贴边。   */
+  .site-header{
+    background:#fff !important;
+    position:relative;
+    z-index:20;
+    border-bottom:1px solid #e5e5e5;
+  }
+  .site-header .hd-bar{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:54px;
+    padding:0 24px;
+  }
+  .site-header .hd-nav{
+    border:0 !important;
+    padding:0;
+    overflow:visible;
+  }
+  .site-header .hd-nav ul{
+    justify-content:center;
+    min-width:0;
+    width:auto;
+    margin:0;
+  }
+  .site-header .hd-top{
+    position:absolute;
+    right:24px;
+    top:50%;
+    transform:translateY(-50%);
+    padding:0;
+    display:flex;
+    gap:18px;
+    font-size:12px;
+  }
+  .site-header .hd-top a{color:#3c3a37}
+  .site-header .hd-nav a{padding:10px 16px;color:#3c3a37}
+
+  /* 图片从导航栏下方开始铺满 */
+  .hero-img{
+    margin-top:0;
+    padding-top:0 !important;
+    min-height:clamp(460px, 66vh, 780px) !important;
+  }
+  /* 图片右上角的品牌字 */
+  .hero-logo{
+    position:absolute;
+    top:clamp(18px,3.2vh,40px);
+    right:clamp(20px,4.5vw,64px);
+    z-index:3;
+    text-decoration:none;
+    text-align:center;
+    line-height:1;
+  }
+  .hero-logo .logo{
+    display:block;
+    font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif;
+    font-size:clamp(15px,1.6vw,22px);
+    letter-spacing:.5em;text-indent:.5em;
+    color:#1a1a1a;
+    text-shadow:0 1px 16px rgba(255,255,255,.95), 0 0 34px rgba(255,255,255,.7);
+  }
+  .hero-logo .en{
+    display:block;margin-top:7px;
+    font-size:clamp(7.5px,.62vw,9.5px);
+    letter-spacing:.42em;text-indent:.42em;
+    text-transform:uppercase;color:#4a4640;
+    text-shadow:0 1px 14px rgba(255,255,255,.95);
+  }
+  @media (max-width:768px){
+    /* 手机上同样保持一行：导航横滚，「联系/登录」固定在右端 */
+    .site-header{position:relative;max-width:100vw}
+    .site-header .hd-bar{
+      justify-content:flex-start;
+      min-height:48px;
+      padding:0 10px 0 6px;
+      gap:4px;
+    }
+    .site-header .hd-nav{
+      flex:1 1 auto;
+      min-width:0;
+      max-width:100%;
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+    .site-header .hd-nav::-webkit-scrollbar{display:none}
+    .site-header .hd-nav ul{justify-content:flex-start;min-width:0;width:max-content;margin:0}
+    .site-header .hd-nav a{padding:9px 11px;font-size:11.5px}
+    .site-header .hd-top{
+      position:static;
+      transform:none;
+      flex:0 0 auto;
+      padding:0;
+      gap:10px;
+      font-size:11px;
+    }
+    .hero-logo{top:16px;right:16px}
+    .hero-logo .logo{font-size:15px;letter-spacing:.36em;text-indent:.36em}
+    .hero-logo .en{font-size:7px;margin-top:6px}
+    .hero-img{
+      margin-top:0;
+      padding-top:0 !important;
+      min-height:clamp(420px, 68vh, 700px) !important;
+    }
+  }
 </style>
 
 

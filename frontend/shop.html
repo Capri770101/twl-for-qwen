@@ -250,12 +250,15 @@
   </div>
 </footer>
 
-<script src="js/api.js" defer></script>
+<script src="js/api.js"></script>
 <script>
 (function(){
   let allProducts = [];
   let categories = [];
-  let curCat = '';
+  /* 分类的中文名。API 返回的是 { key, count }，没有 name，这里补齐。 */
+  const CAT_LABELS = { daily: '日常', love: '告白', birthday: '生日', sympathy: '探望' };
+  /* 支持从首页导航直接带参数进来：shop.html?category=daily */
+  let curCat = new URLSearchParams(location.search).get('category') || '';
   let sortIdx = 0;
   const SORTS = [
     { label: '推荐', val: '' },
@@ -342,11 +345,19 @@
   (async () => {
     try {
       const c = await API.getCategories();
-      categories = (c.items || c || []).map(x =>
-        typeof x === 'string' ? { id: x, name: x } : x
-      );
+      categories = (c.items || c || []).map(x => {
+        if (typeof x === 'string') return { id: x, name: CAT_LABELS[x] || x };
+        const id = x.id ?? x.key ?? '';
+        return { id, name: x.name ?? CAT_LABELS[id] ?? id };
+      }).filter(x => x.id);
     } catch (e) {
       categories = [];
+    }
+    /* 带了 ?category= 就把筛选按钮的文字同步过去，否则会一直显示「全部」 */
+    if (curCat) {
+      const hit = categories.find(c => c.id === curCat);
+      if (hit) catEl.innerHTML = hit.name + ' <span class="caret">▾</span>';
+      else curCat = '';
     }
     load();
   })();
