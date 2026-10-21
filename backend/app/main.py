@@ -243,31 +243,57 @@ async def health_check():
 
 
 # ════════════════════════════════════════════════════════════
-# 【静态托管前端页面】
+# 【静态托管】
+#
+# 【目录约定】
+#   项目根/
+#   ├── frontend/            前端（页面 + js + images）
+#   └── backend/
+#       ├── app/             后端代码
+#       └── static/uploads/  用户上传的文件（运行时产生）
 #
 # 【为什么要挂在这里】
-# 前端是静态 HTML，如果从 file:// 打开，
-# 调 /api/v1 会有跨域问题（浏览器会拦）。
+# 前端是静态 HTML，从 file:// 打开调 /api/v1 会有跨域问题。
 # 挂到同一个端口（8000）下，前后端同源，没有跨域。
 #
 # 【访问方式】
-#   http://127.0.0.1:8000/            → 首页
-#   http://127.0.0.1:8000/shop.html   → 商城
-#   http://127.0.0.1:8000/api/v1/...  → 接口
+#   http://127.0.0.1:8000/                → 首页
+#   http://127.0.0.1:8000/shop.html       → 商城
+#   http://127.0.0.1:8000/js/api.js       → 前端接口封装
+#   http://127.0.0.1:8000/images/xx.png   → 商品图
+#   http://127.0.0.1:8000/uploads/xx.png  → 用户上传的图
+#   http://127.0.0.1:8000/api/v1/...      → 接口
 #
-# 【注意】
-# mount("/") 必须放在所有 API 路由之后。
-# 否则它会拦截 /api 请求。
+# 【挂载顺序很重要】
+# 1. /api/v1（已在上面注册）
+# 2. /uploads（用户上传，必须先于 / 挂载）
+# 3. /（前端根目录，最后挂载，兜底）
 # ════════════════════════════════════════════════════════════
-from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-# main.py 在 backend/app/ 下，往上一级就是 backend/
-BACKEND_DIR = Path(__file__).resolve().parent.parent
-STATIC_DIR = BACKEND_DIR / "static"
-STATIC_DIR.mkdir(exist_ok=True)
+from fastapi.staticfiles import StaticFiles
 
-app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
+# main.py 在 backend/app/ 下
+# .parent      = backend/app
+# .parent.parent = backend
+BACKEND_DIR = Path(__file__).resolve().parent.parent
+
+# 项目根 = backend 的上一级
+PROJECT_ROOT = BACKEND_DIR.parent
+
+# 前端目录
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
+FRONTEND_DIR.mkdir(exist_ok=True)
+
+# 用户上传目录（运行时数据，留在 backend 下）
+UPLOAD_DIR = BACKEND_DIR / "static" / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+# 先挂 uploads（子路径要在 / 之前挂，否则被拦截）
+app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+
+# 再挂前端根目录（兜底）
+app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 
 
 # ════════════════════════════════════════════════════════════
