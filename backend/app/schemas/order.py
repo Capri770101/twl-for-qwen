@@ -147,6 +147,7 @@ class OrderOut(BaseSchema):
     delivery_slot: str | None = None
     card_message: str | None = None
     anonymous: bool = False
+    is_demo: bool = False
     pay_channel: str | None = None
     paid_at: str | None = None
     expire_at: str | None = None

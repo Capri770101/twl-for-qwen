@@ -218,6 +218,7 @@ async def seed() -> None:
                     status=ProductStatus.ON.value,
                     stock=999,
                     sort_order=data["sort_order"],
+                    is_demo=True,
                 )
                 session.add(product)
                 created += 1

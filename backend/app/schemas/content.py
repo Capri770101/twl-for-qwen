@@ -61,16 +61,21 @@ class ArticleListOut(BaseSchema):
 # ── 配置 ──
 
 class DeliverySetting(BaseSchema):
-    """配送规则"""
+    """
+    配送规则
 
-    free_shipping_threshold: float = Field(199, description="免运费门槛（元）")
-    base_shipping_fee: float = Field(15, description="基础运费（元）")
-    remote_shipping_fee: float = Field(25, description="偏远地区运费（元）")
-    same_city_hours: int = Field(2, description="同城配送时效（小时）")
-    cutoff_hour: int = Field(16, description="当日达截止时间（点）")
-    delivery_slots: list[str] = Field(
-        default_factory=lambda: ["14:00-16:00", "18:00-20:00"],
-        description="可选配送时段",
-    )
+    【为什么全是 Optional】
+    交付时没有真实数据，全部为 None。
+    老板在后台填哪些就存哪些，没填的还是 None，前端显示「待配置」。
+    """
+
+    configured: bool = Field(False, description="是否已配置真实规则")
+    announcement: str = Field("", description="顶部公告文案")
+    free_shipping_threshold: float | None = Field(None, description="免运费门槛（元）")
+    base_shipping_fee: float | None = Field(None, description="基础运费（元）")
+    remote_shipping_fee: float | None = Field(None, description="偏远地区运费（元）")
+    same_city_hours: int | None = Field(None, description="同城配送时效（小时）")
+    cutoff_hour: int | None = Field(None, description="当日达截止时间（点）")
+    delivery_slots: list[str] = Field(default_factory=list, description="可选配送时段")
     payment_timeout_minutes: int = Field(30, description="订单支付超时（分钟）")
-    service_hours: str = Field("9:00-21:00", description="客服时间")
+    service_hours: str = Field("", description="客服时间")

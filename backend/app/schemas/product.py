@@ -119,6 +119,7 @@ class ProductOut(BaseSchema):
     status: str
     stock: int
     sort_order: int
+    is_demo: bool = False
     created_at: datetime
 
 
@@ -133,6 +134,7 @@ class ProductBrief(BaseSchema):
     cover: str | None = None
     flowers: list[str] | None = None
     category: str
+    is_demo: bool = False
 
 
 # ════════════════════════════════════════════════════════════

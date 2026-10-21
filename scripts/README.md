@@ -95,3 +95,93 @@ python security_test.py
 ```
 
 **三个都通过，说明改动没破坏已有功能。**
+---
+
+## 演示模式相关
+
+### eset_demo.py —— 一键清空演示数据
+
+`ash
+python reset_demo.py
+`
+
+**会删：**
+- 所有 is_demo=true 的商品
+- 所有 is_demo=true 的订单（含明细、日志、支付、配送、工单）
+- 非管理员用户
+
+**不会删：**
+- 表结构
+- 管理员账号
+- 配送规则配置
+- 花语文章
+
+**什么时候用：** 老板接手、灌真实数据之前。
+
+---
+
+### seo_config.py —— SEO 配置表
+
+21 个页面的 title / description / keywords / schema 都在这。
+
+**改 SEO 就改这个文件，然后重跑 pply_seo.py。**
+
+---
+
+### pply_seo.py —— 注入 SEO 元信息
+
+`ash
+python apply_seo.py
+`
+
+给 21 个页面注入 robots / description / canonical / OG / Twitter Card / JSON-LD。
+
+**重复跑不会重复插入**（会先删旧的 SEO 块）。
+
+---
+
+### gen_site_files.py —— 生成三个站点文件
+
+`ash
+python gen_site_files.py
+`
+
+生成：
+- rontend/robots.txt
+- rontend/sitemap.xml（从数据库读商品和文章）
+- rontend/llms.txt（GEO 专用）
+
+**加了新文章或新商品后要重跑。**
+
+---
+
+### check_seo.py —— SEO 验收
+
+`ash
+python check_seo.py
+`
+
+检查 21 个页面的 title / description / canonical / OG / JSON-LD / robots / h1 / alt。
+
+---
+
+### check_paths.py —— 路径可移植性
+
+`ash
+python check_paths.py
+`
+
+检查有没有硬编码绝对路径，确保项目换位置能跑。
+
+---
+
+### import_content.py —— 导入 Markdown 文章
+
+`ash
+python import_content.py                    # 导入全部
+python import_content.py 花语/champagne-rose.md   # 导入单篇
+`
+
+解析 frontmatter + 自动提取 FAQ，写入数据库。
+
+**写作规范见 content/README.md。**

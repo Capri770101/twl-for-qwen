@@ -209,3 +209,144 @@ window.TWL = {
     });
   }
 };
+
+
+/* ═══════════════════════════════════════════════════════════
+   系统配置 + 演示模式标识
+
+   【干什么】
+   页面加载时读一次 /api/v1/system/config，
+   存到 window.APP_CONFIG，然后：
+     1. 演示模式 → 顶部插一条提示
+     2. 有公告 → 更新顶部公告栏
+     3. 配送未配置 → 把写死的配送文案改掉
+
+   【为什么要自动做】
+   21 个页面不用各写一遍，引了 api.js 就自动生效。
+   ═══════════════════════════════════════════════════════════ */
+
+(function () {
+  // ── 注入演示模式提示条 ──
+  function injectDemoBanner() {
+    if (document.getElementById("__demo-banner")) return;
+    if (sessionStorage.getItem("twl_demo_dismissed") === "1") return;
+
+    const bar = document.createElement("div");
+    bar.id = "__demo-banner";
+    bar.style.cssText = [
+      "position:fixed",
+      "left:0",
+      "right:0",
+      "top:0",
+      "z-index:9998",
+      "background:#fdf8ee",
+      "border-bottom:1px solid #ddc9a0",
+      "color:#8a6420",
+      "font-size:12px",
+      "line-height:1.6",
+      "padding:8px 40px",
+      "text-align:center",
+      "font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif",
+    ].join(";");
+
+    bar.innerHTML =
+      '演示环境 · 商品与配送信息为示例数据，下单不会真实扣款' +
+      '<span id="__demo-close" style="margin-left:16px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">知道了</span>';
+
+    document.body.appendChild(bar);
+
+    // 给 body 留出空间，避免遮挡
+    document.body.style.paddingTop = "34px";
+
+    document.getElementById("__demo-close").addEventListener("click", () => {
+      bar.remove();
+      document.body.style.paddingTop = "0";
+      sessionStorage.setItem("twl_demo_dismissed", "1");
+    });
+  }
+
+  // ── 更新公告栏 ──
+  function updateAnnounce(text) {
+    document.querySelectorAll(".announce").forEach(el => {
+      el.innerHTML = text;
+    });
+  }
+
+  // ── 配送文案降级 ──
+  function neutralizeDelivery() {
+    // 把页面里写死的「2 小时达」「满 199 免运费」这类替换掉
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT,
+      null
+    );
+
+    const replacements = [
+      [/深圳同城\s*2\s*小时达/g, "配送时效以实际为准"],
+      [/满\s*¥?\s*199\s*免运费/g, "运费以结算页为准"],
+      [/2\s*小时达/g, "当日达"],
+      [/满\s*199\s*免运费/g, "运费以结算页为准"],
+      [/16:00\s*前下单当日送达/g, "具体时效以客服确认为准"],
+    ];
+
+    const nodes = [];
+    while (walker.nextNode()) {
+      const n = walker.currentNode;
+      if (n.parentElement && /^(SCRIPT|STYLE)$/.test(n.parentElement.tagName)) continue;
+      nodes.push(n);
+    }
+
+    nodes.forEach(n => {
+      let t = n.nodeValue;
+      let changed = false;
+      replacements.forEach(([re, to]) => {
+        const nt = t.replace(re, to);
+        if (nt !== t) {
+          t = nt;
+          changed = true;
+        }
+      });
+      if (changed) n.nodeValue = t;
+    });
+  }
+
+  // ── 主流程 ──
+  async function init() {
+    try {
+      const r = await fetch("/api/v1/system/config");
+      const j = await r.json();
+
+      if (j.code !== 0 || !j.data) return;
+
+      window.APP_CONFIG = j.data;
+
+      const cfg = j.data;
+
+      // 公告
+      if (cfg.delivery && cfg.delivery.announcement) {
+        updateAnnounce(cfg.delivery.announcement);
+      } else if (cfg.demo_mode) {
+        updateAnnounce("配送信息待配置");
+      }
+
+      // 演示模式
+      if (cfg.demo_mode) {
+        injectDemoBanner();
+        neutralizeDelivery();
+      }
+
+      // 派发事件，页面可以监听
+      window.dispatchEvent(new CustomEvent("twl:config", { detail: cfg }));
+
+    } catch (e) {
+      // 拿不到配置不影响页面使用
+      console.warn("系统配置加载失败", e);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

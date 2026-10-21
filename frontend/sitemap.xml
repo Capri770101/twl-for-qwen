@@ -54,31 +54,7 @@
 
   <!-- 商品详情 -->
   <url>
-    <loc>https://h5.tiaowulan.com/product.html?id=TW-001</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://h5.tiaowulan.com/product.html?id=TW-002</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://h5.tiaowulan.com/product.html?id=TW-003</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://h5.tiaowulan.com/product.html?id=TW-004</loc>
-    <lastmod>2026-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://h5.tiaowulan.com/product.html?id=TW-005</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -97,6 +73,30 @@
   </url>
   <url>
     <loc>https://h5.tiaowulan.com/product.html?id=TW-008</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://h5.tiaowulan.com/product.html?id=TW-004</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://h5.tiaowulan.com/product.html?id=TW-002</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://h5.tiaowulan.com/product.html?id=TW-005</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://h5.tiaowulan.com/product.html?id=TW-001</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

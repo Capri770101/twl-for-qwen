@@ -19,6 +19,7 @@ from app.api.v1 import (
     payments,
     products,
     settings,
+    system,
     tickets,
     uploads,
 )
@@ -33,6 +34,7 @@ api_router.include_router(payments.router)
 api_router.include_router(tickets.router)
 api_router.include_router(deliveries.router)
 api_router.include_router(articles.router)
+api_router.include_router(system.router)
 api_router.include_router(settings.router)
 api_router.include_router(uploads.router)
 api_router.include_router(admin.router)

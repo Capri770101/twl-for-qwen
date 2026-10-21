@@ -131,27 +131,46 @@ async def delete_article(db: AsyncSession, article_id: str) -> None:
 # ════════════════════════════════════════════════════════════
 
 # 默认配送规则（数据库没配时用这个）
+#
+# 【为什么默认全是 None】
+# 交付环境没有真实配送数据，不能编。
+# 前端拿到 None 就显示「待配置」，不留假承诺。
+# 老板在后台填了真实规则，这里就不是 None 了。
 DEFAULT_DELIVERY = {
-    "free_shipping_threshold": 199,
-    "base_shipping_fee": 15,
-    "remote_shipping_fee": 25,
-    "same_city_hours": 2,
-    "cutoff_hour": 16,
-    "delivery_slots": ["14:00-16:00", "18:00-20:00"],
+    "configured": False,
+    "announcement": "",                       # 顶部公告文案
+    "free_shipping_threshold": None,
+    "base_shipping_fee": None,
+    "remote_shipping_fee": None,
+    "same_city_hours": None,
+    "cutoff_hour": None,
+    "delivery_slots": [],
     "payment_timeout_minutes": 30,
-    "service_hours": "9:00-21:00",
+    "service_hours": "",
 }
 
 
 async def get_setting(db: AsyncSession, key: str) -> dict:
-    """读配置，没有就返回默认值"""
+    """
+    【干什么】读配置，没有就返回默认值。
+
+    【为什么读出来还要补默认值】
+    数据库里可能只配了一半（比如只填了免运费门槛），
+    缺的字段要补上，否则前端拿到不全的数据会显示 undefined。
+    """
     result = await db.execute(select(Setting).where(Setting.key == key))
     s = result.scalar_one_or_none()
 
-    if not s:
-        return DEFAULT_DELIVERY if key == "delivery" else {}
+    if key == "delivery":
+        saved = s.value if s else {}
+        merged = dict(DEFAULT_DELIVERY)
+        merged.update(saved or {})
+        # 只要填了任一真实字段，就算已配置
+        if any(merged.get(k) is not None for k in ("free_shipping_threshold","base_shipping_fee","same_city_hours","cutoff_hour")):
+            merged["configured"] = True
+        return merged
 
-    return s.value or {}
+    return s.value if s else {}
 
 
 async def save_setting(db: AsyncSession, key: str, value: dict, description: str | None = None) -> dict:

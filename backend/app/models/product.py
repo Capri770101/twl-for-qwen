@@ -163,6 +163,14 @@ class Product(Base):
         comment="排序权重，越小越靠前",
     )
 
+    # ── 演示标记 ──
+    is_demo: Mapped[bool] = mapped_column(
+        nullable=False,
+        default=False,
+        index=True,
+        comment="是否演示数据（交付环境用，接手后清空）",
+    )
+
     # ── 索引 ──
     __table_args__ = (
         Index("idx_products_category_status", "category", "status"),

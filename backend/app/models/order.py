@@ -176,6 +176,14 @@ class Order(Base):
         comment="是否匿名送花",
     )
 
+    # ── 演示标记 ──
+    is_demo: Mapped[bool] = mapped_column(
+        nullable=False,
+        default=False,
+        index=True,
+        comment="是否演示订单（交付环境用）",
+    )
+
     remark: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
