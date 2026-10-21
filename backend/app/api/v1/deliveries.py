@@ -9,7 +9,8 @@
 
 from fastapi import APIRouter, Query
 
-from app.api.deps import DeliveryServiceDep
+from app.api.deps import AdminDep, DbDep, DeliveryServiceDep
+from app.models.payment import DELIVERY_STATUS_TEXT
 from app.schemas import ApiResponse, DeliveryNotifyResult
 
 router = APIRouter(prefix="/deliveries", tags=["履约"])
@@ -121,4 +122,66 @@ async def get_delivery(order_no: str, service: DeliveryServiceDep):
         "sent_at": delivery.sent_at,
         "error_message": delivery.error_message,
         "created_at": delivery.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+    })
+
+# ════════════════════════════════════════════════════════════
+# 【后台：配送单列表】
+# ════════════════════════════════════════════════════════════
+
+@router.get(
+    "",
+    response_model=ApiResponse[dict],
+    summary="【后台】配送单列表",
+)
+async def list_deliveries(
+    admin: AdminDep,
+    service: DeliveryServiceDep,
+    status: str | None = Query(None, description="按状态筛选"),
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+):
+    """配送单列表"""
+    items, total = await service.list_deliveries(status=status, page=page, size=size)
+
+    return ApiResponse(data={
+        "items": [
+            {
+                "id": d.id,
+                "order_no": d.order_no,
+                "provider": d.provider,
+                "status": d.status,
+                "status_text": DELIVERY_STATUS_TEXT.get(d.status, d.status),
+                "external_ref": d.external_ref,
+                "sent_at": d.sent_at,
+                "error_message": d.error_message,
+            }
+            for d in items
+        ],
+        "total": total,
+        "page": page,
+        "size": size,
+    })
+
+
+# ════════════════════════════════════════════════════════════
+# 【后台：重推配送】
+# ════════════════════════════════════════════════════════════
+
+@router.post(
+    "/{order_no}/retry",
+    response_model=ApiResponse[dict],
+    summary="【后台】重推配送",
+    description="推送失败后人工重试。只对 failed / pending 状态有效。",
+)
+async def retry_delivery(
+    order_no: str,
+    admin: AdminDep,
+    service: DeliveryServiceDep,
+):
+    """重推配送"""
+    result = await service.retry_delivery(order_no)
+
+    return ApiResponse(data={
+        "order_no": order_no,
+        "result": result.model_dump() if hasattr(result, "model_dump") else result,
     })

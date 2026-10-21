@@ -396,6 +396,8 @@
       <div class="right">
         <a href="#">帮助</a>
         <a href="#">通知</a>
+        <a data-page="deliveries"><span class="ico">◈</span>配送管理</a>
+        <a data-page="refunds"><span class="ico">⊘</span>退款单</a>
         <div class="avatar" onclick="doLogout()">木</div>
       </div>
     </div>
@@ -559,7 +561,29 @@
       </div>
 
       <!-- ═══ 配送规则 ═══ -->
-      <div class="panel-page" id="page-settings">
+      <div class="panel-page" id="page-deliveries">
+  <div class="page-title">
+    <div><h1>配送管理</h1><p>推送履约会自动把订单推进到「配花中」</p></div>
+  </div>
+  <div class="box">
+    <table>
+      <tr><th>订单号</th><th>履约方</th><th>状态</th><th>外部单号</th><th>推送时间</th><th>操作</th></tr>
+    </table>
+  </div>
+</div>
+
+<div class="panel-page" id="page-refunds">
+  <div class="page-title">
+    <div><h1>退款单</h1><p>审核通过后自动调支付网关退款</p></div>
+  </div>
+  <div class="box">
+    <table>
+      <tr><th>退款单号</th><th>订单号</th><th>金额</th><th>状态</th><th>原因</th><th>申请时间</th><th>操作</th></tr>
+    </table>
+  </div>
+</div>
+
+<div class="panel-page" id="page-settings">
         <div class="page-title"><div><h2>配送规则</h2><p>修改后立即生效</p></div></div>
         <div class="box">
           <table>
@@ -1169,6 +1193,150 @@ async function loadTickets() {
   }
 }
 
+/* ═══════════════════════════════════════════════════════
+   配送管理
+   ═══════════════════════════════════════════════════════ */
+async function loadDeliveries() {
+  try {
+    const data = await API.listDeliveries({ size: 50 });
+    const list = data.items || [];
+    const table = document.querySelector('#page-deliveries .box table');
+    if (!table) return;
+
+    const pill = (s) => {
+      if (s === 'delivered') return 'done';
+      if (s === 'failed') return 'cancel';
+      if (s === 'pending') return 'wait';
+      return 'doing';
+    };
+
+    const rows = list.map(d => `
+      <tr>
+        <td><span class="mono">${d.order_no}</span></td>
+        <td>${d.provider || '—'}</td>
+        <td><span class="pill ${pill(d.status)}">${d.status_text || d.status}</span></td>
+        <td><span class="mono">${d.external_ref || '—'}</span></td>
+        <td>${d.sent_at || '—'}</td>
+        <td>
+          ${(d.status === 'failed' || d.status === 'pending')
+            ? `<span class="act" onclick="retryDelivery('${d.order_no}')">重推</span>`
+            : '<span style="color:#ccc">—</span>'}
+        </td>
+      </tr>
+    `).join('');
+
+    table.innerHTML = `
+      <tr><th>订单号</th><th>履约方</th><th>状态</th><th>外部单号</th><th>推送时间</th><th>操作</th></tr>
+      ${rows || '<tr><td colspan="6" style="padding:40px;text-align:center;color:#999">还没有配送单</td></tr>'}
+    `;
+
+    const ph = document.querySelector('#page-deliveries .page-title p');
+    if (ph) ph.textContent = `共 ${list.length} 条配送单`;
+  } catch (e) {
+    console.warn('配送加载失败', e);
+  }
+}
+
+window.retryDelivery = async function(orderNo) {
+  if (!confirm(`重推订单 ${orderNo} 的配送？`)) return;
+  try {
+    await API.retryDelivery(orderNo);
+    API.toast('已重推');
+    await loadDeliveries();
+  } catch (e) {
+    API.toast('重推失败：' + e.message, 'error');
+  }
+};
+
+/* ═══════════════════════════════════════════════════════
+   退款单
+   ═══════════════════════════════════════════════════════ */
+async function loadRefunds() {
+  try {
+    const data = await API.listRefunds({ size: 50 });
+    const list = data.items || [];
+    const table = document.querySelector('#page-refunds .box table');
+    if (!table) return;
+
+    const pill = (s) => {
+      if (s === 'refunded') return 'done';
+      if (s === 'rejected' || s === 'failed') return 'cancel';
+      if (s === 'pending') return 'wait';
+      return 'doing';
+    };
+
+    const rows = list.map(r => `
+      <tr>
+        <td><span class="mono">${r.refund_no}</span></td>
+        <td><span class="mono">${r.order_no}</span></td>
+        <td><span class="price">¥${API.money(r.amount)}</span></td>
+        <td><span class="pill ${pill(r.status)}">${r.status_text || r.status}</span></td>
+        <td>${(r.reason || '').slice(0, 20)}</td>
+        <td>${(r.applied_at || '').replace('T', ' ').slice(0, 16)}</td>
+        <td>
+          ${r.status === 'pending'
+            ? `<span class="act" onclick="reviewRefund('${r.refund_no}', true)">通过</span>
+               <span class="act" onclick="reviewRefund('${r.refund_no}', false)">拒绝</span>`
+            : r.status === 'failed'
+              ? `<span class="act" onclick="retryRefund('${r.refund_no}')">重试</span>`
+              : '<span style="color:#ccc">—</span>'}
+        </td>
+      </tr>
+    `).join('');
+
+    table.innerHTML = `
+      <tr><th>退款单号</th><th>订单号</th><th>金额</th><th>状态</th><th>原因</th><th>申请时间</th><th>操作</th></tr>
+      ${rows || '<tr><td colspan="7" style="padding:40px;text-align:center;color:#999">还没有退款单</td></tr>'}
+    `;
+
+    const ph = document.querySelector('#page-refunds .page-title p');
+    if (ph) ph.textContent = `共 ${list.length} 条，待审核 ${list.filter(r => r.status === 'pending').length} 条`;
+  } catch (e) {
+    console.warn('退款加载失败', e);
+  }
+}
+
+window.reviewRefund = async function(refundNo, approve) {
+  let payload = { approve };
+
+  if (approve) {
+    const input = prompt(
+      `通过退款 ${refundNo}\n\n可以调整退款金额（留空=按申请金额）：`,
+      ''
+    );
+    if (input === null) return;
+    if (input.trim() && !isNaN(parseFloat(input))) {
+      payload.adjusted_amount = input.trim();
+    }
+  } else {
+    const reason = prompt('拒绝理由：');
+    if (!reason || !reason.trim()) {
+      API.toast('拒绝必须填理由', 'error');
+      return;
+    }
+    payload.reject_reason = reason.trim();
+  }
+
+  try {
+    const r = await API.reviewRefund(refundNo, payload);
+    API.toast(`已${approve ? '通过' : '拒绝'}：${r.status_text}`);
+    await loadRefunds();
+  } catch (e) {
+    API.toast('操作失败：' + e.message, 'error');
+  }
+};
+
+window.retryRefund = async function(refundNo) {
+  try {
+    await API.retryRefund(refundNo);
+    API.toast('已重试');
+    await loadRefunds();
+  } catch (e) {
+    API.toast('重试失败：' + e.message, 'error');
+  }
+};
+
+
 /* 回复工单 */
 window.replyTicket = async function(ticketNo) {
   const msg = prompt('回复内容：');
@@ -1217,7 +1385,7 @@ async function loadCategories() {
 
 /* 登录后加载数据 */
 async function loadAll() {
-  await Promise.all([loadDashboard(), loadOrders(), loadProducts(), loadTickets(), loadCategories()]);
+  await Promise.all([loadDashboard(), loadOrders(), loadProducts(), loadTickets(), loadDeliveries(), loadRefunds(), loadCategories()]);
 }
 
 /* 覆盖原来的 showApp，登录成功后拉数据 */

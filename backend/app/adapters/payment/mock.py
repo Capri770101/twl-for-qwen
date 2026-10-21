@@ -95,3 +95,47 @@ class MockPaymentAdapter(PaymentAdapter):
             "success": bool(data.get("success", True)),
             "raw": data,
         }
+
+    async def refund(
+        self,
+        order_no: str,
+        amount,
+        reason: str = "",
+    ) -> dict:
+        """
+        【干什么】Mock 退款。
+
+        【真实接入时要做什么】
+        微信支付：调 /v3/refund/domestic/refunds
+          - transaction_id 或 out_trade_no → order_no
+          - amount.refund → amount（单位：分）
+          - 返回 refund_id → 这里的 refund_no
+
+        支付宝：调 alipay.trade.refund
+          - out_trade_no → order_no
+          - refund_amount → amount（单位：元）
+          - 返回 trade_no → 这里的 refund_no
+
+        【为什么 Mock 直接返回成功】
+        退款流程的业务逻辑（校验、状态机、金额）和网关无关。
+        Mock 模拟「网关返回成功」，让流程能跑通。
+        """
+        import time
+
+        refund_no = f"MOCKREF{int(time.time() * 1000)}"
+
+        logger.info(
+            "mock_refund",
+            order_no=order_no,
+            amount=str(amount),
+            reason=reason,
+            refund_no=refund_no,
+        )
+
+        return {
+            "success": True,
+            "refund_no": refund_no,
+            "amount": str(amount),
+            "channel": "mock",
+            "message": "Mock 退款成功",
+        }

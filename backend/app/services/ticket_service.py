@@ -310,3 +310,67 @@ class DeliveryService:
             order_no=order_no,
             status=status,
         )
+
+    async def list_deliveries(
+        self,
+        status: str | None = None,
+        page: int = 1,
+        size: int = 20,
+    ) -> tuple[list, int]:
+        """
+        【干什么】配送单列表（后台用）。
+
+        【排序】按推送时间倒序，最新在前。
+        """
+        from sqlalchemy import func, select
+
+        from app.models.payment import Delivery
+
+        stmt = select(Delivery)
+        if status:
+            stmt = stmt.where(Delivery.status == status)
+
+        count_stmt = select(func.count()).select_from(stmt.subquery())
+        total = (await self.db.execute(count_stmt)).scalar() or 0
+
+        stmt = stmt.order_by(Delivery.sent_at.desc().nullslast())
+        stmt = stmt.offset((page - 1) * size).limit(size)
+
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all()), total
+
+    async def retry_delivery(self, order_no: str):
+        """
+        【干什么】重推配送单。
+
+        【什么时候用】
+        推送失败（外卖平台挂了、接口超时）后，人工重试。
+
+        【做什么】
+        删掉旧的配送记录（如果是 failed），重新推送。
+        """
+        from sqlalchemy import select
+
+        from app.models.payment import Delivery, DeliveryStatus
+        from app.core.exceptions import ConflictError
+
+        result = await self.db.execute(
+            select(Delivery).where(Delivery.order_no == order_no)
+        )
+        delivery = result.scalar_one_or_none()
+
+        if not delivery:
+            # 没有配送单，直接推
+            return await self.notify_fulfillment(order_no)
+
+        if delivery.status not in (DeliveryStatus.FAILED, DeliveryStatus.PENDING):
+            raise ConflictError(
+                f"配送单状态是「{delivery.status}」，只有 failed/pending 可以重推"
+            )
+
+        # 删掉旧的，重新推
+        await self.db.delete(delivery)
+        await self.db.flush()
+
+        return await self.notify_fulfillment(order_no)
+

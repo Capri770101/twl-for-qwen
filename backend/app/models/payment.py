@@ -139,6 +139,17 @@ class DeliveryStatus(StrEnum):
     DELIVERED = "delivered"   # 已送达
     FAILED = "failed"         # 推送失败
 
+# 配送状态中文映射
+DELIVERY_STATUS_TEXT: dict[str, str] = {
+    "pending": "待推送",
+    "sent": "已推送",
+    "accepted": "已接单",
+    "delivering": "配送中",
+    "delivered": "已送达",
+    "failed": "推送失败",
+}
+
+
 
 class Delivery(Base):
     """

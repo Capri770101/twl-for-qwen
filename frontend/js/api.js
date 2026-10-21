@@ -170,6 +170,56 @@ const API = (() => {
       return request('/admin/products');
     },
 
+    /* ── 后台：配送 ── */
+    async listDeliveries(params = {}) {
+      const qs = new URLSearchParams();
+      if (params.status) qs.set('status', params.status);
+      if (params.page) qs.set('page', params.page);
+      if (params.size) qs.set('size', params.size);
+      const q = qs.toString();
+      return request('/deliveries' + (q ? '?' + q : ''));
+    },
+
+    async retryDelivery(orderNo) {
+      return request('/deliveries/' + encodeURIComponent(orderNo) + '/retry', {
+        method: 'POST',
+      });
+    },
+
+    async getDelivery(orderNo) {
+      return request('/deliveries/' + encodeURIComponent(orderNo));
+    },
+
+    /* ── 退款 ── */
+    async createRefund(payload) {
+      return request('/refunds', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+
+    async listRefunds(params = {}) {
+      const qs = new URLSearchParams();
+      if (params.status) qs.set('status', params.status);
+      if (params.page) qs.set('page', params.page);
+      if (params.size) qs.set('size', params.size);
+      const q = qs.toString();
+      return request('/refunds' + (q ? '?' + q : ''));
+    },
+
+    async reviewRefund(refundNo, payload) {
+      return request('/refunds/' + encodeURIComponent(refundNo) + '/review', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+
+    async retryRefund(refundNo) {
+      return request('/refunds/' + encodeURIComponent(refundNo) + '/retry', {
+        method: 'POST',
+      });
+    },
+
     /* ── 工具 ── */
     money(v) {
       const n = typeof v === 'string' ? parseFloat(v) : v;

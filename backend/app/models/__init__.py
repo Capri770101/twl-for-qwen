@@ -67,3 +67,10 @@ __all__ = [
     "Article",
     "Setting",
 ]
+
+# 退款单
+from app.models.refund import (  # noqa: E402
+    REFUND_STATUS_TEXT,
+    Refund,
+    RefundStatus,
+)
