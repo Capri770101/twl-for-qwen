@@ -289,6 +289,13 @@ FRONTEND_DIR.mkdir(exist_ok=True)
 UPLOAD_DIR = BACKEND_DIR / "storage" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
+# ── SSR 路由（必须先于 StaticFiles 挂载）──
+# 商城、商品详情、花语列表、花语详情这四个页面需要服务端渲染，
+# 否则爬虫只能看到空壳（内容是 JS 动态渲染的）。
+from app.web.routes import router as pages_router
+
+app.include_router(pages_router)
+
 # 先挂 uploads（子路径要在 / 之前挂，否则被拦截）
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 

@@ -71,3 +71,9 @@ seo_description: 香槟玫瑰的标准花语是「爱上你是我今生最大的
 ### 香槟玫瑰是真花吗？
 
 是真花。香槟色是玫瑰花瓣本身的颜色，不是染的。市面上有染色的「蓝玫瑰」「彩虹玫瑰」，但香槟色通常是天然色系。
+
+## 你可能还想知道
+
+- [白玫瑰的花语是什么？和红玫瑰有什么区别](/flower-language-detail.html?slug=white-rose)
+- [玫瑰怎么养能开更久？7 个具体做法](/flower-language-detail.html?slug=rose-care)
+- [全部花语百科](/flower-language.html)
