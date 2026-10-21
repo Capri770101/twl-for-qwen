@@ -100,3 +100,16 @@ desktop.ini
 .cache/
 tmp/
 temp/
+# ────────────────────────────────────────────────────────────
+# 【首页 hero 图相关（作者单独管理）】
+#
+# 生成脚本、候选方向图、测试图都不进仓库。
+# 只保留前端正在用的 frontend/images/hero_workshop.webp
+# 和设计源文件 assets/hero/hero_workshop.png。
+# ────────────────────────────────────────────────────────────
+scripts/gen_hero_*.py
+assets/hero/_test/
+assets/hero/方向_*.png
+# 候选图（hero_A5 / hero_B1 这种），保留在用的 hero_workshop.webp
+frontend/images/hero_?[0-9]*.webp
+frontend/images/hero_test*.webp

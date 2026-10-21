@@ -441,24 +441,3 @@ python check_perf.py
 | `opt_fonts.py` | 去 Google Fonts | | ✓ |
 | `opt_perf.py` | 性能优化 | | ✓ |
 | `start.ps1` | 启动服务 | | |
-
----
-
-## 图片生成（3 个，ComfyUI 专用）
-
-首页 21:9 通栏图的生成脚本。**只在需要换 hero 图时用。**
-
-| 脚本 | 干什么 |
-|---|---|
-| `gen_hero_test.py` | 低分辨率试方向（1024x439） |
-| `gen_hero_directions.py` | 批量生成多个方向候选 |
-| `gen_hero_final.py` | 选定方向后放大到成品（2688x1152） |
-
-**依赖：**
-- 本机 ComfyUI（`D:\ComfyUI`）
-- 模型：anima-aesthetic-v1.1 + 2x-AnimeSharpV4
-
-**输出：** `frontend/images/hero_*.webp`
-
-**注意：** 这些是**一次性工具**，不是日常脚本。
-生成后手动挑选、压缩（`compress_images.py`）、替换引用。
