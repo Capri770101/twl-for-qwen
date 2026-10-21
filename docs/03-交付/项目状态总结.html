@@ -239,19 +239,22 @@
   <div class="card">
     <h3>怎么自己跑</h3>
     <pre># 1. 启动服务
-cd D:\DeepSeek-Harness\WorkSpace\跳舞兰\backend
-$env:PYTHONUTF8 = "1"
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --port 8000
+# 项目根目录
+cd 跳舞兰
 
-# 2. 单元测试
-.\.venv\Scripts\python.exe -m pytest tests/ -v
+# 1. 启动服务
+.\scripts\start.ps1
 
-# 3. 全流程测试
-cd ..\gen
-D:\ComfyUI\venv\Scripts\python.exe full_test.py
+# 2. 单元测试（另开窗口）
+cd backend
+.venv\Scripts\python.exe -m pytest tests/ -v
+
+# 3. 全流程测试（需服务在跑）
+cd ..\scripts
+python full_test.py
 
 # 4. 安全测试
-D:\ComfyUI\venv\Scripts\python.exe security_test.py</pre>
+python security_test.py</pre>
   </div>
 </div>
 

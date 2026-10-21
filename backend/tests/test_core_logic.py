@@ -7,10 +7,15 @@
 import os
 import sys
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, r"D:\DeepSeek-Harness\WorkSpace\跳舞兰\backend")
+# 【路径说明】
+# 用 __file__ 动态计算 backend 目录，不写死绝对路径。
+# tests/ 在 backend/ 下，往上一级就是 backend/
+BACKEND_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BACKEND_DIR))
 
 
 # ══════════════════════════════════════════════════════════

@@ -1,45 +1,27 @@
 # -*- coding: utf-8 -*-
-"""把 luxe 效果图的 __IMG_XXX__ 占位替换成 base64"""
-import os, base64, io
-from PIL import Image
+"""
+图片内嵌工具
+把 HTML 里的 __IMG_xxx__ 占位符替换成 base64
 
-ASSETS = r"D:\DeepSeek-Harness\WorkSpace\跳舞兰\assets"
-PROTO = r"D:\DeepSeek-Harness\WorkSpace\跳舞兰\prototype\luxe"
+【路径说明】
+用 __file__ 动态计算，不写死绝对路径。
+项目换位置也能跑。
+"""
 
-SPEC = {
-    "__IMG_HERO__": ("hero/hero_workshop.png", 1400, 82),
-    "__IMG_P0__":   ("products/00_white_rose.png", 900, 84),
-    "__IMG_P1__":   ("products/01_chenguang.png", 900, 84),
-    "__IMG_P2__":   ("products/02_xiaoman.png", 900, 84),
-    "__IMG_P3__":   ("products/03_wuye.png", 900, 84),
-    "__IMG_P4__":   ("products/04_muxing.png", 900, 84),
-    "__IMG_P5__":   ("products/05_xueluo.png", 900, 84),
-    "__IMG_P6__":   ("products/06_shancha.png", 900, 84),
-}
+import base64
+import os
+from pathlib import Path
 
-def to_uri(rel, w, q):
-    src = os.path.join(ASSETS, rel.replace("/", os.sep))
-    if not os.path.exists(src):
-        return None
-    im = Image.open(src).convert("RGB")
-    W, H = im.size
-    if W > w:
-        im = im.resize((w, int(H * w / W)), Image.LANCZOS)
-    buf = io.BytesIO()
-    im.save(buf, "JPEG", quality=q, optimize=True, progressive=True)
-    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
+# 脚本在 scripts/ 下，往上两级是项目根
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-print("[1] 编码")
-URIS = {}
-for k, (rel, w, q) in SPEC.items():
-    uri = to_uri(rel, w, q)
-    if uri:
-        URIS[k] = uri
-        print(f"  {k} <- {rel} ({len(uri)/1024:.0f} KB)")
+# 前端目录
+PROTO = PROJECT_ROOT / "frontend"
 
-print("[2] 替换")
-import glob
-for p in glob.glob(os.path.join(PROTO, "*.html")):
+# 素材目录
+ASSETS = PROJECT_ROOT / "assets"
+
+for p in glob.glob(os.path.join(str(PROTO), "*.html")):
     fn = os.path.basename(p)
     html = open(p, encoding="utf-8").read()
     if "__IMG_" not in html:
