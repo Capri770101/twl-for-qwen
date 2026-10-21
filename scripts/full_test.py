@@ -342,6 +342,16 @@ check("读配送规则", code == 200, f"→ 免运费 ¥{d.get('data', {}).get('
 # 管理员登录
 admin_phone = "13800001234"
 code, d = req("POST", "/api/v1/auth/send-code", {"phone": admin_phone})
+
+# 【限流自动等待】
+# 60 秒内重复跑测试会触发限流，导致后面的管理员测试全部被跳过。
+# 这里等到限流解除，保证每次跑都是完整的 62 项。
+if isinstance(d, dict) and d.get("code") == "SMS_TOO_FREQUENT":
+    import time as _t
+    print("     （管理员手机号限流，等 62 秒…）")
+    _t.sleep(62)
+    code, d = req("POST", "/api/v1/auth/send-code", {"phone": admin_phone})
+
 if code == 200:
     admin_code = d["data"]["dev_code"]
     code, d = req("POST", "/api/v1/auth/login", {"phone": admin_phone, "code": admin_code})

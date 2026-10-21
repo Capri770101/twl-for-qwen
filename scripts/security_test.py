@@ -87,10 +87,12 @@ except urllib.error.HTTPError as e:
 
 # ── 5. 限流 ──
 print("\n【5. 限流】")
-code1, d1 = req("POST", "/api/v1/auth/send-code", {"phone": "13700001111"})
+import random as _r
+_rate_phone = "137" + str(_r.randint(10000000, 99999999))
+code1, d1 = req("POST", "/api/v1/auth/send-code", {"phone": _rate_phone})
 check("第 1 次发码", code1 == 200, f"→ {code1}")
 
-code2, d2 = req("POST", "/api/v1/auth/send-code", {"phone": "13700001111"})
+code2, d2 = req("POST", "/api/v1/auth/send-code", {"phone": _rate_phone})
 blocked = code2 != 200 or (isinstance(d2, dict) and d2.get("code") == "SMS_TOO_FREQUENT")
 check("第 2 次发码被拦截", blocked, f"→ {code2} {d2.get('code') if isinstance(d2, dict) else ''}")
 
@@ -99,7 +101,7 @@ dev_code = d1["data"]["dev_code"] if code1 == 200 else None
 # ── 6. 登录 ──
 print("\n【6. 登录】")
 if dev_code:
-    code3, d3 = req("POST", "/api/v1/auth/login", {"phone": "13700001111", "code": dev_code})
+    code3, d3 = req("POST", "/api/v1/auth/login", {"phone": _rate_phone, "code": dev_code})
     check("登录成功", code3 == 200, f"→ {code3}")
     token_user = d3["data"]["token"] if code3 == 200 else None
     is_admin_user = d3["data"]["user"]["is_admin"] if code3 == 200 else None

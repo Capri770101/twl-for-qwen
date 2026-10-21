@@ -234,45 +234,192 @@
     if (addBtn) addBtn.addEventListener('click', () => openForm(null, null));
   }
 
-  /* 弹窗表单（用 prompt 简化，正式环境要换成真表单） */
+  /* ═════════════════════════════════════════════════════
+     地址表单弹窗
+
+     【为什么不用 prompt】
+     prompt 要填 5 次才能知道手机号错了，移动端还挡输入框。
+     用真表单一次看到所有字段，边填边校验。
+     ═════════════════════════════════════════════════════ */
+
   async function openForm(id, card) {
-    let cur = { receiver: '', phone: '', province: '', city: '', district: '', detail: '', tag: '' };
+    let cur = { receiver: '', phone: '', province: '', city: '', district: '', detail: '', tag: '', is_default: false };
 
     if (id && card) {
       cur = {
-        receiver: card.querySelector('.name').textContent,
-        phone: card.querySelector('.phone').textContent,
-        detail: card.querySelector('.detail').textContent,
+        receiver: card.querySelector('.name')?.textContent?.trim() || '',
+        phone: card.querySelector('.phone')?.textContent?.trim() || '',
+        detail: card.querySelector('.detail')?.textContent?.trim() || '',
         province: '', city: '', district: '', tag: '',
+        is_default: card.classList.contains('default'),
       };
     }
 
-    const receiver = prompt('收件人姓名', cur.receiver);
-    if (receiver === null) return;
+    // 建弹窗
+    const mask = document.createElement('div');
+    mask.id = '__addrMask';
+    mask.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.4);' +
+      'overflow-y:auto;padding:40px 20px;display:flex;align-items:flex-start;justify-content:center';
 
-    const phone = prompt('手机号', cur.phone);
-    if (phone === null) return;
+    mask.innerHTML = `
+      <div style="width:100%;max-width:520px;background:#fff;border-radius:8px;padding:28px 32px;
+                  font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <h3 style="font-size:16px;font-weight:500;margin:0">${id ? '编辑地址' : '新增地址'}</h3>
+          <span id="__addrClose" style="cursor:pointer;font-size:20px;color:#999;line-height:1">×</span>
+        </div>
 
-    const detail = prompt('详细地址', cur.detail);
-    if (detail === null) return;
+        <form id="__addrForm" style="display:grid;gap:14px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <label>
+              <div style="font-size:12px;color:#6f6a61;margin-bottom:5px">收件人 *</div>
+              <input name="receiver" required value="${cur.receiver}" placeholder="李女士"
+                     style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+            </label>
+            <label>
+              <div style="font-size:12px;color:#6f6a61;margin-bottom:5px">手机号 *</div>
+              <input name="phone" required value="${cur.phone}" placeholder="13800138000" maxlength="11"
+                     style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+            </label>
+          </div>
 
-    const tag = prompt('标签（家/公司/学校，可留空）', cur.tag || '');
-    if (tag === null) return;
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <label>
+              <div style="font-size:12px;color:#6f6a61;margin-bottom:5px">省</div>
+              <input name="province" value="${cur.province}" placeholder="广东省"
+                     style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+            </label>
+            <label>
+              <div style="font-size:12px;color:#6f6a61;margin-bottom:5px">市</div>
+              <input name="city" value="${cur.city}" placeholder="深圳市"
+                     style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+            </label>
+            <label>
+              <div style="font-size:12px;color:#6f6a61;margin-bottom:5px">区</div>
+              <input name="district" value="${cur.district}" placeholder="南山区"
+                     style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+            </label>
+          </div>
 
-    const payload = { receiver, phone, detail, tag: tag || null };
+          <label>
+            <div style="font-size:12px;color:#6f6a61;margin-bottom:5px">详细地址 *</div>
+            <input name="detail" required value="${cur.detail}" placeholder="科技园南路 18 号 3 栋 501"
+                   style="width:100%;padding:9px 12px;border:1px solid #e5e2dc;border-radius:4px;font-size:13px">
+          </label>
 
-    try {
-      if (id) {
-        await request('/addresses/' + id, { method: 'PUT', body: JSON.stringify(payload) });
-        API.toast('已保存');
-      } else {
-        await request('/addresses', { method: 'POST', body: JSON.stringify(payload) });
-        API.toast('已添加');
+          <div style="display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end">
+            <label>
+              <div style="font-size:12px;color:#6f6a61;margin-bottom:5px">标签</div>
+              <div style="display:flex;gap:8px">
+                ${['家','公司','学校'].map(t => `
+                  <span class="__tag" data-tag="${t}"
+                        style="padding:6px 14px;border:1px solid #e5e2dc;border-radius:100px;
+                               font-size:12px;cursor:pointer;color:#666">${t}</span>
+                `).join('')}
+              </div>
+              <input name="tag" type="hidden" value="${cur.tag}">
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;padding-bottom:6px;cursor:pointer">
+              <input name="is_default" type="checkbox" ${cur.is_default ? 'checked' : ''}
+                     style="width:15px;height:15px;cursor:pointer">
+              <span style="font-size:12px;color:#666">设为默认</span>
+            </label>
+          </div>
+
+          <div id="__addrErr" style="display:none;padding:9px 12px;background:#fbeae7;color:#b34a3a;
+               border-radius:4px;font-size:12px"></div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+            <button type="button" id="__addrCancel"
+                    style="padding:9px 22px;background:#fff;border:1px solid #e5e2dc;border-radius:4px;
+                           font-size:13px;cursor:pointer">取消</button>
+            <button type="submit"
+                    style="padding:9px 22px;background:#1a1a1a;color:#fff;border:none;border-radius:4px;
+                           font-size:13px;cursor:pointer">保存</button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.body.appendChild(mask);
+
+    const form = mask.querySelector('#__addrForm');
+    const errBox = mask.querySelector('#__addrErr');
+    const tagInput = form.querySelector('input[name="tag"]');
+
+    // 标签选择
+    mask.querySelectorAll('.__tag').forEach(el => {
+      if (el.dataset.tag === cur.tag) {
+        el.style.background = '#1a1a1a';
+        el.style.color = '#fff';
+        el.style.borderColor = '#1a1a1a';
       }
-      load();
-    } catch (err) {
-      API.toast(err.message);
-    }
+      el.addEventListener('click', () => {
+        const t = el.dataset.tag;
+        const nowOn = tagInput.value === t;
+        mask.querySelectorAll('.__tag').forEach(x => {
+          x.style.background = '';
+          x.style.color = '#666';
+          x.style.borderColor = '#e5e2dc';
+        });
+        if (nowOn) {
+          tagInput.value = '';
+        } else {
+          tagInput.value = t;
+          el.style.background = '#1a1a1a';
+          el.style.color = '#fff';
+          el.style.borderColor = '#1a1a1a';
+        }
+      });
+    });
+
+    const close = () => mask.remove();
+    mask.querySelector('#__addrClose').addEventListener('click', close);
+    mask.querySelector('#__addrCancel').addEventListener('click', close);
+    mask.addEventListener('click', e => { if (e.target === mask) close(); });
+
+    // 提交
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errBox.style.display = 'none';
+
+      const fd = new FormData(form);
+      const payload = {
+        receiver: (fd.get('receiver') || '').trim(),
+        phone: (fd.get('phone') || '').trim(),
+        province: (fd.get('province') || '').trim() || null,
+        city: (fd.get('city') || '').trim() || null,
+        district: (fd.get('district') || '').trim() || null,
+        detail: (fd.get('detail') || '').trim(),
+        tag: tagInput.value || null,
+        is_default: fd.get('is_default') === 'on',
+      };
+
+      // 前端校验
+      if (!/^1\d{10}$/.test(payload.phone)) {
+        errBox.textContent = '手机号必须是 1 开头的 11 位数字';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      try {
+        if (id) {
+          await request('/addresses/' + id, { method: 'PUT', body: JSON.stringify(payload) });
+          API.toast('已保存');
+        } else {
+          await request('/addresses', { method: 'POST', body: JSON.stringify(payload) });
+          API.toast('已添加');
+        }
+        close();
+        load();
+      } catch (err) {
+        errBox.textContent = '保存失败：' + err.message;
+        errBox.style.display = 'block';
+      }
+    });
+
+    // 自动聚焦收件人
+    setTimeout(() => form.querySelector('input[name="receiver"]').focus(), 50);
   }
 
   /* 加载 */
@@ -332,7 +479,7 @@
     <div class="ft-col">
       <h5>Contact</h5>
       <a href="mailto:hello@tiaowulan.com">hello@tiaowulan.com</a>
-      <a href="contact.html">400-000-0000</a>
+      <a href="contact.html">联系客服</a>
       <a href="#">9:00 – 21:00</a>
     </div>
   </div>
@@ -430,10 +577,6 @@
     });
   });
 
-  const addNew = document.querySelector('.add-new');
-  if (addNew) {
-    addNew.addEventListener('click', () => TWL.toast('新增地址（演示环境未实现表单）'));
-  }
 })();
 </script>
 

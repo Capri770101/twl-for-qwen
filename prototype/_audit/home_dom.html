@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>跳舞兰 · 与花共度的每一天</title>
+<style>
+  /* ═══════════════════════════════════════════════════
+     配色：白 + 黑 + 墨绿 + 暖灰
+     墨绿是主强调色，撑住整个页面的重量
+     ═══════════════════════════════════════════════════ */
+  :root{
+    --white:#ffffff;
+    --paper:#f6f4ef;
+    --ink:#141414;
+    --green:#141414;
+    --green-mid:#6e6a63;
+    --gray-7:#6e6a63;
+    --gray-a:#6f6a61;
+    --gray-d:#dedad3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    background:var(--white);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif,"PingFang SC",sans-serif;
+    font-weight:300;line-height:1.9;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img{display:block;width:100%}
+
+  .topbar{
+    padding:13px 18px 0;display:flex;justify-content:flex-end;gap:22px;
+    font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray-7);
+  }
+  .topbar a{transition:color .2s}
+  .topbar a:hover{color:var(--ink)}
+
+  .brand{padding:22px 18px 30px;text-align:center}
+  .brand .logo{
+    font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif;font-size:21px;font-weight:400;
+    letter-spacing:.52em;text-indent:.52em;line-height:1;
+  }
+  .brand .en{
+    display:block;margin-top:9px;
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:10px;letter-spacing:.44em;text-transform:uppercase;color:var(--gray-a);
+  }
+
+  .mainnav{
+    border-top:1px solid var(--gray-d);border-bottom:1px solid var(--gray-d);
+    padding:0 10px;overflow-x:auto;scrollbar-width:none;
+  }
+  .mainnav::-webkit-scrollbar{display:none}
+  .mainnav ul{display:flex;justify-content:center;list-style:none;min-width:max-content}
+  .mainnav a{
+    display:block;padding:15px 17px;font-size:10px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--gray-7);white-space:nowrap;transition:color .2s;
+  }
+  .mainnav a:hover,.mainnav a.on{color:var(--ink)}
+
+  .hero{padding:96px 26px 76px;text-align:center;border-bottom:1px solid var(--gray-d)}
+  .hero .kicker{
+    font-size:9px;letter-spacing:.38em;text-transform:uppercase;
+    color:var(--ink);margin-bottom:30px;
+  }
+  .hero h1{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:36px;font-weight:300;line-height:1.3;letter-spacing:.005em;margin-bottom:26px;
+  }
+  .hero .sub{
+    font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif;font-size:11.5px;
+    letter-spacing:.24em;color:var(--gray-7);line-height:2.4;
+  }
+
+  .story{padding:88px 30px;background:var(--paper);border-bottom:1px solid var(--gray-d)}
+  .story .eyebrow{
+    font-size:9px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--ink);margin-bottom:32px;text-align:center;
+  }
+  .story p{font-size:13px;line-height:2.35;color:#3a3733;max-width:540px;margin:0 auto 22px}
+  .story p:last-child{margin-bottom:0}
+  .story strong{font-weight:500;color:var(--ink)}
+
+  .figure{position:relative}
+  .figure img{width:100%;aspect-ratio:3/2;object-fit:cover}
+  .figure .cap{
+    position:absolute;left:0;right:0;bottom:0;padding:80px 26px 26px;
+    background:linear-gradient(to top,rgba(0,0,0,.62),transparent);
+    font-family:Georgia,'Times New Roman',serif;font-size:16px;letter-spacing:.18em;color:#fff;
+  }
+
+  .duo{border-bottom:1px solid var(--gray-d);background:var(--white)}
+  .duo.rev{background:var(--paper)}
+  .duo .txt{padding:76px 30px}
+  .duo .txt h2{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:28px;font-weight:300;letter-spacing:.02em;margin-bottom:10px;
+  }
+  .duo .txt .en-sub{
+    font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--ink);margin-bottom:28px;
+  }
+  .duo .txt p{font-size:12.5px;line-height:2.35;color:#3a3733;margin-bottom:18px}
+  .duo .txt p:last-child{margin-bottom:0}
+  .duo .pic img{width:100%;aspect-ratio:4/3;object-fit:cover}
+
+  .cat-entry{border-bottom:1px solid var(--gray-d)}
+  .cat-entry a{display:block;position:relative;border-bottom:1px solid var(--gray-d)}
+  .cat-entry a:last-child{border-bottom:0}
+  .cat-entry img{width:100%;aspect-ratio:4/3;object-fit:cover}
+  .cat-entry .label{
+    position:absolute;left:0;right:0;bottom:0;padding:80px 24px 24px;
+    background:linear-gradient(to top,rgba(0,0,0,.58),transparent);
+  }
+  .cat-entry .label h4{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:20px;font-weight:400;letter-spacing:.1em;color:#fff;margin-bottom:5px;
+  }
+  .cat-entry .label span{
+    font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.72);
+  }
+
+  .insta{padding:60px 26px;text-align:center;border-bottom:1px solid var(--gray-d)}
+  .insta a{
+    display:inline-block;font-family:Georgia,'Times New Roman',serif;
+    font-size:15px;letter-spacing:.16em;color:var(--ink);
+    border-bottom:1px solid var(--ink);padding-bottom:4px;
+  }
+
+  /* ═══════════ 页脚 —— 横向 ═══════════ */
+  footer{background:var(--paper);color:var(--gray-7);padding:56px 0 0;border-top:1px solid var(--gray-d)}
+
+  .foot-row{
+    display:flex;gap:0;padding:0 26px 44px;
+    overflow-x:auto;scrollbar-width:none;
+  }
+  .foot-row::-webkit-scrollbar{display:none}
+
+  .foot-brand{
+    flex:0 0 auto;padding-right:40px;margin-right:40px;
+    border-right:1px solid var(--gray-d);min-width:180px;
+  }
+  .foot-brand h4{
+    font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif;font-size:16px;font-weight:400;
+    letter-spacing:.42em;text-indent:.42em;color:var(--ink);line-height:1;margin-bottom:10px;
+  }
+  .foot-brand .en{
+    font-family:Georgia,'Times New Roman',serif;font-size:9.5px;
+    letter-spacing:.34em;text-transform:uppercase;color:var(--gray-a);
+  }
+  .foot-brand .slogan{
+    margin-top:20px;font-size:10.5px;line-height:2;
+    color:var(--gray-7);letter-spacing:.04em;
+  }
+
+  .foot-col{flex:0 0 auto;padding-right:44px;min-width:110px}
+  .foot-col:last-child{padding-right:0}
+  .foot-col h5{
+    font-family:Georgia,'Times New Roman',serif;font-size:11.5px;font-weight:500;
+    letter-spacing:.24em;text-transform:uppercase;color:var(--gray-a);margin-bottom:16px;
+  }
+  .foot-col a{
+    display:block;font-size:11px;line-height:2.5;letter-spacing:.04em;
+    color:var(--gray-7);white-space:nowrap;transition:color .2s;
+  }
+  .foot-col a:hover{color:var(--ink)}
+
+  .foot-bottom{
+    display:flex;justify-content:space-between;align-items:center;gap:20px;
+    padding:22px 26px;border-top:1px solid var(--gray-d);flex-wrap:wrap;
+  }
+  .foot-bottom .cr{font-size:9.5px;letter-spacing:.1em;color:var(--gray-a);line-height:1.8}
+  .social{display:flex;gap:10px}
+  .social a{
+    width:28px;height:28px;border:1px solid var(--gray-d);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:9px;letter-spacing:.05em;color:var(--gray-7);transition:all .25s;
+  }
+  .social a:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  @media (min-width:820px){
+    .hero h1{font-size:52px}
+    .hero{padding:110px 40px 90px}
+    .duo{display:grid;grid-template-columns:1fr 1fr}
+    .duo .txt{padding:90px 60px;display:flex;flex-direction:column;justify-content:center}
+    .duo .pic img{aspect-ratio:auto;height:100%}
+    .duo.rev .txt{order:2}
+    .duo.rev .pic{order:1}
+    .cat-entry{display:grid;grid-template-columns:repeat(3,1fr)}
+    .cat-entry a{border-bottom:0;border-right:1px solid #fff}
+    .figure img{aspect-ratio:21/9}
+  }
+</style>
+
+<style>
+/* ═══ 统一页眉 ═══ */
+.site-header{background:#fff}
+
+.hd-top{
+  padding:13px 40px 0;
+  display:flex;justify-content:flex-end;gap:24px;
+  font-size:12px;color:#666;
+  letter-spacing:.02em;
+}
+.hd-top a{transition:color .2s}
+.hd-top a:hover{color:#1a1a1a}
+
+.hd-brand{padding:20px 24px 26px;text-align:center}
+.hd-brand a{display:block}
+.hd-brand .logo{
+  font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif,-apple-system,sans-serif;
+  font-size:22px;font-weight:400;
+  letter-spacing:.5em;text-indent:.5em;
+  line-height:1;color:#1a1a1a;
+}
+.hd-brand .en{
+  display:block;margin-top:9px;
+  font-size:10px;letter-spacing:.42em;
+  text-transform:uppercase;color:#767676;
+}
+
+.hd-nav{border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;padding:0 10px}
+.hd-nav ul{display:flex;justify-content:center;list-style:none;min-width:max-content}
+.hd-nav a{
+  display:block;padding:15px 18px;
+  font-size:13px;color:#666;
+  white-space:nowrap;transition:color .2s;
+}
+.hd-nav a:hover{color:#1a1a1a}
+
+/* ═══ 统一页脚 ═══ */
+.site-footer{background:#f1efeb;border-top:1px solid #e5e5e5;padding:56px 0 0}
+
+.ft-row{
+  display:flex;gap:0;padding:0 40px 44px;
+  overflow-x:auto;scrollbar-width:none;
+  max-width:1560px;margin:0 auto;
+}
+.ft-row::-webkit-scrollbar{display:none}
+
+.ft-brand{
+  flex:0 0 auto;padding-right:48px;margin-right:48px;
+  border-right:1px solid #ddd9d2;min-width:200px;
+}
+.ft-brand h4{
+  font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif,-apple-system,sans-serif;
+  font-size:15px;font-weight:400;
+  letter-spacing:.4em;text-indent:.4em;
+  color:#1a1a1a;line-height:1;margin-bottom:10px;
+}
+.ft-brand .en{
+  font-size:9px;letter-spacing:.34em;
+  text-transform:uppercase;color:#605c55;
+}
+.ft-brand .slogan{
+  margin-top:20px;font-size:11px;line-height:2;color:#888;
+}
+
+.ft-col{flex:0 0 auto;padding-right:48px;min-width:110px}
+.ft-col:last-child{padding-right:0}
+.ft-col h5{
+  font-size:10px;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:#605c55;margin-bottom:14px;
+}
+.ft-col a{
+  display:block;font-size:12px;line-height:2.4;
+  color:#555;white-space:nowrap;transition:color .2s;
+}
+.ft-col a:hover{color:#1a1a1a}
+
+.ft-bottom{
+  display:flex;justify-content:space-between;align-items:center;gap:20px;
+  padding:22px 40px;
+  border-top:1px solid #ddd9d2;
+  max-width:1560px;margin:0 auto;
+  flex-wrap:wrap;
+}
+.ft-bottom .cr{font-size:10px;color:#605c55;letter-spacing:.02em}
+.social{display:flex;gap:9px}
+.social a{
+  width:28px;height:28px;border:1px solid #ddd9d2;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:#605c55;transition:all .25s;
+}
+.social a:hover{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+
+/* ═══ 全站无衬线（除 Logo）═══ */
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif !important;
+}
+h1,h2,h3,h4,h5,h6,
+.page-head h2,.info h1,.coll-head h1,.art-head h1,
+.hero h2,.duo .txt h3,.card .info h3,.rel-card h4,
+.empty h3,.cart-head h2,.result h2,.acc-head h2,
+.addr-head h2,.as-head h2,.od-head h2,.as-head h2,
+.ft-brand h4,.login-head h1{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif !important;
+  font-weight:400;
+  letter-spacing:-.01em;
+}
+/* Logo 与页脚品牌名保留衬线 */
+.hd-brand .logo,.ft-brand h4,.brand .logo{
+  font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif !important;
+  letter-spacing:.5em !important;
+}
+
+/* 英文小标题也改无衬线 */
+.en,.en-sub,.eyebrow,.kicker,.vendor{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif !important;
+  letter-spacing:.14em !important;
+}
+
+/* ═══ 响应式 ═══ */
+@media (max-width:768px){
+  .hd-top{padding:10px 16px 0;gap:16px;font-size:10px}
+  .hd-brand{padding:14px 16px 18px}
+  .hd-brand .logo{font-size:18px;letter-spacing:.4em;text-indent:.4em}
+  .hd-brand .en{font-size:8.5px}
+  .hd-nav{overflow-x:auto;scrollbar-width:none}
+  .hd-nav::-webkit-scrollbar{display:none}
+  .hd-nav ul{justify-content:flex-start;margin:0 auto}
+  .hd-nav a{padding:12px 14px;font-size:11.5px}
+
+  .ft-row{flex-wrap:wrap;padding:0 20px 32px;gap:28px}
+  .ft-brand{border-right:0;padding-right:0;margin-right:0;width:100%}
+  .ft-brand .slogan{display:none}
+  .ft-col{padding-right:0;min-width:calc(50% - 14px)}
+  .ft-bottom{padding:18px 20px;flex-direction:column;align-items:flex-start;gap:12px}
+}
+</style>
+
+
+<style>
+/* ═══════════════════════════════════════════════════════
+   全站统一风格 v2
+   无衬线 · 大标题 · 浅灰信息块 · 细线 · 大留白
+   ═══════════════════════════════════════════════════════ */
+
+/* ── 字体：全部无衬线 ── */
+body,button,input,textarea,select{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 标题：无衬线 + 负字距（现代感） */
+h1,h2,h3,h4,h5,h6,
+.page-head h2,.info h1,.coll-head h1,.art-head h1,
+.hero h2,.duo .txt h3,.card .info h3,.rel-card h4,
+.empty h3,.cart-head h2,.result h2,.acc-head h2,
+.addr-head h2,.as-head h2,.od-head h2,
+.sec-head h2,.statement h2,.advisor h2,
+.fl-head h2,.ordered h3,
+.body-sec h3,.section h2{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif !important;
+  font-weight:400 !important;
+  letter-spacing:-.015em !important;
+}
+
+/* Logo 与品牌名保留衬线 */
+.hd-brand .logo,.ft-brand h4,.brand h1,.logo{
+  font-family:'Songti SC','STSong','SimSun','Noto Serif CJK SC',serif !important;
+  letter-spacing:.5em !important;
+}
+
+/* 英文小标题：无衬线，加大字距 */
+.en,.en-sub,.eyebrow,.kicker,.vendor,.no{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif !important;
+  letter-spacing:.14em !important;
+}
+
+/* ── 页面主标题：放大 ── */
+.page-head{padding:72px 40px 48px !important}
+.page-head h2{font-size:56px !important;line-height:1.08 !important;margin-bottom:18px !important}
+.page-head .kicker{margin-bottom:22px !important;color:#605c55 !important}
+
+/* ── 分割线改淡 ── */
+.page-head{border-bottom-color:#ebe9e5 !important}
+.sec,.body-sec,.detail,.info,.fees,.form-sec,.cart-head,
+.art-body,.faq,.timeline,.od-head,.acc-head,.addr-head,
+.as-head,.co-head,.result,.pay-head,.coll-head,.items,
+.order,.addr,.item,.fl-item,.order-ref{
+  border-color:#ebe9e5 !important;
+}
+
+/* ── 卡片信息块改浅灰底 ── */
+.card .info{background:#f1efeb !important}
+.grid{background:transparent !important;gap:24px !important;padding:0 40px 80px !important}
+
+/* ── 按钮：统一 4px 圆角 ── */
+.btn,.btn-block,.buy-btns a,.dock .btn,
+.alert .actions .btn,.alert .actions .btn-ghost,
+.add a,.empty a,.load-more a,.back-link a,
+.code-btn,.btn-login,.wx-login,.btn-add,.btn-buy{
+  border-radius:4px !important;
+}
+
+/* ── 折叠面板 / 表单：细线 ── */
+details,summary{border-color:#ebe9e5 !important}
+.field,.row,.irow,.drow,.spec-row,.fee,.sum-row,.row-form{
+  border-color:#ebe9e5 !important;
+}
+
+/* ── 标题区留白加大 ── */
+.story{padding:100px 40px !important;background:#f1efeb !important}
+.story p{font-size:16px !important;line-height:2 !important;color:#333 !important;max-width:680px !important}
+.hero{padding:120px 40px 100px !important}
+.hero h1{font-size:72px !important;line-height:1.15 !important}
+.hero .sub{font-size:14px !important;letter-spacing:.18em !important}
+
+/* ── 花语/内容页 ── */
+.art-head h1{font-size:44px !important;line-height:1.2 !important}
+.art-body p,.body-sec p{font-size:16px !important;line-height:1.95 !important;color:#333 !important}
+.art-body h2,.body-sec h3{font-size:22px !important;margin-top:52px !important}
+
+/* ── 让所有内容区块居中限宽 ── */
+@media (min-width:1024px){
+  .page-head,.content,.section,.sec,.body-sec,.art-body,
+  .timeline,.detail,.fees,.form-sec,.agree,.cart-head,
+  .summary,.note,.note-bar,.info,.opt,.buy-actions,.ship,
+  .meaning,.acc,.od-head,.acc-head,.addr-head,.as-head,
+  .co-head,.result,.pay-head,.methods,.secure,.fl-head,
+  .fl-tabs,.fl-list,.faq,.related-head,.prod,.ops,
+  .items,.order-ref,.login-head,.login-form,.divider,
+  .wx-login,.terms,.skip,.more,.back-link,.cta,.insta,
+  .cat-entry,.search-bar,.hot,.result-head,.load-more{
+    max-width:1320px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
+
+/* ── 移动端 ── */
+@media (max-width:768px){
+  .page-head{padding:44px 16px 32px !important}
+  .page-head h2{font-size:34px !important}
+  .hero{padding:64px 20px 56px !important}
+  .hero h1{font-size:38px !important}
+  .story{padding:56px 20px !important}
+  .story p{font-size:14px !important}
+  .art-head h1{font-size:26px !important}
+  .art-body p,.body-sec p{font-size:14px !important}
+  .grid{padding:0 12px 48px !important;gap:12px !important}
+}
+</style>
+
+
+
+<script src="js/api.js" defer=""></script>
+
+<!-- SEO-START -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="description" content="跳舞兰是深圳的花艺团队。当日现做花束，香槟玫瑰、白郁金香、向日葵等 8 款日常花束，¥199 起。配送范围与时效以结算页为准。">
+<meta name="keywords" content="深圳鲜花,深圳花店,花束配送,同城送花,日常花束,跳舞兰">
+<link rel="canonical" href="https://h5.tiaowulan.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="跳舞兰">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="跳舞兰花艺 - 深圳的日常花束">
+<meta property="og:description" content="跳舞兰是深圳的花艺团队。当日现做花束，香槟玫瑰、白郁金香、向日葵等 8 款日常花束，¥199 起。配送范围与时效以结算页为准。">
+<meta property="og:url" content="https://h5.tiaowulan.com/">
+<meta property="og:image" content="https://h5.tiaowulan.com/images/01_chenguang.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="跳舞兰花艺 - 深圳的日常花束">
+<meta name="twitter:description" content="跳舞兰是深圳的花艺团队。当日现做花束，香槟玫瑰、白郁金香、向日葵等 8 款日常花束，¥199 起。配送范围与时效以结算页为准。">
+<meta name="twitter:image" content="https://h5.tiaowulan.com/images/01_chenguang.webp">
+<meta name="author" content="深圳市跳舞兰科技有限公司">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#ffffff">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Florist",
+  "@id": "https://h5.tiaowulan.com/#florist",
+  "name": "跳舞兰",
+  "alternateName": "Tiao Wu Lan",
+  "legalName": "深圳市跳舞兰科技有限公司",
+  "url": "https://h5.tiaowulan.com",
+  "logo": "https://h5.tiaowulan.com/images/01_chenguang.webp",
+  "image": "https://h5.tiaowulan.com/images/01_chenguang.webp",
+  "description": "深圳市跳舞兰科技有限公司旗下的花艺品牌。当日现做花束。",
+  "telephone": "400-000-0000",
+  "email": "hello@tiaowulan.com",
+  "priceRange": "¥199-¥999",
+  "currenciesAccepted": "CNY",
+  "paymentAccepted": "微信支付, 支付宝, 银行卡",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "深圳市",
+    "addressRegion": "广东省",
+    "addressCountry": "CN"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "22.5431",
+    "longitude": "114.0579"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "opens": "09:00",
+    "closes": "21:00"
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "深圳市"
+    },
+    {
+      "@type": "Country",
+      "name": "中国"
+    }
+  ],
+  "sameAs": []
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://h5.tiaowulan.com/#website",
+  "url": "https://h5.tiaowulan.com",
+  "name": "跳舞兰",
+  "description": "深圳市跳舞兰科技有限公司旗下的花艺品牌。当日现做花束。",
+  "publisher": {
+    "@id": "https://h5.tiaowulan.com/#florist"
+  },
+  "inLanguage": "zh-CN",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://h5.tiaowulan.com/search.html?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://h5.tiaowulan.com/#organization",
+  "name": "深圳市跳舞兰科技有限公司",
+  "alternateName": "跳舞兰",
+  "url": "https://h5.tiaowulan.com",
+  "logo": "https://h5.tiaowulan.com/images/01_chenguang.webp",
+  "email": "hello@tiaowulan.com",
+  "telephone": "400-000-0000",
+  "foundingLocation": {
+    "@type": "Place",
+    "name": "深圳市"
+  },
+  "slogan": "Living With Flowers Every Day"
+}
+</script>
+<!-- SEO-END -->
+</head>
+<body style="padding-top: 34px;">
+
+<header class="site-header">
+  <div class="hd-top">
+    <a href="#">Contact</a>
+    <a href="#">Login</a>
+  </div>
+  <div class="hd-brand">
+    <a href="index.html">
+      <div class="logo">跳舞兰</div>
+      <span class="en">Tiao Wu Lan</span>
+    </a>
+  </div>
+  <nav class="hd-nav">
+    <ul>
+      <li><a href="shop.html">全部花束</a></li>
+      <li><a href="#">日常</a></li>
+      <li><a href="#">告白</a></li>
+      <li><a href="#">生日</a></li>
+      <li><a href="flower-language.html">花语</a></li>
+      <li><a href="about.html">关于</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="kicker">Shenzhen</div>
+  <h1>Living With<br>Flowers Every Day</h1>
+  <div class="sub">
+    与花共度的每一天<br>
+    把自然的美，带进日常的空间
+  </div>
+</section>
+
+<section class="story">
+  <div class="eyebrow">Our Story</div>
+  <p>
+    跳舞兰是一家在深圳做花的团队。<br>
+    我们相信，花不只属于节日与仪式 —— 它也可以是某个普通的下午，
+    桌角上的一小束，或者递给同事时随手的一枝。
+  </p>
+  <p>
+    <strong>「与花共度的每一天」</strong> 这句话，
+    既是我们的名字，也是我们想做的事：
+    让花重新回到生活里，像它本来该有的样子。
+  </p>
+</section>
+
+<figure class="figure">
+  <img src="/images/hero_workshop.webp" alt="花艺工作台">
+  <div class="cap">Living with Flowers Every Day</div>
+</figure>
+
+<section class="duo">
+  <div class="txt">
+    <h2>与花共度的每一天</h2>
+    <div class="en-sub">Our Philosophy</div>
+    <p>花常常只被当作「特殊场合」的东西 —— 生日、纪念日、道歉。但我们想改变这个看法。</p>
+    <p>花出现在画里、诗里、衣服上、手里。它本来就深深扎根在我们的生活里。</p>
+    <p>所以我们要做的，只是把它放回去。</p>
+  </div>
+  <div class="pic"><img src="/images/00_white_rose.webp" alt="花束"></div>
+</section>
+
+<section class="duo rev">
+  <div class="txt">
+    <h3>花与东方</h3>
+    <div class="en-sub">Flowers &amp; the East</div>
+    <p>花与自然，是东方文化的中心。看花、赏花、为花的季节更替而欣喜 —— 这是我们的日常。</p>
+    <p><strong>尊重季节的节奏</strong>，与自然保持和谐，是东方生活方式的核心。</p>
+    <p>每一种花都有它短暂而独特的盛开时刻。单一花材的花束尤其受推崇 —— 因为它能展现一种花的性格。</p>
+  </div>
+  <div class="pic"><img src="/images/01_chenguang.webp" alt="茶花"></div>
+</section>
+
+<section class="cat-entry">
+  <a href="shop.html">
+    <img src="/images/02_xiaoman.webp" alt="日常花束">
+    <div class="label"><h4>日常花束</h4><span>Lifestyle</span></div>
+  </a>
+  <a href="shop.html">
+    <img src="/images/03_wuye.webp" alt="今日之花">
+    <div class="label"><h4>今日之花</h4><span>Flower of the Day</span></div>
+  </a>
+  <a href="shop.html">
+    <img src="/images/04_muxing.webp" alt="单花花束">
+    <div class="label"><h4>单花花束</h4><span>Single Species</span></div>
+  </a>
+</section>
+
+<div class="insta">
+  <a href="#">@tiaowulan</a>
+</div>
+
+<style>
+/* ═══════════════════════════════════════════════════════
+   桌面端增强（≥1024px）—— 宽屏、多列、大留白
+   ═══════════════════════════════════════════════════════ */
+
+@media (min-width:1024px){
+
+  /* 内容限宽居中（背景仍全宽） */
+  .topbar,.brand,.mainnav,.crumb,.page-head,.coll-head,
+  .content,.section,.sec,.info,.opt,.buy-btns,.ship,
+  .meaning,.acc,.detail,.fees,.form-sec,.agree,
+  .cart-head,.summary,.note,.note-bar,
+  .filter-row,.ctrl,.count-bar,
+  .fl-head,.fl-tabs,.fl-list,.art-head,.art-body,
+  .faq,.related-head,.prod,.timeline,
+  .acc-head,.tabs,.addr-head,.addr,.add,
+  .ops,.as-head,.order-ref,.co-head,.result,
+  .pay-head,.methods,.secure,
+  .body-sec,.cta,.more,.back-link,.insta,
+  .story,.hero,.cat-entry,.figure,.duo,.related,
+  .foot-row,.foot-bottom,.search-bar,.hot,.result-head,
+  .load-more,.login-head,.login-form,.divider,
+  .wx-login,.terms,.skip,.items{
+    max-width:1320px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /* 加大左右留白 */
+  .info,.opt,.buy-btns,.ship,.meaning,.acc .body,
+  .page-head,.coll-head,.story,.sec,.form-sec,.fees,
+  .body-sec,.content,.art-body,.faq,.hero{
+    padding-left:56px;
+    padding-right:56px;
+  }
+  .foot-row{padding-left:56px;padding-right:56px}
+
+  /* 标题放大 */
+  .page-head h2{font-size:48px}
+  .coll-head h1{font-size:46px}
+  .hero h1{font-size:64px;line-height:1.2}
+  .art-head h1{font-size:32px}
+  .info h1{font-size:30px}
+  .price-row .p{font-size:28px}
+
+  /* 商品网格 3 列 */
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .rel-grid{grid-template-columns:repeat(4,1fr)}
+
+  /* 双栏：文字 + 图 */
+  .duo{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
+  .duo .txt{
+    padding:110px 72px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .duo .pic img{aspect-ratio:auto;height:100%;min-height:520px}
+  .duo.rev .txt{order:2}
+  .duo.rev .pic{order:1}
+
+  /* 分类入口 3 列 */
+  .cat-entry{display:grid;grid-template-columns:repeat(3,1fr)}
+  .cat-entry a{border-bottom:0;border-right:1px solid #fff}
+  .cat-entry a:last-child{border-right:0}
+  .cat-entry img{aspect-ratio:3/4}
+
+  /* 大图更宽 */
+  .figure img{aspect-ratio:21/9}
+
+  /* Hero / 品牌故事更大 */
+  .hero{padding-top:140px;padding-bottom:120px}
+  .story{padding-top:120px;padding-bottom:120px}
+
+  /* 页脚加大 */
+  .foot-row{padding-top:16px;padding-bottom:56px}
+  .foot-brand{min-width:220px;padding-right:56px;margin-right:56px}
+  .foot-col{padding-right:56px;min-width:130px}
+  .foot-brand h4{font-size:17px}
+
+  /* 花语列表两列 */
+  .fl-list{display:grid;grid-template-columns:repeat(2,1fr)}
+  .fl-item{border-right:1px solid var(--gray-e)}
+  .fl-item:nth-child(2n){border-right:0}
+
+  /* 购物袋两栏 */
+  .items{max-width:880px}
+  .summary{max-width:1320px}
+
+  /* 订单列表两列 */
+  .order{max-width:100%}
+
+  /* 登录页限宽 */
+  .login-form,.login-head{max-width:480px}
+
+  /* 搜索框限宽 */
+  .search-bar,.hot,.result-head{max-width:900px}
+}
+
+/* 超宽屏 */
+@media (min-width:1440px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .topbar,.brand,.mainnav,.crumb,.page-head,.coll-head,
+  .content,.section,.sec,.info,.opt,.buy-btns,.ship,
+  .meaning,.acc,.detail,.fees,.form-sec,.agree,
+  .cart-head,.summary,.note,.note-bar,
+  .filter-row,.ctrl,.count-bar,
+  .fl-head,.fl-tabs,.fl-list,.art-head,.art-body,
+  .faq,.related-head,.prod,.timeline,
+  .acc-head,.tabs,.addr-head,.addr,.add,
+  .ops,.as-head,.order-ref,.co-head,.result,
+  .pay-head,.methods,.secure,
+  .body-sec,.cta,.more,.back-link,.insta,
+  .story,.hero,.cat-entry,.figure,.duo,.related,
+  .foot-row,.foot-bottom,
+  .load-more,.login-head,.login-form,.divider,
+  .wx-login,.terms,.skip{
+    max-width:1520px;
+  }
+  .hero h1{font-size:76px}
+}
+</style>
+
+
+</main>
+
+<footer class="site-footer">
+  <div class="ft-row">
+
+    <div class="ft-brand">
+      <h4>跳舞兰</h4>
+      <div class="en">Tiao Wu Lan</div>
+      <div class="slogan">Living With<br>Flowers Every Day</div>
+    </div>
+
+    <div class="ft-col">
+      <h5>Shop</h5>
+      <a href="shop.html">全部花束</a>
+      <a href="#">日常</a>
+      <a href="#">告白</a>
+      <a href="#">生日</a>
+    </div>
+
+    <div class="ft-col">
+      <h5>Help</h5>
+      <a href="help-delivery.html">配送范围</a>
+      <a href="help-returns.html">售后政策</a>
+      <a href="help-faq.html">常见问题</a>
+    </div>
+
+    <div class="ft-col">
+      <h5>About</h5>
+      <a href="about.html">品牌故事</a>
+      <a href="flower-language.html">花语百科</a>
+      <a href="#">企业合作</a>
+    </div>
+
+    <div class="ft-col">
+      <h5>Contact</h5>
+      <a href="mailto:hello@tiaowulan.com">hello@tiaowulan.com</a>
+      <a href="contact.html">400-000-0000</a>
+      <a href="#">9:00 – 21:00</a>
+    </div>
+
+  </div>
+
+  <div class="ft-bottom">
+    <div class="cr">© 深圳市跳舞兰科技有限公司 &nbsp;·&nbsp; 粤ICP备 00000000 号</div>
+    <div class="social">
+      <a href="#">ig</a><a href="#">wx</a><a href="#">xhs</a><a href="#">dy</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* ═══════════════════════════════════════════════
+   购物袋（全站共用）
+   ═══════════════════════════════════════════════ */
+(function(){
+  const FREE = 199;
+
+  window.TWL = {
+    getCart() {
+      try { return JSON.parse(localStorage.getItem('twl_cart') || '[]'); }
+      catch { return []; }
+    },
+    setCart(items) {
+      localStorage.setItem('twl_cart', JSON.stringify(items));
+      this.updateBadge();
+    },
+    addToCart(item) {
+      const items = this.getCart();
+      const exist = items.find(i => i.id === item.id);
+      if (exist) exist.qty += item.qty || 1;
+      else items.push({ ...item, qty: item.qty || 1 });
+      this.setCart(items);
+      this.toast('已加入购物袋');
+    },
+    count() {
+      return this.getCart().reduce((s, i) => s + i.qty, 0);
+    },
+    subtotal() {
+      return this.getCart().reduce((s, i) => s + i.price * i.qty, 0);
+    },
+    updateBadge() {
+      const n = this.count();
+      document.querySelectorAll('.bag-count').forEach(el => {
+        el.textContent = n;
+        el.style.display = n > 0 ? 'inline' : 'none';
+      });
+    },
+    toast(msg, ms) {
+      let el = document.getElementById('__toast');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = '__toast';
+        el.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(26,26,26,.92);color:#fff;padding:12px 24px;font-size:14px;border-radius:4px;z-index:99999;opacity:0;transition:opacity .25s;white-space:nowrap;';
+        document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      el.style.opacity = '1';
+      clearTimeout(el.__t);
+      el.__t = setTimeout(() => { el.style.opacity = '0'; }, ms || 2000);
+    }
+  };
+
+  /* 初始化默认购物袋 */
+  if (!localStorage.getItem('twl_cart_init')) {
+    localStorage.setItem('twl_cart', JSON.stringify([
+      { id: 'TW-001', name: '晨光序曲', spec: '香槟玫瑰 20 枝 · 满天星', price: 299, qty: 1, img: '' },
+      { id: 'TW-004', name: '木星', spec: '向日葵 6 枝 · 尤加利叶', price: 219, qty: 1, img: '' }
+    ]));
+    localStorage.setItem('twl_cart_init', '1');
+  }
+
+  /* 页面加载后更新角标 */
+  document.addEventListener('DOMContentLoaded', () => TWL.updateBadge());
+  if (document.readyState !== 'loading') TWL.updateBadge();
+})();
+</script>
+
+
+
+<div id="__demo-banner" style="position: fixed; left: 0px; right: 0px; top: 0px; z-index: 9998; background: rgb(253, 248, 238); border-bottom: 1px solid rgb(221, 201, 160); color: rgb(138, 100, 32); font-size: 12px; line-height: 1.6; padding: 8px 40px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, &quot;PingFang SC&quot;, sans-serif;">演示环境 · 商品与配送信息为示例数据，下单不会真实扣款<span id="__demo-close" style="margin-left:16px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">知道了</span></div></body></html>
