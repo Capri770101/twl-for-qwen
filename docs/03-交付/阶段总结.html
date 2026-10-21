@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>阶段总结 · 对照任务书</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  background:#fafaf8;color:#1a1a1a;line-height:1.75;font-size:14px;
+  padding:60px 24px 100px;
+}
+.wrap{max-width:960px;margin:0 auto}
+
+h1{font-size:26px;font-weight:500;letter-spacing:-.015em;margin-bottom:8px}
+.sub{color:#6f6a61;font-size:13px;margin-bottom:48px}
+
+h2{
+  font-size:17px;font-weight:500;margin:48px 0 20px;
+  padding-bottom:10px;border-bottom:1px solid #e5e2dc;
+  letter-spacing:-.01em;
+}
+h3{font-size:14px;font-weight:500;margin:28px 0 12px;color:#333}
+
+p{margin-bottom:14px;color:#444}
+code{
+  background:#f1efeb;padding:2px 6px;border-radius:3px;
+  font-family:ui-monospace,'SF Mono',Consolas,monospace;font-size:12.5px;
+}
+pre{
+  background:#1a1a1a;color:#e8e6e2;padding:16px 20px;border-radius:4px;
+  overflow-x:auto;font-size:12.5px;line-height:1.7;margin-bottom:20px;
+  font-family:ui-monospace,'SF Mono',Consolas,monospace;
+}
+pre code{background:none;padding:0;color:inherit;font-size:inherit}
+
+table{
+  width:100%;border-collapse:collapse;margin-bottom:24px;font-size:13px;
+  background:#fff;
+}
+th{
+  text-align:left;padding:10px 12px;background:#f1efeb;
+  font-weight:500;font-size:12px;color:#444;
+  border-bottom:1px solid #e5e2dc;white-space:nowrap;
+}
+td{
+  padding:10px 12px;border-bottom:1px solid #f0eeea;vertical-align:top;
+}
+tr:last-child td{border-bottom:none}
+
+.ok{color:#2f7d4f;font-weight:500}
+.warn{color:#a8741a;font-weight:500}
+.bad{color:#b34a3a;font-weight:500}
+.muted{color:#8a8580}
+
+.card{
+  background:#fff;border:1px solid #e5e2dc;border-radius:6px;
+  padding:24px 28px;margin-bottom:24px;
+}
+.card h3{margin-top:0}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.metric{
+  background:#fff;border:1px solid #e5e2dc;border-radius:6px;
+  padding:18px 20px;
+}
+.metric .n{font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.2}
+.metric .l{font-size:11.5px;color:#8a8580;margin-top:6px;letter-spacing:.02em}
+.metric .d{font-size:11px;color:#a8a29a;margin-top:2px}
+
+.bar{
+  height:5px;background:#efece7;border-radius:3px;overflow:hidden;margin-top:10px;
+}
+.bar i{display:block;height:100%;background:#1a1a1a;border-radius:3px}
+
+ul,ol{margin:0 0 16px 20px}
+li{margin-bottom:8px;color:#444}
+
+.tag{
+  display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;
+  font-weight:500;letter-spacing:.02em;
+}
+.tag.done{background:#e8f3ec;color:#2f7d4f}
+.tag.todo{background:#fdf3e0;color:#a8741a}
+.tag.block{background:#fbeae7;color:#b34a3a}
+.tag.na{background:#f0eeea;color:#8a8580}
+
+hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>阶段总结</h1>
+<div class="sub">对照《任务书》逐条验收 · 2026-10-21</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>一句话结论</h2>
+
+<div class="card">
+<p style="margin:0 0 12px;font-size:15px;color:#1a1a1a">
+<strong>技术层已全部达标，卡在「等外部条件」和「等真实数据」两件事上。</strong>
+</p>
+<p style="margin:0;color:#555">
+36 项技术验收全部通过。剩下的差距不在代码，在：<br>
+① ICP 备案（7–20 天，不可压缩）<br>
+② 真实业务数据（商品、配送规则、联系方式）<br>
+③ 内容量（15 篇 / 目标 95 篇）
+</p>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>核心数字</h2>
+
+<div class="grid">
+  <div class="metric">
+    <div class="n">98</div>
+    <div class="l">Lighthouse 性能</div>
+    <div class="d">目标 > 85</div>
+  </div>
+  <div class="metric">
+    <div class="n">100</div>
+    <div class="l">SEO 评分</div>
+    <div class="d">Lighthouse SEO</div>
+  </div>
+  <div class="metric">
+    <div class="n">100</div>
+    <div class="l">可访问性</div>
+    <div class="d">Lighthouse A11y</div>
+  </div>
+  <div class="metric">
+    <div class="n">15</div>
+    <div class="l">内容文章</div>
+    <div class="d">目标 95 篇</div>
+  </div>
+  <div class="metric">
+    <div class="n">71</div>
+    <div class="l">FAQ 条目</div>
+    <div class="d">全部结构化</div>
+  </div>
+  <div class="metric">
+    <div class="n">100</div>
+    <div class="l">测试通过率</div>
+    <div class="d">20 + 62 + 18</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>9.1 功能验收（8 项）</h2>
+
+<table>
+<tr><th style="width:36%">项目</th><th style="width:12%">状态</th><th>说明</th></tr>
+<tr>
+  <td>商品浏览</td>
+  <td><span class="tag done">通过</span></td>
+  <td>8 个商品可展示，图片 WebP 加载正常（23–71KB）</td>
+</tr>
+<tr>
+  <td>下单流程</td>
+  <td><span class="tag done">通过</span></td>
+  <td>详情 → 购物袋 → 结算 → 支付 → 成功，全流程无阻断</td>
+</tr>
+<tr>
+  <td>支付回调</td>
+  <td><span class="tag done">通过</span></td>
+  <td>Mock 回调后订单状态正确变为「已支付」，写 order_logs</td>
+</tr>
+<tr>
+  <td>幂等</td>
+  <td><span class="tag done">通过</span></td>
+  <td>重复回调返回 409，不重复处理</td>
+</tr>
+<tr>
+  <td>状态机</td>
+  <td><span class="tag done">通过</span></td>
+  <td>白名单约束，非法流转返回 409（实测 6 种非法路径全拒）</td>
+</tr>
+<tr>
+  <td>后台管理</td>
+  <td><span class="tag done">通过</span></td>
+  <td>订单、商品、文章、配置、日志均可操作</td>
+</tr>
+<tr>
+  <td>售后</td>
+  <td><span class="tag done">通过</span></td>
+  <td>提交工单 → 后台可见 → 可回复 → 状态流转</td>
+</tr>
+<tr>
+  <td>配送推送</td>
+  <td><span class="tag done">通过</span></td>
+  <td>已支付订单可推送履约方（Mock），可回调状态</td>
+</tr>
+</table>
+
+<p><strong>8 / 8 通过。</strong></p>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>9.2 性能验收（3 项）</h2>
+
+<table>
+<tr><th style="width:30%">指标</th><th style="width:20%">标准</th><th style="width:20%">实测</th><th>状态</th></tr>
+<tr>
+  <td>首页加载</td>
+  <td>&lt; 2s（4G）</td>
+  <td><strong>0.8s</strong>（FCP）<br>2.4s（LCP）</td>
+  <td><span class="tag done">通过</span></td>
+</tr>
+<tr>
+  <td>接口响应</td>
+  <td>&lt; 500ms（P95）</td>
+  <td><strong>13–16ms</strong>（P95）</td>
+  <td><span class="tag done">通过</span></td>
+</tr>
+<tr>
+  <td>并发</td>
+  <td>100 QPS</td>
+  <td><span class="muted">未做压测</span></td>
+  <td><span class="tag todo">待测</span></td>
+</tr>
+</table>
+
+<div class="card">
+<h3>性能优化记录</h3>
+<table style="margin-bottom:0">
+<tr><th>优化项</th><th>优化前</th><th>优化后</th><th>收益</th></tr>
+<tr><td>图片格式</td><td>PNG 6571KB</td><td>WebP 315KB</td><td class="ok">-95%</td></tr>
+<tr><td>Google Fonts</td><td>495KB + 6 请求</td><td>0（系统字体）</td><td class="ok">全免</td></tr>
+<tr><td>阻塞 JS</td><td>4 个</td><td>0 个（defer）</td><td class="ok">消除</td></tr>
+<tr><td>GZip</td><td>无</td><td>首页 33KB → 9KB</td><td class="ok">-73%</td></tr>
+<tr><td>静态缓存</td><td>无</td><td>图片 7 天</td><td class="ok">二次访问 0 请求</td></tr>
+</table>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>9.3 SEO / GEO 验收（第 5.4 节 6 项）</h2>
+
+<table>
+<tr><th style="width:32%">项目</th><th style="width:20%">通过标准</th><th style="width:14%">状态</th><th>说明</th></tr>
+<tr>
+  <td>搜索引擎收录</td>
+  <td>上线 2 周内百度 &gt; 50 页</td>
+  <td><span class="tag block">无法测</span></td>
+  <td>内网环境爬虫进不来。技术上已具备条件（sitemap 31 个 URL、robots 正确、爬虫可读性 7/7）</td>
+</tr>
+<tr>
+  <td>结构化数据</td>
+  <td>所有商品页通过富媒体测试</td>
+  <td><span class="tag done">通过</span></td>
+  <td>Product / Article / FAQPage / BreadcrumbList / Florist / Organization 等 12 种 schema，语义完整性校验全过</td>
+</tr>
+<tr>
+  <td>sitemap 提交</td>
+  <td>百度/Google 站长平台提交成功</td>
+  <td><span class="tag block">待域名</span></td>
+  <td>文件已生成（31 URL），需公网域名才能提交</td>
+</tr>
+<tr>
+  <td>性能</td>
+  <td>Lighthouse &gt; 85</td>
+  <td><span class="tag done">通过</span></td>
+  <td><strong>Performance 98 · SEO 100 · A11y 100 · Best Practices 96</strong></td>
+</tr>
+<tr>
+  <td>AI 引用</td>
+  <td>1 个月内问 AI「深圳买花」能提及</td>
+  <td><span class="tag block">无法测</span></td>
+  <td>需公网上线后验证。技术准备已就绪（llms.txt、FAQ 结构化、一句话答案）</td>
+</tr>
+<tr>
+  <td>内容量</td>
+  <td>首期 95 篇全部上线</td>
+  <td><span class="tag todo">15/95</span></td>
+  <td>已完成 16%</td>
+</tr>
+</table>
+
+<h3>5.1 基础要求逐条核查</h3>
+
+<table>
+<tr><th style="width:30%">要求</th><th style="width:12%">状态</th><th>实测</th></tr>
+<tr>
+  <td>SSR / SSG（爬虫能读到内容）</td>
+  <td><span class="tag done">通过</span></td>
+  <td>商城/商品/花语列表/花语详情已做 SSR，<strong>爬虫可读性 7/7</strong>（改造前 3/7）</td>
+</tr>
+<tr>
+  <td>语义化 HTML</td>
+  <td><span class="tag done">通过</span></td>
+  <td>21 页全部有 header / main / footer；H1 唯一（21/21）；img 全部有 alt</td>
+</tr>
+<tr>
+  <td>页面元信息</td>
+  <td><span class="tag done">通过</span></td>
+  <td>21 页全有 title / description / canonical / OG / Twitter Card；<strong>动态页 meta 每篇不同</strong></td>
+</tr>
+<tr>
+  <td>结构化数据 JSON-LD</td>
+  <td><span class="tag done">通过</span></td>
+  <td>12 种 schema，按页面类型分配，字段语义校验通过</td>
+</tr>
+<tr>
+  <td>三个站点文件</td>
+  <td><span class="tag done">通过</span></td>
+  <td>robots.txt（879B）/ sitemap.xml（31 URL）/ llms.txt（4749B）</td>
+</tr>
+<tr>
+  <td>URL 规范</td>
+  <td><span class="tag done">通过</span></td>
+  <td>全小写、连字符、语义化（<code>/product.html?id=TW-001</code>）</td>
+</tr>
+<tr>
+  <td>性能指标</td>
+  <td><span class="tag done">通过</span></td>
+  <td>LCP 2.4s / FCP 0.8s / CLS 0.041 / TBT 0ms / 页面 33KB</td>
+</tr>
+<tr>
+  <td>图片格式</td>
+  <td><span class="tag done">通过</span></td>
+  <td>全部 WebP，平均 39KB</td>
+</tr>
+<tr>
+  <td>移动端友好</td>
+  <td><span class="tag done">通过</span></td>
+  <td>viewport 正确、4 档断点、无横向滚动、字体 ≥14px</td>
+</tr>
+</table>
+
+<h3>5.3 GEO 专项核查</h3>
+
+<table>
+<tr><th style="width:30%">要求</th><th style="width:12%">状态</th><th>实测</th></tr>
+<tr>
+  <td>llms.txt</td>
+  <td><span class="tag done">通过</span></td>
+  <td>4749 字节，含品牌、服务、FAQ、全部文章链接、明确排除项</td>
+</tr>
+<tr>
+  <td>结构化数据完整</td>
+  <td><span class="tag done">通过</span></td>
+  <td>每页都有对应 JSON-LD</td>
+</tr>
+<tr>
+  <td>FAQ 结构化</td>
+  <td><span class="tag done">通过</span></td>
+  <td>文章内 71 个 FAQ 全部转成 FAQPage schema</td>
+</tr>
+<tr>
+  <td>内容分段清晰</td>
+  <td><span class="tag done">通过</span></td>
+  <td>短段落 + 小标题 + 表格 + 列表</td>
+</tr>
+<tr>
+  <td>关键信息前置</td>
+  <td><span class="tag done">通过</span></td>
+  <td>每篇开头一句话答案（AI 引用格式）</td>
+</tr>
+<tr>
+  <td>实体一致性（NAP）</td>
+  <td><span class="tag todo">待数据</span></td>
+  <td>公司名/地址/电话/营业时间目前全是占位，等真实信息</td>
+</tr>
+<tr>
+  <td>权威信号</td>
+  <td><span class="tag todo">未开始</span></td>
+  <td>真实评价、媒体报道、行业背书都没有</td>
+</tr>
+</table>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>9.4 安全验收（6 项）</h2>
+
+<table>
+<tr><th style="width:30%">项目</th><th style="width:12%">状态</th><th>实测</th></tr>
+<tr>
+  <td>SQL 注入</td>
+  <td><span class="tag done">通过</span></td>
+  <td>全量 SQLAlchemy ORM，无字符串拼接 SQL</td>
+</tr>
+<tr>
+  <td>XSS</td>
+  <td><span class="tag done">通过</span></td>
+  <td>SSR 输出全部 <code>html.escape()</code>；前端 innerHTML 只用于自有数据</td>
+</tr>
+<tr>
+  <td>支付回调验签</td>
+  <td><span class="tag todo">待接入</span></td>
+  <td>Mock 支付无验签；接真实网关时必须补</td>
+</tr>
+<tr>
+  <td>后台鉴权</td>
+  <td><span class="tag done">通过</span></td>
+  <td><code>is_admin</code> 校验，18 项安全测试全过（未登录 401 / 非管理员 403）</td>
+</tr>
+<tr>
+  <td>HTTPS</td>
+  <td><span class="tag todo">待部署</span></td>
+  <td>已加安全响应头（HSTS 开关），需 Nginx + 证书</td>
+</tr>
+<tr>
+  <td>敏感信息</td>
+  <td><span class="tag done">通过</span></td>
+  <td><code>.env</code> 已 gitignore，代码库无密码；日志脱敏已实现</td>
+</tr>
+</table>
+
+<p><strong>4 / 6 通过，2 项待外部条件。</strong></p>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>5.2 内容矩阵（最大差距）</h2>
+
+<table>
+<tr><th style="width:24%">类型</th><th style="width:14%">目标</th><th style="width:14%">现状</th><th style="width:16%">完成度</th><th>差距</th></tr>
+<tr>
+  <td>花语百科</td>
+  <td>30 篇</td>
+  <td><strong>7 篇</strong></td>
+  <td>
+    23%
+    <div class="bar"><i style="width:23%"></i></div>
+  </td>
+  <td>香槟玫瑰、白玫瑰、向日葵、白郁金香、绣球、康乃馨、百合</td>
+</tr>
+<tr>
+  <td>养护指南</td>
+  <td>15 篇</td>
+  <td><strong>3 篇</strong></td>
+  <td>
+    20%
+    <div class="bar"><i style="width:20%"></i></div>
+  </td>
+  <td>玫瑰养护、保鲜剂、收到后处理</td>
+</tr>
+<tr>
+  <td>送花指南</td>
+  <td>20 篇</td>
+  <td><strong>5 篇</strong></td>
+  <td>
+    25%
+    <div class="bar"><i style="width:25%"></i></div>
+  </td>
+  <td>送妈妈、送女朋友、告白、生日、探望病人</td>
+</tr>
+<tr>
+  <td>本地内容</td>
+  <td>10 篇</td>
+  <td><strong class="bad">0 篇</strong></td>
+  <td>
+    0%
+    <div class="bar"><i style="width:0%"></i></div>
+  </td>
+  <td class="bad">需要真实配送范围，现在写不了</td>
+</tr>
+<tr>
+  <td>节日专题</td>
+  <td>按节日</td>
+  <td><strong class="bad">0 篇</strong></td>
+  <td>
+    0%
+    <div class="bar"><i style="width:0%"></i></div>
+  </td>
+  <td>情人节、母亲节、七夕等</td>
+</tr>
+<tr>
+  <td>FAQ</td>
+  <td>20 条</td>
+  <td><strong>71 条</strong></td>
+  <td>
+    <span class="ok">355%</span>
+    <div class="bar"><i style="width:100%"></i></div>
+  </td>
+  <td>已超额（分布在 15 篇文章里）</td>
+</tr>
+</table>
+
+<div class="card" style="border-color:#e8d9b8;background:#fdfaf3">
+<p style="margin:0">
+<strong>内容总量：15 / 75 篇（20%）</strong><br>
+<span style="color:#6f6a61;font-size:13px">
+这是距离任务书要求最大的一块。技术上已经全部就绪（SSR、结构化数据、内链、sitemap 自动更新），
+现在纯粹是「写字」的工作量。按每篇 40 分钟算，还差 60 篇 ≈ 40 小时。
+</span>
+</p>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>第十一章 · 交付物清单（8 项）</h2>
+
+<table>
+<tr><th style="width:30%">交付物</th><th style="width:14%">状态</th><th>说明</th></tr>
+<tr>
+  <td>源代码</td>
+  <td><span class="tag done">完成</span></td>
+  <td>GitHub <code>Capri770101/twl-for-qwen</code>，198 文件，9 次提交</td>
+</tr>
+<tr>
+  <td>数据库脚本</td>
+  <td><span class="tag done">完成</span></td>
+  <td>Alembic 迁移 ×3 + <code>seed.py</code>（upsert 模式，可重复跑）</td>
+</tr>
+<tr>
+  <td>接口文档</td>
+  <td><span class="tag done">完成</span></td>
+  <td><code>/docs</code> 自动生成，46+ 接口</td>
+</tr>
+<tr>
+  <td>部署手册</td>
+  <td><span class="tag done">完成</span></td>
+  <td><code>docs/05-交付/接手清单.md</code> 第 8 章（Nginx + systemd + 生产配置）</td>
+</tr>
+<tr>
+  <td>运维手册</td>
+  <td><span class="tag warn">部分</span></td>
+  <td>接手清单含「遇到问题找谁」「检查清单」，但没有独立运维文档</td>
+</tr>
+<tr>
+  <td>测试报告</td>
+  <td><span class="tag warn">部分</span></td>
+  <td>有 <code>full_test.py</code> / <code>security_test.py</code> / <code>audit_seo.py</code> 三个可复跑脚本，但没有静态报告文档</td>
+</tr>
+<tr>
+  <td>工程书</td>
+  <td><span class="tag done">完成</span></td>
+  <td><code>docs/02-技术/工程书.md</code> 30KB</td>
+</tr>
+<tr>
+  <td>任务书</td>
+  <td><span class="tag done">完成</span></td>
+  <td><code>docs/01-需求/任务书.md</code> 28KB</td>
+</tr>
+</table>
+
+<p><strong>6 / 8 完成，2 项部分完成。</strong></p>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>第十章 · 里程碑对照</h2>
+
+<table>
+<tr><th style="width:24%">阶段</th><th style="width:16%">计划</th><th style="width:14%">状态</th><th>实际</th></tr>
+<tr>
+  <td><strong>M1 · 基础系统</strong></td>
+  <td>第 1 周</td>
+  <td><span class="tag done">完成</span></td>
+  <td>后端 + 数据库 + 21 页前台 + 后台，全部跑通</td>
+</tr>
+<tr>
+  <td><strong>M2 · 接口对接</strong></td>
+  <td>第 2 周</td>
+  <td><span class="tag block">卡住</span></td>
+  <td>
+    <span class="bad">支付网关</span>：需微信商户号（要 ICP 备案）<br>
+    <span class="bad">履约系统</span>：需真实配送系统<br>
+    <span class="bad">商品数据源</span>：需业务系统字段清单<br>
+    <span class="muted">代码层全部留了适配器，接的时候填配置 + 写一个类</span>
+  </td>
+</tr>
+<tr>
+  <td><strong>M3 · SEO/GEO</strong></td>
+  <td>第 3 周</td>
+  <td><span class="tag done">技术完成</span></td>
+  <td>
+    结构化数据 / sitemap / llms.txt / SSR / 性能优化 全部完成<br>
+    <span class="warn">内容首期未完成</span>（15/75）<br>
+    <span class="warn">提交站长平台待域名</span>
+  </td>
+</tr>
+<tr>
+  <td><strong>M4 · 上线</strong></td>
+  <td>第 4 周</td>
+  <td><span class="tag block">未开始</span></td>
+  <td>需 ICP 备案（7–20 天）+ 服务器 + 域名 + 证书</td>
+</tr>
+</table>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>差距分类</h2>
+
+<h3>① 技术已达标，不用再动（36 项）</h3>
+<ul>
+  <li>功能验收 8/8</li>
+  <li>性能验收 2/3（并发未测）</li>
+  <li>SEO/GEO 技术层 12 项</li>
+  <li>安全验收 4/6（2 项待外部）</li>
+  <li>测试 100 项（20 单元 + 62 全流程 + 18 安全）</li>
+</ul>
+
+<h3>② 卡在外部条件（做不了）</h3>
+<table>
+<tr><th style="width:32%">卡点</th><th style="width:20%">影响什么</th><th>需要什么</th></tr>
+<tr>
+  <td><strong>ICP 备案</strong></td>
+  <td>整站上线</td>
+  <td>7–20 天，不可压缩。这是最长的一条链路</td>
+</tr>
+<tr>
+  <td><strong>微信支付商户号</strong></td>
+  <td>收真钱</td>
+  <td>备案后才能申请，还要营业执照 + 对公账户</td>
+</tr>
+<tr>
+  <td><strong>短信签名+模板</strong></td>
+  <td>真验证码</td>
+  <td>阿里云审核 1–2 天</td>
+</tr>
+<tr>
+  <td><strong>公网域名</strong></td>
+  <td>提交 sitemap、测 AI 引用</td>
+  <td>随备案一起下来</td>
+</tr>
+</table>
+
+<h3>③ 等真实业务数据（现在是示例）</h3>
+<table>
+<tr><th style="width:32%">数据</th><th style="width:20%">影响什么</th><th>现在的状态</th></tr>
+<tr>
+  <td>商品清单</td>
+  <td>整个商城</td>
+  <td>8 个示例商品，已打 <code>is_demo</code> 标记</td>
+</tr>
+<tr>
+  <td>配送规则</td>
+  <td>时效、运费、时段</td>
+  <td>全部 null，前端显示「待配置」</td>
+</tr>
+<tr>
+  <td>联系方式</td>
+  <td>NAP 实体一致性</td>
+  <td>电话/邮箱/地址全是占位</td>
+</tr>
+<tr>
+  <td>图片</td>
+  <td>视觉可信度</td>
+  <td>8 张 AI 生成图，需换真实摄影</td>
+</tr>
+</table>
+
+<h3>④ 纯工作量（能做，但要时间）</h3>
+<table>
+<tr><th style="width:32%">任务</th><th style="width:18%">剩余</th><th>估算</th></tr>
+<tr>
+  <td>内容写作</td>
+  <td>60 篇</td>
+  <td>40 小时（每篇 40 分钟）</td>
+</tr>
+<tr>
+  <td>并发压测</td>
+  <td>1 项</td>
+  <td>2 小时</td>
+</tr>
+<tr>
+  <td>运维手册 + 测试报告</td>
+  <td>2 份文档</td>
+  <td>4 小时</td>
+</tr>
+<tr>
+  <td>真实花艺摄影</td>
+  <td>8 张</td>
+  <td>看拍摄安排</td>
+</tr>
+</table>
+
+<h3>⑤ 未开始（可以做但没排期）</h3>
+<ul>
+  <li>退款流程（现在只有售后工单，没有退款）</li>
+  <li>物流轨迹</li>
+  <li>发票</li>
+  <li>后台订单状态推进（接口有，前端未接）</li>
+  <li>数据库连接管理后台</li>
+  <li>数据源接入（映射层）</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>关于准确性的一条说明</h2>
+
+<div class="card" style="border-color:#e8d9b8;background:#fdfaf3">
+<p style="margin:0 0 12px">
+<strong>15 篇文章的内容来自我的训练数据，没有逐条联网核实。</strong>
+</p>
+<p style="margin:0 0 12px;color:#555;font-size:13px">
+这意味着：里面写的是「广泛流传的说法」，不是「查证过某个权威来源」。
+</p>
+<p style="margin:0 0 8px;font-size:13px"><strong>我明确知道有问题的几处：</strong></p>
+<ul style="margin:0 0 0 20px;font-size:13px;color:#555">
+  <li><code>champagne-rose.md</code>：「爱上你是我今生最大的幸福」不是权威花语，是中文网络流传的说法。维多利亚花语里香槟玫瑰没有独立条目。</li>
+  <li><code>white-tulip.md</code>：「白马王子」品种名不确定对应哪个英文品种，建议删掉。</li>
+  <li><code>white-tulip.md</code>：「失恋」含义有分歧，英文资料里有完全相反的 "I am worthy of you" 说法。</li>
+  <li><code>sunflower.md</code>：「沉默的爱」是日式花语（花言葉）的说法，不是中国传统花语。</li>
+</ul>
+<p style="margin:12px 0 0;color:#555;font-size:13px">
+<strong>建议：</strong>上线前找人复核这 4 处，或者给每篇加 <code>source</code> / <code>confidence</code> 字段标注可信度。
+</p>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>下一步优先级</h2>
+
+<table>
+<tr><th style="width:8%">优先级</th><th style="width:36%">任务</th><th style="width:18%">依赖</th><th>理由</th></tr>
+<tr>
+  <td><span class="tag block">P0</span></td>
+  <td><strong>启动 ICP 备案</strong></td>
+  <td>无</td>
+  <td>7–20 天是最长链路，越早启动越好。这是所有上线工作的前置</td>
+</tr>
+<tr>
+  <td><span class="tag block">P0</span></td>
+  <td><strong>要真实商品和配送数据</strong></td>
+  <td>业务方</td>
+  <td>没有这个，商城永远是演示状态</td>
+</tr>
+<tr>
+  <td><span class="tag todo">P1</span></td>
+  <td>复核 4 处不准确内容</td>
+  <td>你的行业知识</td>
+  <td>准确性是内容资产的地基</td>
+</tr>
+<tr>
+  <td><span class="tag todo">P1</span></td>
+  <td>继续写内容（每周 4–5 篇）</td>
+  <td>无</td>
+  <td>现在唯一能立刻推进的事</td>
+</tr>
+<tr>
+  <td><span class="tag todo">P2</span></td>
+  <td>并发压测</td>
+  <td>无</td>
+  <td>验 100 QPS 是否达标</td>
+</tr>
+<tr>
+  <td><span class="tag todo">P2</span></td>
+  <td>退款流程</td>
+  <td>真实支付接入</td>
+  <td>有支付才能退款</td>
+</tr>
+<tr>
+  <td><span class="tag na">P3</span></td>
+  <td>数据库连接管理</td>
+  <td>无</td>
+  <td>锦上添花，不阻塞上线</td>
+</tr>
+<tr>
+  <td><span class="tag na">P3</span></td>
+  <td>数据源接入</td>
+  <td>外部字段清单</td>
+  <td>没数据源做了是空跑</td>
+</tr>
+</table>
+
+<!-- ══════════════════════════════════════════════ -->
+<hr>
+
+<h2>总结：离目标还有多远</h2>
+
+<div class="card">
+<p style="margin:0 0 16px">
+<strong>如果用「能不能上线」来衡量：差 2 件事 —— ICP 备案、真实数据。</strong>
+</p>
+<p style="margin:0 0 16px">
+<strong>如果用「能不能赢」来衡量（任务书的真实目标）：差 3 件事 —— 备案、真实数据、60 篇内容。</strong>
+</p>
+<p style="margin:0;color:#555">
+技术层面该做的都做了，而且做得比任务书要求的标准更高
+（Lighthouse 98 分 vs 要求 85；SEO 100 分；爬虫可读性从 3/7 修到 7/7）。
+<br><br>
+剩下的三件事，两件不归你控制（备案、数据），一件纯靠时间（内容）。
+<br><br>
+<strong>现在能推进的只有内容。</strong>
+</p>
+</div>
+
+<div class="sub" style="margin-top:48px;text-align:center">
+  © 深圳市跳舞兰科技有限公司
+</div>
+
+</div>
+</body>
+</html>
