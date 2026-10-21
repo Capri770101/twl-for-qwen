@@ -28,6 +28,8 @@ dependencies = [
     "python-multipart>=0.0.17",
     "httpx>=0.28.0",
     "python-dotenv>=1.0.0",
+    # MCP Server（给 AI 智能体调用）
+    "mcp>=1.9,<2",
 ]
 
 [project.optional-dependencies]
