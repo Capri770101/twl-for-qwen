@@ -797,6 +797,78 @@
    ═══════════════════════════════════════════════════════════ */
 
 /* 状态 → 药丸样式 */
+/* ═══════════════════════════════════════════════════════
+   订单状态机（前端副本）
+
+   【为什么前端也要知道】
+   后台要显示「下一步能推进到什么状态」。
+   真正的校验在后端（TRANSITIONS 白名单），这里只做 UI 提示。
+   ═══════════════════════════════════════════════════════ */
+const NEXT_STATUS = {
+  paid: 'preparing',
+  preparing: 'delivering',
+  delivering: 'delivered',
+  delivered: 'completed',
+};
+
+const STATUS_CN = {
+  pending_payment: '待支付',
+  paid: '已支付',
+  preparing: '配花中',
+  delivering: '配送中',
+  delivered: '已送达',
+  completed: '已完成',
+  cancelled: '已取消',
+};
+
+function nextStatus(s) {
+  return NEXT_STATUS[s] || null;
+}
+
+/* 推进订单 */
+window.advanceOrder = async function(orderNo, curStatus) {
+  const next = NEXT_STATUS[curStatus];
+  if (!next) {
+    API.toast('这个订单已经不能推进了');
+    return;
+  }
+
+  const ok = confirm(
+    `订单 ${orderNo}\n\n` +
+    `${STATUS_CN[curStatus] || curStatus} → ${STATUS_CN[next] || next}\n\n` +
+    `确认推进？`
+  );
+  if (!ok) return;
+
+  try {
+    await API.updateOrderStatus(orderNo, next);
+    API.toast('已推进到「' + (STATUS_CN[next] || next) + '」');
+    await loadOrders();
+    await loadDashboard();
+  } catch (e) {
+    API.toast('推进失败：' + e.message, 'error');
+  }
+};
+
+/* 看订单详情 */
+window.viewOrder = async function(orderNo) {
+  try {
+    const o = await API.getOrder(orderNo);
+    const items = (o.items || []).map(i => `${i.name} ×${i.qty}  ¥${API.money(i.unit_price)}`).join('\n');
+    alert(
+      `订单号：${o.order_no}\n` +
+      `状态：${o.status_text || o.status}\n` +
+      `收花人：${o.receiver}  ${o.phone || ''}\n` +
+      `地址：${o.address || ''}\n` +
+      `商品：\n${items}\n` +
+      `金额：¥${API.money(o.pay_amount)}\n` +
+      (o.remark ? `备注：${o.remark}` : '')
+    );
+  } catch (e) {
+    API.toast('加载失败：' + e.message, 'error');
+  }
+};
+
 function pillClass(status) {
   if (status === 'pending_payment') return 'wait';
   if (status === 'paid' || status === 'preparing' || status === 'delivering') return 'doing';
@@ -847,7 +919,10 @@ async function loadOrders() {
         ${compact ? '' : `<td>${o.receiver}<br><span class="sub">${o.phone || ''}</span></td>`}
         <td><span class="price">¥${API.money(o.pay_amount)}</span></td>
         <td><span class="pill ${pillClass(o.status)}">${o.status_text || o.status}</span></td>
-        <td><span class="act">详情</span></td>
+        <td>
+          <span class="act" onclick="viewOrder('${o.order_no}')">详情</span>
+          ${nextStatus(o.status) ? `<span class="act" onclick="advanceOrder('${o.order_no}', '${o.status}')">推进</span>` : ''}
+        </td>
       </tr>
     `;
 

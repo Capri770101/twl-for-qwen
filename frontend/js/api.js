@@ -129,6 +129,17 @@ const API = (() => {
       return request('/admin/stats');
     },
 
+    /* ── 后台：推进订单状态 ── */
+    async updateOrderStatus(orderNo, toStatus, reason) {
+      const qs = new URLSearchParams();
+      qs.set('to_status', toStatus);
+      if (reason) qs.set('reason', reason);
+      return request(
+        '/orders/' + encodeURIComponent(orderNo) + '/status?' + qs.toString(),
+        { method: 'POST' }
+      );
+    },
+
     async adminOrders(params = {}) {
       const qs = new URLSearchParams(params).toString();
       return request('/admin/orders' + (qs ? '?' + qs : ''));
