@@ -24,6 +24,10 @@ dependencies = [
     "pydantic-settings>=2.6.0",
     # 日志
     "structlog>=24.4.0",
+    # structlog 的 ConsoleRenderer 在 colors=True 时，Windows 下必须有 colorama，
+    # 否则 import app.main 阶段直接抛 SystemError。它不是 uvicorn 的必然传递依赖，
+    # 必须显式声明，否则全新环境装完起不来。
+    "colorama>=0.4.6; sys_platform == 'win32'",
     # 工具
     "python-multipart>=0.0.17",
     "httpx>=0.28.0",

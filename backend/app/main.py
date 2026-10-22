@@ -318,8 +318,17 @@ class CachedStaticFiles(StaticFiles):
         if path.endswith((".html", ".txt", ".xml")):
             # HTML / sitemap / robots：不缓存，改了立刻生效
             resp.headers["Cache-Control"] = "public, max-age=0, must-revalidate"
+        elif path.endswith((".js", ".css")):
+            # JS / CSS：只缓存 10 分钟。
+            #
+            # 【为什么不用 7 天】
+            # 原来这里和图片一样缓存 7 天，开发时改完样式怎么刷都不生效，
+            # 一度以为是代码没写对。页面里已经用 ?v=<时间戳> 做版本号了，
+            # 正常情况下 URL 一变就会重新拉，7 天缓存反而是坑。
+            # 10 分钟足够减少重复请求，又不会把人锁在旧文件上。
+            resp.headers["Cache-Control"] = "public, max-age=600"
         else:
-            # 图片 / JS / CSS：缓存 7 天
+            # 图片 / 字体：缓存 7 天
             resp.headers["Cache-Control"] = "public, max-age=604800"
 
         return resp

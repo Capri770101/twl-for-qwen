@@ -1,0 +1,363 @@
+/* ═══════════════════════════════════════════════════════════
+   跳舞兰 · 动效层  motion.css
+   ───────────────────────────────────────────────────────────
+   独立文件，各页面在 </head> 前引用（必须排在内联 <style> 之后，
+   否则被页面的内联样式盖掉）。
+
+   为什么单独一个文件、而不是塞进 base.css：
+   21 个页面都是自带完整内联样式的独立页，base.css 其实没被任何
+   页面引用。动效放进去等于死代码。抽成独立文件，加一行 link 就能
+   生效，也不去碰各页面已经调好的样式。
+
+   设计原则（改之前先读）：
+   1. 只做「有物理感」的位移与透明度。不旋转、不弹跳、不上彩色，
+      和这套「纯白 + 近黑 + 浅米」的文艺调性保持一致。
+   2. 时长 180–560ms，缓动统一，宁可短不可拖。
+   3. body 上绝不加 transform —— 一旦加了，position:fixed 的
+      .dock / .topbar / .announce 会变成相对 body 定位，全站布局崩。
+      所以整页入场只动 opacity。
+   4. 全部动效在 prefers-reduced-motion 下退化成瞬时切换。
+
+   变量统一加 twl- 前缀，避免和页面自己的 :root 变量撞车。
+   ═══════════════════════════════════════════════════════════ */
+
+:root{
+  --twl-ease:     cubic-bezier(.22,.61,.36,1);
+  --twl-ease-out: cubic-bezier(.16,1,.3,1);
+  --twl-dur-fast: 180ms;
+  --twl-dur:      280ms;
+  --twl-dur-slow: 560ms;
+
+  /* 丝滑曲线：quart-out。
+     比 expo-out 慢一档 —— expo 前 15% 时间就跑完 60% 位移，
+     看着像「啪一下到位」；quart 留得住过程，收尾更柔。 */
+  --twl-ease-silk: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ── 1. 整页淡入 ── */
+@keyframes twlPageFadeIn{
+  from{ opacity:0 }
+  to{ opacity:1 }
+}
+body{ animation:twlPageFadeIn var(--twl-dur-slow) var(--twl-ease-out) both }
+
+/* ── 2. 滚动入场 ──
+   【丝滑感从哪来 —— 三个关键】
+   1. 三个属性时长不同：transform 1200ms 最慢，opacity / blur 900ms。
+      位置慢慢落定，显形先完成，形成「惯性拖尾」。
+   2. 透明度延迟 120ms 起步：位移先动，显形后跟。
+      内容是「从雾里浮上来」而不是「原地变清晰」，这个差别很大。
+   3. 缓动用 quart-out 而不是 expo-out：expo 前 15% 时间就跑完 60% 位移，
+      肉眼看就是「啪一下到位」，没有过程感。quart 慢一档，过程看得见。
+
+   【错峰用 --d 变量叠在基础延迟上】
+   不能直接用 transition-delay 覆盖，那样会把 opacity 那 120ms 的基础延迟冲掉。
+   统一走 --d，各属性自己 calc 叠加。
+
+   【幅度】
+   88px + scale(.92) + blur(9px)。之前 40px 反馈「有点小」，这次给足。 */
+.reveal{
+  --d: 0ms;
+  opacity:0;
+  transform:translate3d(0, 88px, 0) scale(.92);
+  filter:blur(9px);
+  transition:
+    opacity 900ms calc(120ms + var(--d)) var(--twl-ease-silk),
+    transform 1200ms var(--d) var(--twl-ease-silk),
+    filter 900ms calc(120ms + var(--d)) var(--twl-ease-silk);
+  backface-visibility:hidden;
+}
+.reveal.in{
+  opacity:1;
+  transform:translate3d(0, 0, 0) scale(1);
+  filter:blur(0);
+}
+
+/* 错峰档位：每档 70ms，最多 8 档 */
+.reveal[data-delay="1"]{ --d:70ms }
+.reveal[data-delay="2"]{ --d:140ms }
+.reveal[data-delay="3"]{ --d:210ms }
+.reveal[data-delay="4"]{ --d:280ms }
+.reveal[data-delay="5"]{ --d:350ms }
+.reveal[data-delay="6"]{ --d:420ms }
+.reveal[data-delay="7"]{ --d:490ms }
+.reveal[data-delay="8"]{ --d:560ms }
+
+/* 手机端：blur 对低端机有压力，位移和模糊收一档 */
+@media (max-width:640px){
+  .reveal{
+    transform:translate3d(0, 64px, 0) scale(.94);
+    filter:blur(6px);
+    transition:
+      opacity 780ms calc(100ms + var(--d)) var(--twl-ease-silk),
+      transform 1000ms var(--d) var(--twl-ease-silk),
+      filter 780ms calc(100ms + var(--d)) var(--twl-ease-silk);
+  }
+}
+
+/* 错峰：同组元素依次入场 */
+.reveal[data-delay="1"]{ transition-delay:60ms }
+.reveal[data-delay="2"]{ transition-delay:120ms }
+.reveal[data-delay="3"]{ transition-delay:180ms }
+.reveal[data-delay="4"]{ transition-delay:240ms }
+.reveal[data-delay="5"]{ transition-delay:300ms }
+.reveal[data-delay="6"]{ transition-delay:360ms }
+
+/* ── 3. 按钮反馈 ── */
+.btn{
+  transition:opacity var(--twl-dur) var(--twl-ease),
+             transform var(--twl-dur-fast) var(--twl-ease),
+             box-shadow var(--twl-dur) var(--twl-ease),
+             background-color var(--twl-dur) var(--twl-ease),
+             color var(--twl-dur) var(--twl-ease),
+             border-color var(--twl-dur) var(--twl-ease);
+}
+.btn:hover{ opacity:.92; transform:translateY(-1px) }
+.btn:active{ opacity:1; transform:translateY(0) scale(.985) }
+
+/* 各页面自定义的按钮（.login-btn / .pay-btn / .code-btn / .size / .chip
+   和后台的 .act）没有共用 .btn，这里统一给一份按压手感 */
+button:not(.btn),
+.act,
+.chip,
+.size{
+  transition:transform var(--twl-dur-fast) var(--twl-ease),
+             background-color var(--twl-dur) var(--twl-ease),
+             color var(--twl-dur) var(--twl-ease),
+             border-color var(--twl-dur) var(--twl-ease),
+             opacity var(--twl-dur) var(--twl-ease);
+}
+button:not(.btn):active,
+.act:active,
+.chip:active,
+.size:active{ transform:scale(.96) }
+
+/* ── 3b. 触摸端反馈 ──
+   这是 H5 项目，主力是手机。手机没有 hover，
+   所以「按压感」必须靠 :active，而且要比桌面更明显，
+   否则手指按下去毫无反馈，用起来像死页面。 */
+.card:active,
+.item:active{
+  transform:scale(.985);
+  transition:transform 120ms var(--twl-ease);
+}
+
+/* 触摸设备上 hover 效果别粘住 */
+@media (hover: none){
+  .btn:hover{ opacity:1; transform:none }
+  .card:hover{ transform:none; box-shadow:none }
+}
+
+/* ── 4. 链接与导航下划线 ── */
+/* 很多页面没有 <button>，可点的全是 <a>（首页 30 个、联系页 27 个）。
+   只给 button 配过渡的话，这些页面的按钮反馈是空的。 */
+a{
+  transition:color var(--twl-dur) var(--twl-ease),
+             opacity var(--twl-dur) var(--twl-ease),
+             border-color var(--twl-dur) var(--twl-ease);
+}
+
+.mainnav a{ position:relative }
+.mainnav a::after{
+  content:'';
+  position:absolute; left:16px; right:16px; bottom:9px; height:1px;
+  background:currentColor;
+  transform:scaleX(0); transform-origin:right center;
+  transition:transform var(--twl-dur) var(--twl-ease-out);
+}
+.mainnav a:hover::after,
+.mainnav a.on::after{
+  transform:scaleX(1); transform-origin:left center;
+}
+
+/* ── 5. 卡片抬升 ── */
+.card{
+  transition:transform var(--twl-dur) var(--twl-ease),
+             box-shadow var(--twl-dur) var(--twl-ease);
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px -14px rgba(20,20,20,.22);
+}
+
+/* ── 6. 图片加载淡入（motion.js 打 data-fade / loaded） ── */
+img[data-fade]{ opacity:0; transition:opacity var(--twl-dur-slow) var(--twl-ease) }
+img[data-fade].loaded{ opacity:1 }
+
+/* ── 7. 购物袋数字弹一下 ── */
+@keyframes twlBadgePop{
+  0%{ transform:scale(1) }
+  45%{ transform:scale(1.28) }
+  100%{ transform:scale(1) }
+}
+.bag-count.pop{ animation:twlBadgePop 340ms var(--twl-ease) }
+
+/* ── 8. 表单聚焦 ── */
+.field input,
+.field textarea{
+  transition:color var(--twl-dur) var(--twl-ease),
+             background-color var(--twl-dur) var(--twl-ease);
+}
+.field input:focus,
+.field textarea:focus{
+  background:linear-gradient(to right, transparent, rgba(20,20,20,.025));
+}
+
+/* ── 9. 骨架屏（列表加载占位） ── */
+@keyframes twlShimmer{
+  0%{ background-position:-200% 0 }
+  100%{ background-position:200% 0 }
+}
+.skeleton{
+  background:linear-gradient(90deg,
+    var(--gray-e, #ece9e3) 25%,
+    var(--paper, #f6f4ef) 50%,
+    var(--gray-e, #ece9e3) 75%);
+  background-size:200% 100%;
+  animation:twlShimmer 1.4s linear infinite;
+  border-radius:2px;
+  color:transparent !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   页面级专项动效
+   ───────────────────────────────────────────────────────────
+   滚动入场是「通用层」，下面这些是按页面语义单独设计的。
+   原则还是一样：克制，不上彩色，不做弹跳。
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── A. 商品详情：主图「推近」入场 ──
+   图片比文字更适合「从远到近」的收拢，比单纯淡入有质感。 */
+.pdp .gallery img,
+.pdp .gallery{
+  transition:transform 1400ms var(--twl-ease-silk),
+             opacity 900ms var(--twl-ease-silk);
+  transform-origin:center;
+}
+.pdp .gallery.reveal{ transform:scale(1.04); opacity:0 }
+.pdp .gallery.reveal.in{ transform:scale(1); opacity:1 }
+
+/* ── B. 商品卡片的图片：hover 时缓慢放大 ──
+   慢一点（800ms）才显得从容，快了像抽搐。 */
+.card .pic img{
+  transition:transform 800ms var(--twl-ease-silk);
+  will-change:transform;
+}
+.card:hover .pic img{ transform:scale(1.045) }
+
+/* ── C. 购物车数量变化：数字弹一下 ── */
+@keyframes twlQtyPop{
+  0%{ transform:scale(1) }
+  40%{ transform:scale(1.22) }
+  100%{ transform:scale(1) }
+}
+.qty .n.changed,
+.cart-left .count.changed{
+  animation:twlQtyPop 320ms var(--twl-ease);
+}
+
+/* ── D. 订单状态标签：切换时淡入 ── */
+.pill{
+  transition:background-color var(--twl-dur) var(--twl-ease),
+             color var(--twl-dur) var(--twl-ease),
+             border-color var(--twl-dur) var(--twl-ease);
+}
+
+/* ── E. FAQ / 手风琴展开 ──
+   <details> 原生展开是瞬时的，加个高度过渡会破坏原生行为，
+   所以只对内容做淡入上移。 */
+details[open] > *:not(summary){
+  animation:twlAccordion 320ms var(--twl-ease-out) both;
+}
+@keyframes twlAccordion{
+  from{ opacity:0; transform:translateY(-6px) }
+  to{ opacity:1; transform:none }
+}
+
+/* ── F. 表单聚焦：下划线从左展开 ── */
+.field,
+.fld{
+  position:relative;
+}
+.field::after,
+.fld::after{
+  content:'';
+  position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:currentColor;
+  transform:scaleX(0); transform-origin:left center;
+  transition:transform 380ms var(--twl-ease-silk);
+  pointer-events:none;
+}
+.field:focus-within::after,
+.fld:focus-within::after{
+  transform:scaleX(1);
+}
+
+/* ── G. 后台表格行：逐行入场 ── */
+.box table tr{
+  transition:background-color var(--twl-dur) var(--twl-ease);
+}
+.box table tr:hover{
+  background:rgba(20,20,20,.022);
+}
+
+/* ── H. 后台侧边栏 / 顶栏链接：下划线 ── */
+.side-nav a{
+  position:relative;
+  transition:color var(--twl-dur) var(--twl-ease),
+             background-color var(--twl-dur) var(--twl-ease);
+}
+
+/* ── I. 登录 / 结算表单：字段逐个浮现 ── */
+.login-wrap .fld,
+.wrap .form-sec{
+  transition:opacity 600ms var(--twl-ease-silk),
+             transform 600ms var(--twl-ease-silk);
+}
+
+/* ── J. 搜索热词标签：hover 轻微抬起 ── */
+.hot .tag,
+.hot a,
+.chips .chip{
+  transition:transform 220ms var(--twl-ease),
+             background-color var(--twl-dur) var(--twl-ease),
+             color var(--twl-dur) var(--twl-ease),
+             border-color var(--twl-dur) var(--twl-ease);
+}
+.hot .tag:hover,
+.hot a:hover,
+.chips .chip:hover{
+  transform:translateY(-2px);
+}
+
+/* ── K. 下单成功页：对勾 / 结果区放大浮现 ── */
+.res-wrap .ok,
+.res-wrap .success,
+.res-wrap .icon{
+  animation:twlSuccessIn 700ms var(--twl-ease-silk) both;
+}
+@keyframes twlSuccessIn{
+  from{ opacity:0; transform:scale(.7) }
+  60%{ opacity:1; transform:scale(1.04) }
+  to{ opacity:1; transform:scale(1) }
+}
+
+/* ── 10. toast 过渡（元素由 api.js 动态创建） ── */
+#__toast{
+  transition:opacity var(--twl-dur) var(--twl-ease),
+             transform var(--twl-dur) var(--twl-ease-out) !important;
+}
+
+/* ── 11. 系统开了「减少动态」就全部退化 ── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  body{ animation:none }
+  .reveal{ opacity:1; transform:none }
+  .card:hover{ transform:none }
+  .btn:hover{ transform:none }
+}

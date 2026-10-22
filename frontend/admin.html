@@ -274,7 +274,7 @@
     th:nth-child(4),td:nth-child(4){display:none}
   }
 </style>
-<script src="js/api.js" defer></script>
+<script src="js/api.js"></script>
 
 
 
@@ -299,6 +299,8 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#ffffff">
 <!-- SEO-END -->
+<link rel="stylesheet" href="css/motion.css?v=1792600969">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
 
@@ -394,8 +396,8 @@
       <button class="hamburger" id="hamburger">☰</button>
       <div class="crumb">概览 / <b id="crumb">数据看板</b></div>
       <div class="right">
-        <a href="#">帮助</a>
-        <a href="#">通知</a>
+        <a href="help-faq.html" title="帮助中心">帮助</a>
+        <a data-page="tickets" title="售后工单与通知">通知</a>
         <a data-page="deliveries"><span class="ico">◈</span>配送管理</a>
         <a data-page="refunds"><span class="ico">⊘</span>退款单</a>
         <div class="avatar" onclick="doLogout()">木</div>
@@ -412,8 +414,8 @@
             <p>2026 年 10 月 20 日 · 每小时更新</p>
           </div>
           <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost">导出</button>
-            <button class="btn">+ 新建商品</button>
+            <button class="btn btn-ghost" onclick="exportDashboardCsv()" title="导出看板数据为 CSV">导出</button>
+            <button class="btn" onclick="openProductForm()" title="新建花束">+ 新建商品</button>
           </div>
         </div>
 
@@ -464,7 +466,7 @@
       <div class="panel-page" id="page-orders">
         <div class="page-title">
           <div><h2>全部订单</h2><p>共 12 笔 · 按时间倒序</p></div>
-          <button class="btn btn-ghost">导出 CSV</button>
+          <button class="btn btn-ghost" onclick="exportOrdersCsv()" title="导出全部订单为 CSV">导出 CSV</button>
         </div>
         <div class="box">
           <table>
@@ -540,7 +542,7 @@
       <div class="panel-page" id="page-content">
         <div class="page-title">
           <div><h2>花语百科</h2><p>已发布 1 篇 · 草稿 0 篇 · 目标 20 篇</p></div>
-          <button class="btn">+ 写新文章</button>
+          <button class="btn" onclick="newArticle()" title="内容管理尚未接入后端">+ 写新文章</button>
         </div>
         <div class="box">
           <table>
@@ -796,7 +798,10 @@
   }
 
   /* ═══ 事件绑定 ═══ */
-  document.querySelectorAll('.side-nav a[data-page]').forEach(el => {
+  /* 用 [data-page] 而不是 .side-nav a[data-page]：
+     顶栏也有 data-page 链接（配送管理 / 退款单 / 通知），
+     原来只选侧边栏，顶栏那几个点了没反应。 */
+  document.querySelectorAll('[data-page]').forEach(el => {
     el.addEventListener('click', () => go(el.dataset.page));
   });
 
@@ -874,20 +879,79 @@ window.advanceOrder = async function(orderNo, curStatus) {
   }
 };
 
+/* ═══════════════════════════════════════════════════════════
+   通用信息弹窗
+
+   【为什么不用 alert】
+   原来订单详情是 alert() 弹出来的：不能复制、不能换行排版、
+   手机上还把整页糊住，后台用起来很别扭。换成页面内弹窗，
+   内容可以排版、可以选中复制。
+   ═══════════════════════════════════════════════════════════ */
+window.showInfoModal = function (title, bodyHtml) {
+  let m = document.getElementById('infoModal');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'infoModal';
+    m.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.4);overflow-y:auto;padding:40px 20px';
+    m.innerHTML =
+      '<div style="max-width:640px;margin:0 auto;background:#fff;border-radius:8px;padding:28px 32px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">' +
+          '<h2 id="infoModalTitle" style="font-size:16px;font-weight:500;margin:0"></h2>' +
+          '<span onclick="closeInfoModal()" style="cursor:pointer;font-size:20px;color:#999;line-height:1">×</span>' +
+        '</div>' +
+        '<div id="infoModalBody" style="font-size:13px;line-height:1.9;color:#333"></div>' +
+      '</div>';
+    m.addEventListener('click', function (e) {
+      if (e.target === m) closeInfoModal();
+    });
+    document.body.appendChild(m);
+  }
+  document.getElementById('infoModalTitle').textContent = title;
+  document.getElementById('infoModalBody').innerHTML = bodyHtml;
+  m.style.display = 'block';
+};
+
+window.closeInfoModal = function () {
+  const m = document.getElementById('infoModal');
+  if (m) m.style.display = 'none';
+};
+
 /* 看订单详情 */
 window.viewOrder = async function(orderNo) {
   try {
     const o = await API.getOrder(orderNo);
-    const items = (o.items || []).map(i => `${i.name} ×${i.qty}  ¥${API.money(i.unit_price)}`).join('\n');
-    alert(
-      `订单号：${o.order_no}\n` +
-      `状态：${o.status_text || o.status}\n` +
-      `收花人：${o.receiver}  ${o.phone || ''}\n` +
-      `地址：${o.address || ''}\n` +
-      `商品：\n${items}\n` +
-      `金额：¥${API.money(o.pay_amount)}\n` +
-      (o.remark ? `备注：${o.remark}` : '')
-    );
+    const itemRows = (o.items || []).map(i =>
+      `<tr>
+         <td style="padding:6px 0">${i.name}</td>
+         <td style="padding:6px 0;text-align:right">×${i.qty}</td>
+         <td style="padding:6px 0;text-align:right">¥${API.money(i.unit_price)}</td>
+       </tr>`
+    ).join('');
+
+    const row = (k, v) =>
+      `<div style="display:flex;gap:14px;padding:7px 0;border-bottom:1px solid #f0eeea">
+         <span style="color:#8a857c;min-width:64px;flex:0 0 auto">${k}</span>
+         <span style="flex:1;word-break:break-all">${v || '—'}</span>
+       </div>`;
+
+    showInfoModal('订单详情', `
+      ${row('订单号', o.order_no)}
+      ${row('状态', o.status_text || o.status)}
+      ${row('收花人', `${o.receiver || ''} ${o.phone || ''}`)}
+      ${row('地址', o.address)}
+      ${row('备注', o.remark)}
+      <div style="margin-top:16px">
+        <div style="color:#8a857c;margin-bottom:6px">商品明细</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          ${itemRows || '<tr><td colspan="3" style="padding:10px 0;color:#999">无商品</td></tr>'}
+        </table>
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid #e5e2dc;
+                  display:flex;justify-content:space-between;font-size:15px">
+        <span>实付</span>
+        <strong>¥${API.money(o.pay_amount)}</strong>
+      </div>
+    `);
   } catch (e) {
     API.toast('加载失败：' + e.message, 'error');
   }
@@ -1152,6 +1216,100 @@ window.deleteProduct = async function (productId, name) {
   } catch (e) {
     API.toast('删除失败：' + e.message, 'error');
   }
+};
+
+
+/* ═══════════════════════════════════════════════════════════
+   CSV 导出
+
+   【为什么前端生成】
+   导出是只读操作，为了它加一个后端接口不值当；数据本来就在
+   API 里拿得到，前端拼 CSV 直接下载最快。
+
+   【为什么加 \uFEFF】
+   Excel 打开 CSV 时默认按系统代码页（GBK）解码。不加 UTF-8 BOM，
+   中文列名和收花人姓名全是乱码。这个 BOM 是必须的，不是可选项。
+   ═══════════════════════════════════════════════════════════ */
+
+function csvCell(v) {
+  const s = v == null ? '' : String(v);
+  return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function downloadCsv(filename, header, rows) {
+  const lines = [header.map(csvCell).join(',')];
+  for (const r of rows) lines.push(r.map(csvCell).join(','));
+  const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function fileStamp() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+}
+
+/* 导出全部订单 */
+window.exportOrdersCsv = async function () {
+  try {
+    const data = await API.adminOrders({ size: 500 });
+    const list = data.items || [];
+    if (!list.length) {
+      API.toast('没有可导出的订单', 'error');
+      return;
+    }
+    downloadCsv(
+      `订单-${fileStamp()}.csv`,
+      ['订单号', '收花人', '电话', '商品明细', '实付金额', '状态'],
+      list.map(o => [
+        o.order_no,
+        o.receiver || '',
+        o.phone || '',
+        (o.items || []).map(i => `${i.name}×${i.qty}`).join(' / '),
+        API.money(o.pay_amount),
+        o.status_text || STATUS_CN[o.status] || o.status,
+      ])
+    );
+    API.toast(`已导出 ${list.length} 笔订单`);
+  } catch (e) {
+    API.toast('导出失败：' + e.message, 'error');
+  }
+};
+
+/* 导出数据看板 */
+window.exportDashboardCsv = async function () {
+  try {
+    const s = await API.stats();
+    const rows = [
+      ['今日订单', s.orders_today],
+      ['今日营收（元）', API.money(s.revenue)],
+      ['售后待处理', s.tickets_open],
+      ['在售花束', s.products_on],
+      [],
+      ['订单状态', '数量'],
+      ...(s.by_status || []).map(x => [STATUS_CN[x.status] || x.status, x.count]),
+    ];
+    downloadCsv(
+      `看板-${fileStamp()}.csv`,
+      ['指标', '数值'],
+      rows
+    );
+    API.toast('看板数据已导出');
+  } catch (e) {
+    API.toast('导出失败：' + e.message, 'error');
+  }
+};
+
+/* 写新文章 —— 内容管理还没有后端，先明确告知，不做假按钮 */
+window.newArticle = function () {
+  API.toast('内容管理还没接后端，先在花语页维护', 'error');
 };
 
 
@@ -1557,5 +1715,6 @@ if (sessionStorage.getItem(KEY) === '1') {
   </div>
 </div>
 
+<script src="js/motion.js?v=1792601108" defer></script>
 </body>
 </html>

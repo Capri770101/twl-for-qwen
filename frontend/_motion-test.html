@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>动效自检 · 跳舞兰</title>
+<link rel="stylesheet" href="css/motion.css?v=1792600969">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:-apple-system,"PingFang SC",sans-serif;
+    background:#faf9f6;color:#141414;
+    padding:24px;line-height:1.8;font-weight:300;
+  }
+  h1{font-size:20px;font-weight:500;margin-bottom:6px}
+  .sub{font-size:12px;color:#8a857c;margin-bottom:24px}
+  .card{
+    background:#fff;border:1px solid #e5e2dc;border-radius:6px;
+    padding:18px 20px;margin-bottom:14px;
+  }
+  .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;
+       border-bottom:1px solid #f2f0ec;font-size:13px}
+  .row:last-child{border-bottom:0}
+  .k{color:#8a857c}
+  .v{font-family:ui-monospace,Consolas,monospace;font-size:12px;text-align:right;word-break:break-all}
+  .ok{color:#1a7f37}
+  .bad{color:#b3261e}
+  .warn{color:#a06a00}
+  h2{font-size:14px;font-weight:500;margin:22px 0 12px}
+  .demo{display:grid;gap:12px;margin-bottom:16px}
+  .demo .box{
+    height:64px;border-radius:4px;
+    background:linear-gradient(135deg,#f0efec,#e8e6e2);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:#8a857c;
+  }
+  .tip{font-size:12px;color:#8a857c;background:#f6f4ef;
+       border-left:2px solid #dedad3;padding:10px 14px;margin-bottom:20px}
+  button{
+    padding:10px 20px;background:#141414;color:#fff;border:0;
+    border-radius:4px;font-size:13px;font-family:inherit;cursor:pointer;
+    transition:transform .18s cubic-bezier(.22,.61,.36,1),opacity .28s;
+  }
+  button:hover{opacity:.9;transform:translateY(-1px)}
+  button:active{transform:scale(.96)}
+</style>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+<h1>动效自检</h1>
+<div class="sub">打开这一页，就能知道动效到底有没有在工作。</div>
+
+<div class="tip">
+  <strong>怎么看</strong>：先看下面「环境检查」是否全绿；
+  然后往下滚动，看 4 个测试方块有没有依次淡入上浮。
+  如果方块是「直接出现」而不是「从下往上淡入」，说明动效没生效。
+</div>
+
+<div class="card" id="envCard">
+  <div class="row"><span class="k">检查中…</span><span class="v">—</span></div>
+</div>
+
+<h2>滚动测试：往下滚，看这 4 个方块</h2>
+<div class="demo">
+  <div class="box">方块 1</div>
+  <div class="box">方块 2</div>
+  <div class="box">方块 3</div>
+  <div class="box">方块 4</div>
+</div>
+
+<div style="height:60vh"></div>
+
+<h2>按钮反馈测试</h2>
+<div class="card">
+  <p style="font-size:13px;color:#8a857c;margin-bottom:14px">
+    鼠标悬停应轻微上浮，按下应缩小。
+  </p>
+  <button onclick="this.textContent='点了 '+new Date().toLocaleTimeString()">点我试试</button>
+</div>
+
+<div style="height:40vh"></div>
+
+<!-- motion.js 必须在检查脚本之前加载，否则检查时 window.Motion 还不存在，
+     会误报「motion.js 未加载」。 -->
+<script src="js/motion.js?v=1792601108"></script>
+
+<script>
+(function () {
+  var rows = [];
+
+  function row(k, v, status) {
+    rows.push({ k: k, v: v, s: status || '' });
+  }
+
+  /* 1. motion.css 是否加载 */
+  var hasMotionCss = Array.from(document.styleSheets).some(function (s) {
+    return s.href && s.href.indexOf('motion.css') !== -1;
+  });
+  row('motion.css 已加载', hasMotionCss ? '是' : '否', hasMotionCss ? 'ok' : 'bad');
+
+  /* 2. CSS 变量 */
+  var ease = getComputedStyle(document.documentElement)
+    .getPropertyValue('--twl-ease').trim();
+  row('--twl-ease 变量', ease || '(空)', ease ? 'ok' : 'bad');
+
+  /* 3. body 动画 */
+  var bodyAnim = getComputedStyle(document.body).animationName;
+  row('body 淡入动画', bodyAnim, bodyAnim === 'twlPageFadeIn' ? 'ok' : 'bad');
+
+  /* 4. IntersectionObserver */
+  var hasIO = 'IntersectionObserver' in window;
+  row('IntersectionObserver', hasIO ? '支持' : '不支持', hasIO ? 'ok' : 'bad');
+
+  /* 5. prefers-reduced-motion */
+  var reduce = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  row('系统「减少动画」',
+      reduce ? '已开启（会禁用全部动效）' : '未开启',
+      reduce ? 'warn' : 'ok');
+
+  /* 6. motion.js */
+  var hasJs = !!(window.Motion && typeof window.Motion.scan === 'function');
+  row('motion.js 已加载', hasJs ? '是' : '否', hasJs ? 'ok' : 'bad');
+
+  /* 7. reveal 元素数量 */
+  var rv = document.querySelectorAll('.reveal');
+  row('本页 reveal 元素', rv.length + ' 个', rv.length > 0 ? 'ok' : 'warn');
+
+  /* 8. 当前未入场数量 */
+  var notIn = document.querySelectorAll('.reveal:not(.in)');
+  row('尚未入场', notIn.length + ' 个', 'ok');
+
+  /* 9. 浏览器 */
+  row('视口', window.innerWidth + ' × ' + window.innerHeight);
+
+  /* 渲染 */
+  var html = rows.map(function (r) {
+    return '<div class="row"><span class="k">' + r.k + '</span>' +
+           '<span class="v ' + r.s + '">' + r.v + '</span></div>';
+  }).join('');
+  document.getElementById('envCard').innerHTML = html;
+
+  /* 把方块也纳入滚动入场，但延迟一点，保证打开时它们在视口外 */
+  setTimeout(function () {
+    var boxes = document.querySelectorAll('.demo .box');
+    boxes.forEach(function (b, i) {
+      b.classList.add('reveal');
+      b.setAttribute('data-delay', String(i + 1));
+      if (window.Motion) window.Motion.scan();
+    });
+  }, 60);
+
+  /* 实时更新「尚未入场」 */
+  setInterval(function () {
+    var el = document.querySelectorAll('#envCard .row');
+    if (el.length >= 8) {
+      var n = document.querySelectorAll('.reveal:not(.in)').length;
+      el[7].querySelector('.v').textContent = n + ' 个';
+    }
+  }, 400);
+})();
+</script>
+
+</body>
+</html>

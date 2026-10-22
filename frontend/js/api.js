@@ -226,18 +226,31 @@ const API = (() => {
       return isNaN(n) ? '0' : n.toLocaleString('zh-CN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     },
 
-    toast(msg, ms) {
+    /* 第二个参数兼容两种写法：
+       数字   → 显示毫秒数
+       字符串 → 类型（'error' 用暗红底，其余走默认近黑）
+       原来只认数字，admin 里 API.toast(msg, 'error') 会被 setTimeout 当成
+       0ms，提示一闪就没，看着像点了没反应。 */
+    toast(msg, opts) {
+      let ms = 2200;
+      let type = 'info';
+      if (typeof opts === 'number') ms = opts;
+      else if (typeof opts === 'string') type = opts;
+
       let el = document.getElementById('__toast');
       if (!el) {
         el = document.createElement('div');
         el.id = '__toast';
-        el.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(26,26,26,.92);color:#fff;padding:12px 24px;font-size:14px;border-radius:4px;z-index:99999;opacity:0;transition:opacity .25s;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis;';
+        el.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);color:#fff;padding:12px 24px;font-size:14px;border-radius:4px;z-index:99999;opacity:0;transition:opacity .25s, transform .25s;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis;';
         document.body.appendChild(el);
       }
+      el.style.background = type === 'error'
+        ? 'rgba(140,42,42,.94)'
+        : 'rgba(26,26,26,.92)';
       el.textContent = msg;
       el.style.opacity = '1';
       clearTimeout(el.__t);
-      el.__t = setTimeout(() => { el.style.opacity = '0'; }, ms || 2200);
+      el.__t = setTimeout(() => { el.style.opacity = '0'; }, ms);
     },
   };
 })();
@@ -248,6 +261,12 @@ window.API = API;
    购物袋（全站共用，存 localStorage）
    ═══════════════════════════════════════════════════════════ */
 window.TWL = {
+  /* 全站有 17 处写成 TWL.toast(...)，但 toast 一直只在 API 上。
+     与其去改那 17 处调用，不如在这里补一个转发：
+     两个入口都能用，旧代码不用动，以后写错也不会炸。 */
+  toast(msg, opts) {
+    return API.toast(msg, opts);
+  },
   getCart() {
     try { return JSON.parse(localStorage.getItem('twl_cart') || '[]'); }
     catch { return []; }

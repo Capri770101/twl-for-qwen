@@ -128,20 +128,22 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#ffffff">
 <!-- SEO-END -->
+<link rel="stylesheet" href="css/motion.css?v=1792600969">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
 
 <header>
-  <div class="hd-top"><a href="#">Contact</a><a href="#">Login</a></div>
+  <div class="hd-top"><a href="contact.html">Contact</a><a href="login.html">Login</a></div>
   <div class="hd-brand">
     <a href="index.html"><div class="logo">跳舞兰</div><span class="en">Tiao Wu Lan</span></a>
   </div>
   <nav class="hd-nav">
     <ul>
       <li><a href="shop.html">全部花束</a></li>
-      <li><a href="#">日常</a></li>
-      <li><a href="#">告白</a></li>
-      <li><a href="#">生日</a></li>
+      <li><a href="shop.html?category=daily">日常</a></li>
+      <li><a href="shop.html?category=love">告白</a></li>
+      <li><a href="shop.html?category=birthday">生日</a></li>
       <li><a href="flower-language.html">花语</a></li>
       <li><a href="about.html">关于</a></li>
     </ul>
@@ -155,7 +157,7 @@
   <div style="padding:120px 40px;text-align:center;color:#999;font-size:14px">加载订单…</div>
 </div>
 
-<script src="js/api.js" defer></script>
+<script src="js/api.js"></script>
 <script>
 (function(){
   const params = new URLSearchParams(location.search);
@@ -283,9 +285,9 @@
     <div class="ft-col">
       <h5>Shop</h5>
       <a href="shop.html">全部花束</a>
-      <a href="#">日常</a>
-      <a href="#">告白</a>
-      <a href="#">生日</a>
+      <a href="shop.html?category=daily">日常</a>
+      <a href="shop.html?category=love">告白</a>
+      <a href="shop.html?category=birthday">生日</a>
     </div>
     <div class="ft-col">
       <h5>Help</h5>
@@ -297,18 +299,18 @@
       <h5>About</h5>
       <a href="about.html">品牌故事</a>
       <a href="flower-language.html">花语百科</a>
-      <a href="#">企业合作</a>
+      <a href="contact.html">企业合作</a>
     </div>
     <div class="ft-col">
       <h5>Contact</h5>
       <a href="mailto:hello@tiaowulan.com">hello@tiaowulan.com</a>
       <a href="contact.html">联系客服</a>
-      <a href="#">9:00 – 21:00</a>
+      <a href="contact.html" title="营业时间与联系方式">9:00 – 21:00</a>
     </div>
   </div>
   <div class="ft-bottom">
     <div class="cr">© 深圳市跳舞兰科技有限公司 &nbsp;·&nbsp; 粤ICP备 00000000 号</div>
-    <div class="social"><a href="#">ig</a><a href="#">wx</a><a href="#">xhs</a><a href="#">dy</a></div>
+    <div class="social"><a href="contact.html" title="社交媒体账号请联系客服获取">ig</a><a href="contact.html" title="社交媒体账号请联系客服获取">wx</a><a href="contact.html" title="社交媒体账号请联系客服获取">xhs</a><a href="contact.html" title="社交媒体账号请联系客服获取">dy</a></div>
   </div>
 </footer>
 
@@ -317,67 +319,10 @@
 /* ═══════════════════════════════════════════════
    购物袋（全站共用）
    ═══════════════════════════════════════════════ */
-(function(){
-  const FREE = 199;
-
-  window.TWL = {
-    getCart() {
-      try { return JSON.parse(localStorage.getItem('twl_cart') || '[]'); }
-      catch { return []; }
-    },
-    setCart(items) {
-      localStorage.setItem('twl_cart', JSON.stringify(items));
-      this.updateBadge();
-    },
-    addToCart(item) {
-      const items = this.getCart();
-      const exist = items.find(i => i.id === item.id);
-      if (exist) exist.qty += item.qty || 1;
-      else items.push({ ...item, qty: item.qty || 1 });
-      this.setCart(items);
-      this.toast('已加入购物袋');
-    },
-    count() {
-      return this.getCart().reduce((s, i) => s + i.qty, 0);
-    },
-    subtotal() {
-      return this.getCart().reduce((s, i) => s + i.price * i.qty, 0);
-    },
-    updateBadge() {
-      const n = this.count();
-      document.querySelectorAll('.bag-count').forEach(el => {
-        el.textContent = n;
-        el.style.display = n > 0 ? 'inline' : 'none';
-      });
-    },
-    toast(msg, ms) {
-      let el = document.getElementById('__toast');
-      if (!el) {
-        el = document.createElement('div');
-        el.id = '__toast';
-        el.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(26,26,26,.92);color:#fff;padding:12px 24px;font-size:14px;border-radius:4px;z-index:99999;opacity:0;transition:opacity .25s;white-space:nowrap;';
-        document.body.appendChild(el);
-      }
-      el.textContent = msg;
-      el.style.opacity = '1';
-      clearTimeout(el.__t);
-      el.__t = setTimeout(() => { el.style.opacity = '0'; }, ms || 2000);
-    }
-  };
-
-  /* 初始化默认购物袋 */
-  if (!localStorage.getItem('twl_cart_init')) {
-    localStorage.setItem('twl_cart', JSON.stringify([
-      { id: 'TW-001', name: '晨光序曲', spec: '香槟玫瑰 20 枝 · 满天星', price: 299, qty: 1, img: '' },
-      { id: 'TW-004', name: '木星', spec: '向日葵 6 枝 · 尤加利叶', price: 219, qty: 1, img: '' }
-    ]));
-    localStorage.setItem('twl_cart_init', '1');
-  }
-
-  /* 页面加载后更新角标 */
-  document.addEventListener('DOMContentLoaded', () => TWL.updateBadge());
-  if (document.readyState !== 'loading') TWL.updateBadge();
-})();
+/* 购物袋已统一到 js/api.js 的 window.TWL
+   （含 toast / getCart / setCart / addToCart / updateQty / remove / clear / count / subtotal / updateBadge）。
+   这里原本有一份重复定义，会覆盖 api.js 的版本并丢掉上面那些方法，
+   导致加购、筛选等操作报 "TWL.toast is not a function"。已删除。 */
 </script>
 
 
@@ -391,5 +336,6 @@
 })();
 </script>
 
+<script src="js/motion.js?v=1792601108" defer></script>
 </body>
 </html>

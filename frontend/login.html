@@ -85,7 +85,7 @@
 </style>
 
 
-<script src="js/api.js" defer></script>
+<script src="js/api.js"></script>
 
 <!-- SEO-START -->
 <meta name="robots" content="noindex, nofollow">
@@ -108,20 +108,22 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#ffffff">
 <!-- SEO-END -->
+<link rel="stylesheet" href="css/motion.css?v=1792600969">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
 
 <header>
-  <div class="hd-top"><a href="#">Contact</a><a href="#">Login</a></div>
+  <div class="hd-top"><a href="contact.html">Contact</a><a href="login.html">Login</a></div>
   <div class="hd-brand">
     <a href="index.html"><div class="logo">跳舞兰</div><span class="en">Tiao Wu Lan</span></a>
   </div>
   <nav class="hd-nav">
     <ul>
       <li><a href="shop.html">全部花束</a></li>
-      <li><a href="#">日常</a></li>
-      <li><a href="#">告白</a></li>
-      <li><a href="#">生日</a></li>
+      <li><a href="shop.html?category=daily">日常</a></li>
+      <li><a href="shop.html?category=love">告白</a></li>
+      <li><a href="shop.html?category=birthday">生日</a></li>
       <li><a href="flower-language.html">花语</a></li>
       <li><a href="about.html">关于</a></li>
     </ul>
@@ -152,7 +154,7 @@
 
   <div class="terms">
     登录即表示同意<br>
-    <a href="#">《用户协议》</a> 与 <a href="#">《隐私政策》</a>
+    <a href="help-returns.html" title="服务条款">《用户协议》</a> 与 <a href="help-returns.html" title="隐私政策">《隐私政策》</a>
   </div>
 
   <a href="checkout.html" class="skip">不想登录，继续以游客下单</a>
@@ -172,9 +174,9 @@
     <div class="ft-col">
       <h5>Shop</h5>
       <a href="shop.html">全部花束</a>
-      <a href="#">日常</a>
-      <a href="#">告白</a>
-      <a href="#">生日</a>
+      <a href="shop.html?category=daily">日常</a>
+      <a href="shop.html?category=love">告白</a>
+      <a href="shop.html?category=birthday">生日</a>
     </div>
     <div class="ft-col">
       <h5>Help</h5>
@@ -186,18 +188,18 @@
       <h5>About</h5>
       <a href="about.html">品牌故事</a>
       <a href="flower-language.html">花语百科</a>
-      <a href="#">企业合作</a>
+      <a href="contact.html">企业合作</a>
     </div>
     <div class="ft-col">
       <h5>Contact</h5>
       <a href="mailto:hello@tiaowulan.com">hello@tiaowulan.com</a>
       <a href="contact.html">联系客服</a>
-      <a href="#">9:00 – 21:00</a>
+      <a href="contact.html" title="营业时间与联系方式">9:00 – 21:00</a>
     </div>
   </div>
   <div class="ft-bottom">
     <div class="cr">© 深圳市跳舞兰科技有限公司 &nbsp;·&nbsp; 粤ICP备 00000000 号</div>
-    <div class="social"><a href="#">ig</a><a href="#">wx</a><a href="#">xhs</a><a href="#">dy</a></div>
+    <div class="social"><a href="contact.html" title="社交媒体账号请联系客服获取">ig</a><a href="contact.html" title="社交媒体账号请联系客服获取">wx</a><a href="contact.html" title="社交媒体账号请联系客服获取">xhs</a><a href="contact.html" title="社交媒体账号请联系客服获取">dy</a></div>
   </div>
 </footer>
 
@@ -206,79 +208,45 @@
 /* ═══════════════════════════════════════════════
    购物袋（全站共用）
    ═══════════════════════════════════════════════ */
-(function(){
-  const FREE = 199;
-
-  window.TWL = {
-    getCart() {
-      try { return JSON.parse(localStorage.getItem('twl_cart') || '[]'); }
-      catch { return []; }
-    },
-    setCart(items) {
-      localStorage.setItem('twl_cart', JSON.stringify(items));
-      this.updateBadge();
-    },
-    addToCart(item) {
-      const items = this.getCart();
-      const exist = items.find(i => i.id === item.id);
-      if (exist) exist.qty += item.qty || 1;
-      else items.push({ ...item, qty: item.qty || 1 });
-      this.setCart(items);
-      this.toast('已加入购物袋');
-    },
-    count() {
-      return this.getCart().reduce((s, i) => s + i.qty, 0);
-    },
-    subtotal() {
-      return this.getCart().reduce((s, i) => s + i.price * i.qty, 0);
-    },
-    updateBadge() {
-      const n = this.count();
-      document.querySelectorAll('.bag-count').forEach(el => {
-        el.textContent = n;
-        el.style.display = n > 0 ? 'inline' : 'none';
-      });
-    },
-    toast(msg, ms) {
-      let el = document.getElementById('__toast');
-      if (!el) {
-        el = document.createElement('div');
-        el.id = '__toast';
-        el.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(26,26,26,.92);color:#fff;padding:12px 24px;font-size:14px;border-radius:4px;z-index:99999;opacity:0;transition:opacity .25s;white-space:nowrap;';
-        document.body.appendChild(el);
-      }
-      el.textContent = msg;
-      el.style.opacity = '1';
-      clearTimeout(el.__t);
-      el.__t = setTimeout(() => { el.style.opacity = '0'; }, ms || 2000);
-    }
-  };
-
-  /* 初始化默认购物袋 */
-  if (!localStorage.getItem('twl_cart_init')) {
-    localStorage.setItem('twl_cart', JSON.stringify([
-      { id: 'TW-001', name: '晨光序曲', spec: '香槟玫瑰 20 枝 · 满天星', price: 299, qty: 1, img: '' },
-      { id: 'TW-004', name: '木星', spec: '向日葵 6 枝 · 尤加利叶', price: 219, qty: 1, img: '' }
-    ]));
-    localStorage.setItem('twl_cart_init', '1');
-  }
-
-  /* 页面加载后更新角标 */
-  document.addEventListener('DOMContentLoaded', () => TWL.updateBadge());
-  if (document.readyState !== 'loading') TWL.updateBadge();
-})();
+/* 购物袋已统一到 js/api.js 的 window.TWL
+   （含 toast / getCart / setCart / addToCart / updateQty / remove / clear / count / subtotal / updateBadge）。
+   这里原本有一份重复定义，会覆盖 api.js 的版本并丢掉上面那些方法，
+   导致加购、筛选等操作报 "TWL.toast is not a function"。已删除。 */
 </script>
 
 
 <script>
 (function(){
+  /* 提示：优先用 TWL.toast。
+     但 api.js 是从后端加载的 —— 后端没起时 TWL 根本不存在，
+     原来的写法会在 catch 里二次崩溃，页面上一点提示都没有，
+     只剩控制台一行 "TWL.toast is not a function"。
+     这里兜底：TWL 不在就自己往页面上插一条，让人看得见。 */
+  function notify(msg) {
+    try {
+      if (window.TWL && typeof window.TWL.toast === 'function') {
+        window.TWL.toast(msg);
+        return;
+      }
+    } catch (e) {}
+
+    var old = document.getElementById('__login_msg');
+    if (old) old.remove();
+    var box = document.querySelector('.login-wrap');
+    if (!box) return;
+    var p = document.createElement('div');
+    p.id = '__login_msg';
+    p.textContent = msg;
+    p.style.cssText = 'margin-top:14px;padding:10px 14px;border-radius:6px;background:#fff3f3;color:#b3261e;font-size:13px;line-height:1.6;text-align:center';
+    box.appendChild(p);
+  }
   const codeBtn = document.querySelector('.code-btn');
   if (codeBtn) {
     let counting = false;
     codeBtn.addEventListener('click', async () => {
       const phone = document.querySelector('input[type="tel"]')?.value.trim();
       if (!/^1\d{10}$/.test(phone || '')) {
-        TWL.toast('请先填写正确的手机号');
+        notify('请先填写正确的手机号');
         return;
       }
       if (counting) return;
@@ -296,7 +264,7 @@
         const j = await r.json();
 
         if (j.code !== 0) {
-          TWL.toast(j.message || '发送失败');
+          notify(j.message || '发送失败');
           counting = false;
           codeBtn.textContent = '获取验证码';
           codeBtn.disabled = false;
@@ -306,9 +274,9 @@
         // 开发环境自动填
         if (j.data.dev_code) {
           document.querySelector('.code-row input').value = j.data.dev_code;
-          TWL.toast('开发环境：验证码已自动填入');
+          notify('开发环境：验证码已自动填入');
         } else {
-          TWL.toast('验证码已发送');
+          notify('验证码已发送');
         }
 
         let n = 60;
@@ -325,7 +293,7 @@
         }, 1000);
 
       } catch (e) {
-        TWL.toast('网络错误：' + e.message);
+        notify('网络错误：' + e.message);
         counting = false;
         codeBtn.textContent = '获取验证码';
         codeBtn.disabled = false;
@@ -339,8 +307,8 @@
       const phone = document.querySelector('input[type="tel"]')?.value.trim();
       const code = document.querySelector('.code-row input')?.value.trim();
 
-      if (!/^1\d{10}$/.test(phone || '')) { TWL.toast('请填写正确的手机号'); return; }
-      if (!/^\d{4,6}$/.test(code || '')) { TWL.toast('请填写验证码'); return; }
+      if (!/^1\d{10}$/.test(phone || '')) { notify('请填写正确的手机号'); return; }
+      if (!/^\d{4,6}$/.test(code || '')) { notify('请填写验证码'); return; }
 
       loginBtn.disabled = true;
       loginBtn.textContent = '登录中…';
@@ -354,7 +322,7 @@
         const j = await r.json();
 
         if (j.code !== 0) {
-          TWL.toast(j.message || '登录失败');
+          notify(j.message || '登录失败');
           loginBtn.disabled = false;
           loginBtn.textContent = '登 录';
           return;
@@ -364,11 +332,11 @@
         localStorage.setItem('twl_token', j.data.token);
         localStorage.setItem('twl_user', JSON.stringify(j.data.user));
 
-        TWL.toast(j.data.is_new ? '注册成功' : '登录成功');
+        notify(j.data.is_new ? '注册成功' : '登录成功');
         setTimeout(() => location.href = 'orders.html', 700);
 
       } catch (e) {
-        TWL.toast('网络错误：' + e.message);
+        notify('网络错误：' + e.message);
         loginBtn.disabled = false;
         loginBtn.textContent = '登 录';
       }
@@ -377,5 +345,6 @@
 })();
 </script>
 
+<script src="js/motion.js?v=1792601108" defer></script>
 </body>
 </html>

@@ -91,7 +91,8 @@
   }
 
   .duo{border-bottom:1px solid var(--gray-d);background:var(--white)}
-  .duo.rev{background:var(--paper)}
+  /* 左右分色块：文字区留白底，图片区铺米色底；方向由 .rev 交替 */
+  .duo .pic{background:var(--paper)}
   .duo .txt{padding:76px 30px}
   .duo .txt h2{
     font-family:Georgia,'Times New Roman',serif;
@@ -104,6 +105,25 @@
   .duo .txt p{font-size:12.5px;line-height:2.35;color:#3a3733;margin-bottom:18px}
   .duo .txt p:last-child{margin-bottom:0}
   .duo .pic img{width:100%;aspect-ratio:4/3;object-fit:cover}
+
+  /* ═══════════ 下单流程：三步 ═══════════ */
+  .process{border-bottom:1px solid var(--gray-d);background:var(--white);padding:52px 30px}
+  .process .step{padding:26px 0;border-bottom:1px solid var(--gray-d)}
+  .process .step:last-child{border-bottom:0;padding-bottom:0}
+  .process .step:first-child{padding-top:0}
+  .process .num{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:11px;letter-spacing:.24em;color:#a8a29a;margin-bottom:14px;
+  }
+  .process .step h3{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:19px;font-weight:400;letter-spacing:.04em;margin-bottom:7px;
+  }
+  .process .step .en-sub{
+    font-size:9px;letter-spacing:.3em;text-transform:uppercase;
+    color:#8a857d;margin-bottom:13px;
+  }
+  .process .step p{font-size:12.5px;line-height:2.1;color:#3a3733}
 
   .cat-entry{border-bottom:1px solid var(--gray-d)}
   .cat-entry a{display:block;position:relative;border-bottom:1px solid var(--gray-d)}
@@ -447,7 +467,7 @@ details,summary{border-color:#ebe9e5 !important}
 
 
 
-<script src="js/api.js" defer></script>
+<script src="js/api.js"></script>
 
 <!-- SEO-START -->
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -566,6 +586,8 @@ details,summary{border-color:#ebe9e5 !important}
 }
 </script>
 <!-- SEO-END -->
+<link rel="stylesheet" href="css/motion.css?v=1792600969">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
 
@@ -591,7 +613,7 @@ details,summary{border-color:#ebe9e5 !important}
 <main>
 
 <section class="hero hero-img">
-  <img class="hero-bg" src="/images/hero-00006.webp" alt="花艺工作台上刚扎好的一束白玫瑰，旁边放着剪刀与麻绳">
+  <img class="hero-bg" src="/images/hero-flowerhouse.webp" alt="明亮的花房工作室：左侧是干净的白墙，右侧长木台上排着成桶的白花与绿植，两扇高窗透进晨光，顶部吊着花篮">
   <a class="hero-logo" href="index.html">
     <span class="logo">跳舞兰</span>
     <span class="en">Tiao Wu Lan</span>
@@ -603,10 +625,18 @@ details,summary{border-color:#ebe9e5 !important}
       与花共度的每一天<br>
       把自然的美，带进日常的空间
     </div>
+    <div class="hero-actions">
+      <a class="btn-main" href="shop.html">选购花束</a>
+      <a class="btn-ghost" href="flower-language.html">花语百科</a>
+    </div>
+    <div class="hero-meta">
+      <span>深圳同城</span><span>当日送达</span><span>手工扎制</span>
+    </div>
   </div>
+  <a class="hero-scroll" href="#story">Scroll</a>
 </section>
 
-<section class="story">
+<section class="story" id="story">
   <div class="eyebrow">Our Story</div>
   <p>
     跳舞兰是一家在深圳做花的团队。<br>
@@ -628,37 +658,81 @@ details,summary{border-color:#ebe9e5 !important}
     <p>花出现在画里、诗里、衣服上、手里。它本来就深深扎根在我们的生活里。</p>
     <p>所以我们要做的，只是把它放回去。</p>
   </div>
-  <div class="pic"><img src="/images/00_white_rose.webp" alt="花束"></div>
+  <div class="pic"><img src="/images/duo-daily.webp" alt="清晨的木餐桌上，玻璃瓶里插着一小束白色满天星，旁边是陶杯与翻开的书"></div>
 </section>
 
 <section class="duo rev">
   <div class="txt">
-    <h3>花与东方</h2>
+    <h2>花与东方</h2>
     <div class="en-sub">Flowers &amp; the East</div>
     <p>花与自然，是东方文化的中心。看花、赏花、为花的季节更替而欣喜 —— 这是我们的日常。</p>
     <p><strong>尊重季节的节奏</strong>，与自然保持和谐，是东方生活方式的核心。</p>
     <p>每一种花都有它短暂而独特的盛开时刻。单一花材的花束尤其受推崇 —— 因为它能展现一种花的性格。</p>
   </div>
-  <div class="pic"><img src="/images/01_chenguang.webp" alt="茶花"></div>
+  <div class="pic"><img src="/images/duo-east.webp" alt="青瓷瓶里插着一枝红山茶，旁边是亚麻布与线装书，暗调侧光"></div>
+</section>
+
+<section class="duo">
+  <div class="txt">
+    <h2>花与季节</h2>
+    <div class="en-sub">Flowers &amp; Seasons</div>
+    <p>花有自己的时间表。三月是郁金香，五月轮到芍药，深秋之后，是山茶与水仙。</p>
+    <p>我们不硬让所有花全年都在。当季的花材开得最饱满，香气最足，也最耐放。</p>
+    <p>所以每一束花，都是那个季节能给的最好的样子。</p>
+  </div>
+  <div class="pic"><img src="/images/duo-seasons.webp" alt="花店窗前成排玻璃瓶里插着当季的郁金香与洋牡丹，日光透过窗格"></div>
+</section>
+
+<section class="duo rev">
+  <div class="txt">
+    <h2>花与手艺</h2>
+    <div class="en-sub">Craft &amp; Care</div>
+    <p>一束花好不好看，花材只占一半。另一半是修剪的角度、扎束的松紧、包装的层次。</p>
+    <p>我们的花艺师每天在操作台上做同一件事：把花材修到合适的状态，再用手把它扎成束。</p>
+    <p>包装也是一样。纸怎么折、缎带在哪里收口，决定了这束花递到手上时的样子。</p>
+    <p>没有模板，也不赶时间。每一束都按它自己的样子收口。</p>
+  </div>
+  <div class="pic"><img src="/images/duo-craft.webp" alt="花艺师的手在木台上用剪刀修剪玫瑰枝条，周围散落花瓣与麻绳"></div>
+</section>
+
+<section class="process">
+  <div class="step">
+    <div class="num">01</div>
+    <h3>选花</h3>
+    <div class="en-sub">Choose</div>
+    <p>按场合、色系与预算挑，或者直接告诉我们你想说的话。</p>
+  </div>
+  <div class="step">
+    <div class="num">02</div>
+    <h3>当日扎花</h3>
+    <div class="en-sub">Arrange</div>
+    <p>花材当天到店，花艺师手工修剪、扎制、包装。</p>
+  </div>
+  <div class="step">
+    <div class="num">03</div>
+    <h3>送到手上</h3>
+    <div class="en-sub">Deliver</div>
+    <p>同城当日可达，外地按冷链发出 —— 具体时效以下单页为准。</p>
+  </div>
 </section>
 
 <section class="cat-entry">
-  <a href="shop.html">
-    <img src="/images/02_xiaoman.webp" alt="日常花束">
+  <a href="shop.html?category=daily">
+    <img src="/images/02_xiaoman.webp" alt="白色郁金香配尤加利叶，白色缎带">
     <div class="label"><h4>日常花束</h4><span>Lifestyle</span></div>
   </a>
   <a href="shop.html">
-    <img src="/images/03_wuye.webp" alt="今日之花">
+    <img src="/images/03_wuye.webp" alt="蓝色绣球花束，深蓝纸包装">
     <div class="label"><h4>今日之花</h4><span>Flower of the Day</span></div>
   </a>
   <a href="shop.html">
-    <img src="/images/04_muxing.webp" alt="单花花束">
+    <img src="/images/04_muxing.webp" alt="向日葵配尤加利叶，牛皮纸包装">
     <div class="label"><h4>单花花束</h4><span>Single Species</span></div>
   </a>
 </section>
 
 <div class="insta">
-  <a href="#">@tiaowulan</a>
+  <a href="contact.html" title="社交媒体账号请联系客服获取">@tiaowulan</a>
 </div>
 
 <style>
@@ -680,7 +754,7 @@ details,summary{border-color:#ebe9e5 !important}
   .ops,.as-head,.order-ref,.co-head,.result,
   .pay-head,.methods,.secure,
   .body-sec,.cta,.more,.back-link,.insta,
-  .story,.hero,.cat-entry,.figure,.duo,.related,
+  .story,.hero,.cat-entry,.figure,.duo,.related,.process,
   .foot-row,.foot-bottom,.search-bar,.hot,.result-head,
   .load-more,.login-head,.login-form,.divider,
   .wx-login,.terms,.skip,.items{
@@ -711,14 +785,38 @@ details,summary{border-color:#ebe9e5 !important}
   .rel-grid{grid-template-columns:repeat(4,1fr)}
 
   /* 双栏：文字 + 图 */
-  .duo{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
+  .duo{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;min-height:714px}
   .duo .txt{
     padding:110px 72px;
     display:flex;flex-direction:column;justify-content:center;
   }
-  .duo .pic img{aspect-ratio:auto;height:100%;min-height:520px}
+  /* 照片嵌在米色块里，四周留边：暗调图不会顶到边缘，四块统一成画框感 */
+  .duo .pic{
+    background:var(--paper);
+    padding:clamp(26px,3.2vw,52px);
+    box-sizing:border-box;
+    display:flex;
+    align-items:stretch;
+  }
+  .duo .pic img{aspect-ratio:auto;height:auto;width:100%;min-height:0;object-fit:cover;flex:1 1 auto}
   .duo.rev .txt{order:2}
   .duo.rev .pic{order:1}
+  /* 四块文案等宽，行宽压在 460px 内，读起来才齐 */
+  .duo .txt p{max-width:460px}
+  .duo .txt h2{font-size:30px}
+
+  /* 下单流程 3 列 */
+  .process{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    padding:76px 56px;
+  }
+  .process .step{
+    padding:0 44px;border-bottom:0;
+    border-right:1px solid var(--gray-d);
+  }
+  .process .step:first-child{padding-left:0}
+  .process .step:last-child{border-right:0;padding-right:0}
+  .process .step p{max-width:300px}
 
   /* 分类入口 3 列 */
   .cat-entry{display:grid;grid-template-columns:repeat(3,1fr)}
@@ -772,7 +870,7 @@ details,summary{border-color:#ebe9e5 !important}
   .ops,.as-head,.order-ref,.co-head,.result,
   .pay-head,.methods,.secure,
   .body-sec,.cta,.more,.back-link,.insta,
-  .story,.hero,.cat-entry,.figure,.duo,.related,
+  .story,.hero,.cat-entry,.figure,.duo,.related,.process,
   .foot-row,.foot-bottom,
   .load-more,.login-head,.login-form,.divider,
   .wx-login,.terms,.skip{
@@ -844,11 +942,71 @@ details,summary{border-color:#ebe9e5 !important}
   /* 字号收到 60px 以内：两行放得下，整块落在干净墙面上，不碰桌面与花 */
   .hero-img h1{font-size:clamp(30px, 4.1vw, 58px) !important;line-height:1.18 !important;color:var(--ink)}
   .hero-img .sub{color:var(--ink);opacity:.85}
+
+  /* ── 首屏行动点：主按钮 + 次按钮 + 一行服务信息 ────── */
+  .hero-actions{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+  .btn-main,.btn-ghost{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:126px;padding:15px 26px;
+    font-size:12.5px;letter-spacing:.14em;
+    text-decoration:none;line-height:1;
+    transition:background .22s, border-color .22s, color .22s;
+  }
+  .btn-main{background:var(--ink);color:#fff;border:1px solid var(--ink)}
+  .btn-main:hover{background:#000;border-color:#000}
+  .btn-ghost{
+    background:rgba(255,255,255,.55);
+    color:var(--ink);border:1px solid rgba(26,26,26,.34);
+    backdrop-filter:blur(2px);
+  }
+  .btn-ghost:hover{border-color:var(--ink);background:rgba(255,255,255,.82)}
+  .hero-meta{
+    display:flex;align-items:center;margin-top:24px;
+    font-size:10.5px;letter-spacing:.2em;color:#5a554e;
+    text-shadow:0 1px 10px rgba(255,255,255,.9);
+  }
+  .hero-meta span{position:relative;padding:0 14px}
+  .hero-meta span:first-child{padding-left:0}
+  .hero-meta span + span::before{
+    content:'';position:absolute;left:0;top:50%;
+    width:1px;height:9px;margin-top:-4.5px;
+    background:rgba(90,85,78,.4);
+  }
+  /* 底部滚动提示 */
+  .hero-scroll{
+    position:absolute;left:50%;bottom:20px;transform:translateX(-50%);
+    z-index:3;
+    font-size:9px;letter-spacing:.34em;text-transform:uppercase;
+    color:#6b665f;text-decoration:none;
+    transition:color .22s;
+  }
+  .hero-scroll::after{
+    content:'';display:block;width:1px;height:24px;margin:8px auto 0;
+    background:linear-gradient(to bottom,rgba(107,102,95,.65),rgba(107,102,95,0));
+  }
+  .hero-scroll:hover{color:var(--ink)}
+
   @media (max-width:768px){
     .hero-img{justify-content:center;min-height:72vh}
-    .hero-img .hero-inner{text-align:center;max-width:100%;padding:72px 20px 0}
+    /* 竖屏裁切只看得到图中间一条，文字必然压在花上：
+       垫一层半透明白板，任何底图都能读 */
+    .hero-img .hero-inner{
+      text-align:center;max-width:100%;
+      margin:0 14px;
+      padding:34px 18px 28px;
+      background:rgba(255,255,255,.68);
+      backdrop-filter:blur(3px);
+      border-radius:2px;
+    }
+    .hero-img h1{color:var(--ink) !important}
+    .hero-img .sub,.hero-img .kicker{color:var(--ink) !important;opacity:1}
     /* 竖屏只看得到横图中间一条，把取景框右移到花上 */
     .hero-img .hero-bg{object-position:62% 48%}
+    .hero-actions{gap:10px;margin-top:28px;justify-content:center}
+    .btn-main,.btn-ghost{min-width:0;padding:13px 20px;font-size:12px}
+    .hero-meta{margin-top:20px;justify-content:center;font-size:9.5px;letter-spacing:.14em}
+    .hero-meta span{padding:0 10px}
+    .hero-scroll{display:none}
   }
 
   /* ── 导航栏白底，图片从它下面开始 ─────────────────────
@@ -929,7 +1087,7 @@ details,summary{border-color:#ebe9e5 !important}
     .site-header .hd-bar{
       justify-content:flex-start;
       min-height:48px;
-      padding:0 10px 0 6px;
+      padding:0 16px 0 6px;
       gap:4px;
     }
     .site-header .hd-nav{
@@ -990,9 +1148,9 @@ details,summary{border-color:#ebe9e5 !important}
     <div class="ft-col">
       <h5>Shop</h5>
       <a href="shop.html">全部花束</a>
-      <a href="#">日常</a>
-      <a href="#">告白</a>
-      <a href="#">生日</a>
+      <a href="shop.html?category=daily">日常</a>
+      <a href="shop.html?category=love">告白</a>
+      <a href="shop.html?category=birthday">生日</a>
     </div>
 
     <div class="ft-col">
@@ -1006,14 +1164,14 @@ details,summary{border-color:#ebe9e5 !important}
       <h5>About</h5>
       <a href="about.html">品牌故事</a>
       <a href="flower-language.html">花语百科</a>
-      <a href="#">企业合作</a>
+      <a href="contact.html">企业合作</a>
     </div>
 
     <div class="ft-col">
       <h5>Contact</h5>
       <a href="mailto:hello@tiaowulan.com">hello@tiaowulan.com</a>
       <a href="contact.html">联系客服</a>
-      <a href="#">9:00 – 21:00</a>
+      <a href="contact.html" title="营业时间与联系方式">9:00 – 21:00</a>
     </div>
 
   </div>
@@ -1021,7 +1179,7 @@ details,summary{border-color:#ebe9e5 !important}
   <div class="ft-bottom">
     <div class="cr">© 深圳市跳舞兰科技有限公司 &nbsp;·&nbsp; 粤ICP备 00000000 号</div>
     <div class="social">
-      <a href="#">ig</a><a href="#">wx</a><a href="#">xhs</a><a href="#">dy</a>
+      <a href="contact.html" title="社交媒体账号请联系客服获取">ig</a><a href="contact.html" title="社交媒体账号请联系客服获取">wx</a><a href="contact.html" title="社交媒体账号请联系客服获取">xhs</a><a href="contact.html" title="社交媒体账号请联系客服获取">dy</a>
     </div>
   </div>
 </footer>
@@ -1031,68 +1189,12 @@ details,summary{border-color:#ebe9e5 !important}
 /* ═══════════════════════════════════════════════
    购物袋（全站共用）
    ═══════════════════════════════════════════════ */
-(function(){
-  const FREE = 199;
-
-  window.TWL = {
-    getCart() {
-      try { return JSON.parse(localStorage.getItem('twl_cart') || '[]'); }
-      catch { return []; }
-    },
-    setCart(items) {
-      localStorage.setItem('twl_cart', JSON.stringify(items));
-      this.updateBadge();
-    },
-    addToCart(item) {
-      const items = this.getCart();
-      const exist = items.find(i => i.id === item.id);
-      if (exist) exist.qty += item.qty || 1;
-      else items.push({ ...item, qty: item.qty || 1 });
-      this.setCart(items);
-      this.toast('已加入购物袋');
-    },
-    count() {
-      return this.getCart().reduce((s, i) => s + i.qty, 0);
-    },
-    subtotal() {
-      return this.getCart().reduce((s, i) => s + i.price * i.qty, 0);
-    },
-    updateBadge() {
-      const n = this.count();
-      document.querySelectorAll('.bag-count').forEach(el => {
-        el.textContent = n;
-        el.style.display = n > 0 ? 'inline' : 'none';
-      });
-    },
-    toast(msg, ms) {
-      let el = document.getElementById('__toast');
-      if (!el) {
-        el = document.createElement('div');
-        el.id = '__toast';
-        el.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(26,26,26,.92);color:#fff;padding:12px 24px;font-size:14px;border-radius:4px;z-index:99999;opacity:0;transition:opacity .25s;white-space:nowrap;';
-        document.body.appendChild(el);
-      }
-      el.textContent = msg;
-      el.style.opacity = '1';
-      clearTimeout(el.__t);
-      el.__t = setTimeout(() => { el.style.opacity = '0'; }, ms || 2000);
-    }
-  };
-
-  /* 初始化默认购物袋 */
-  if (!localStorage.getItem('twl_cart_init')) {
-    localStorage.setItem('twl_cart', JSON.stringify([
-      { id: 'TW-001', name: '晨光序曲', spec: '香槟玫瑰 20 枝 · 满天星', price: 299, qty: 1, img: '' },
-      { id: 'TW-004', name: '木星', spec: '向日葵 6 枝 · 尤加利叶', price: 219, qty: 1, img: '' }
-    ]));
-    localStorage.setItem('twl_cart_init', '1');
-  }
-
-  /* 页面加载后更新角标 */
-  document.addEventListener('DOMContentLoaded', () => TWL.updateBadge());
-  if (document.readyState !== 'loading') TWL.updateBadge();
-})();
+/* 购物袋已统一到 js/api.js 的 window.TWL
+   （含 toast / getCart / setCart / addToCart / updateQty / remove / clear / count / subtotal / updateBadge）。
+   这里原本有一份重复定义，会覆盖 api.js 的版本并丢掉上面那些方法，
+   导致加购、筛选等操作报 "TWL.toast is not a function"。已删除。 */
 </script>
 
+<script src="js/motion.js?v=1792601108" defer></script>
 </body>
 </html>

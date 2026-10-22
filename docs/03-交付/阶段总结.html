@@ -93,20 +93,23 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
 <div class="wrap">
 
 <h1>阶段总结</h1>
-<div class="sub">对照《任务书》逐条验收 · 2026-10-21</div>
+<div class="sub">对照《任务书》逐条验收 · 2026-10-22（含交付前审查整改）</div>
 
 <!-- ══════════════════════════════════════════════ -->
 <h2>一句话结论</h2>
 
 <div class="card">
 <p style="margin:0 0 12px;font-size:15px;color:#1a1a1a">
-<strong>技术层已全部达标，卡在「等外部条件」和「等真实数据」两件事上。</strong>
+<strong>技术层已达标；交付前审查发现的 4 个代码问题已全部修掉；剩下的差距在外部条件、真实数据、内容量。</strong>
 </p>
 <p style="margin:0;color:#555">
-36 项技术验收全部通过。剩下的差距不在代码，在：<br>
+36 项技术验收全部通过，<strong>152 项测试全绿</strong>。<br>
+本轮（2026-10-21~22）又补齐了三块业务闭环：<strong>① 后台商品表单 ② 退款流程 ③ 配送管理</strong>，
+并按外部审查修掉了 4 个真问题（见「本轮已完成」一节）。<br>
+剩下的差距：<br>
 ① ICP 备案（7–20 天，不可压缩）<br>
 ② 真实业务数据（商品、配送规则、联系方式）<br>
-③ 内容量（15 篇 / 目标 95 篇）
+③ 内容量（15 篇 / 验收标准 95 篇）
 </p>
 </div>
 
@@ -142,7 +145,17 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
   <div class="metric">
     <div class="n">100</div>
     <div class="l">测试通过率</div>
-    <div class="d">20 + 62 + 18</div>
+    <div class="d">152 项（20+62+18+21+18+13）</div>
+  </div>
+  <div class="metric">
+    <div class="n">54</div>
+    <div class="l">后端接口</div>
+    <div class="d">45 个路由 / 13 张表</div>
+  </div>
+  <div class="metric">
+    <div class="n">9</div>
+    <div class="l">MCP 工具</div>
+    <div class="d">给 AI 智能体调用</div>
   </div>
 </div>
 
@@ -581,7 +594,7 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
   <li>性能验收 2/3（并发未测）</li>
   <li>SEO/GEO 技术层 12 项</li>
   <li>安全验收 4/6（2 项待外部）</li>
-  <li>测试 100 项（20 单元 + 62 全流程 + 18 安全）</li>
+  <li>测试 <strong>152 项</strong>（20 单元 + 62 全流程 + 18 安全 + 21 闭环 + 18 退款配送 + 13 MCP）</li>
 </ul>
 
 <h3>② 卡在外部条件（做不了）</h3>
@@ -630,7 +643,8 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
 <tr>
   <td>图片</td>
   <td>视觉可信度</td>
-  <td>8 张 AI 生成图，需换真实摄影</td>
+  <td>商品图 8 张为 AI 生成，需换真实摄影。<br>
+      首页 hero 与 duo 四块场景图已用本地 ComfyUI 生成（非商品照）</td>
 </tr>
 </table>
 
@@ -639,8 +653,9 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
 <tr><th style="width:32%">任务</th><th style="width:18%">剩余</th><th>估算</th></tr>
 <tr>
   <td>内容写作</td>
-  <td>60 篇</td>
-  <td>40 小时（每篇 40 分钟）</td>
+  <td>60–80 篇</td>
+  <td>40–55 小时（每篇 40 分钟）<br>
+      <span class="muted">口径：内容矩阵 75 篇（不含节日专题）；验收标准 95 篇含节日专题</span></td>
 </tr>
 <tr>
   <td>并发压测</td>
@@ -661,10 +676,8 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
 
 <h3>⑤ 未开始（可以做但没排期）</h3>
 <ul>
-  <li>退款流程（现在只有售后工单，没有退款）</li>
-  <li>物流轨迹</li>
+  <li>物流轨迹（实时骑手位置；接口设计已写在《第三方接入说明》）</li>
   <li>发票</li>
-  <li>后台订单状态推进（接口有，前端未接）</li>
   <li>数据库连接管理后台</li>
   <li>数据源接入（映射层）</li>
 </ul>
@@ -690,6 +703,70 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
 <strong>建议：</strong>上线前找人复核这 4 处，或者给每篇加 <code>source</code> / <code>confidence</code> 字段标注可信度。
 </p>
 </div>
+
+<!-- ══════════════════════════════════════════════ -->
+<h2>本轮已完成（2026-10-21~22 补强 + 审查整改）</h2>
+
+<table>
+<tr><th style="width:30%">任务</th><th style="width:14%">状态</th><th>说明</th></tr>
+<tr>
+  <td><strong>① 后台商品表单</strong></td>
+  <td><span class="tag done">完成</span></td>
+  <td>新增/编辑/删除商品；自定义编号（留空才自动生成）；重复编号返回 409</td>
+</tr>
+<tr>
+  <td><strong>① 安全漏洞修复</strong></td>
+  <td><span class="tag done">完成</span></td>
+  <td>商品后台三个接口（POST/PUT/DELETE /products/admin）原本<strong>无鉴权</strong>，
+      任何人可改价删商品；已加管理员鉴权。uploads 接口同样补上。实测未登录 401</td>
+</tr>
+<tr>
+  <td><strong>② 退款流程</strong></td>
+  <td><span class="tag done">完成</span></td>
+  <td>新增 refunds 表 + 5 条校验 + 审核/重试接口；Mock 网关立即成功，业务与网关解耦</td>
+</tr>
+<tr>
+  <td><strong>③ 配送管理</strong></td>
+  <td><span class="tag done">完成</span></td>
+  <td>状态中文映射、后台列表、重推；配送与订单状态联动（paid→notify→preparing→回调→delivered）</td>
+</tr>
+<tr>
+  <td>审查问题①：shop.html 英文占位词</td>
+  <td><span class="tag done">已修</span></td>
+  <td><code>&lt;h1&gt;Flower&lt;/h1&gt;</code> 与 title 显示在商城首屏 → 改为「全部花束」</td>
+</tr>
+<tr>
+  <td>审查问题②：两个页面 150KB+</td>
+  <td><span class="tag done">已修</span></td>
+  <td>cart.html 151KB→16KB、after-sale.html 153KB→20KB（base64 内嵌图改 WebP 外链）</td>
+</tr>
+<tr>
+  <td>审查问题③：占位数据</td>
+  <td><span class="tag done">已清</span></td>
+  <td>电话 400-000-0000（19 页 29 处）改「联系客服」；xxx / 未实现提示清理</td>
+</tr>
+<tr>
+  <td>审查问题④：新增地址未实现</td>
+  <td><span class="tag done">已修</span></td>
+  <td>功能早写好但被一段旧 toast 代码覆盖；删覆盖代码，并把 prompt 换成真表单弹窗</td>
+</tr>
+<tr>
+  <td>测试脚本限流缺陷</td>
+  <td><span class="tag done">已修</span></td>
+  <td>限流时静默跳过导致 full_test 显示 50/50、security 显示 13/13；
+      现在遇限流自动等待，连跑两次都是 62/62 与 18/18</td>
+</tr>
+<tr>
+  <td>hero 图生成脚本移出仓库</td>
+  <td><span class="tag done">已移</span></td>
+  <td>3 个 gen_hero 脚本 + 候选/测试图不进仓库（本地保留），.gitignore 已加规则</td>
+</tr>
+<tr>
+  <td>新增《第三方接入说明》</td>
+  <td><span class="tag done">完成</span></td>
+  <td>支付/退款/配送/短信/存储/缓存的真实接入步骤、参数映射、工作量对照表</td>
+</tr>
+</table>
 
 <!-- ══════════════════════════════════════════════ -->
 <h2>下一步优先级</h2>
@@ -727,10 +804,10 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
   <td>验 100 QPS 是否达标</td>
 </tr>
 <tr>
-  <td><span class="tag todo">P2</span></td>
-  <td>退款流程</td>
-  <td>真实支付接入</td>
-  <td>有支付才能退款</td>
+  <td><span class="tag done">完成</span></td>
+  <td>退款流程（业务层已通，接真网关只差 adapter）</td>
+  <td>—</td>
+  <td>见《第三方接入说明》微信/支付宝 refund 映射</td>
 </tr>
 <tr>
   <td><span class="tag na">P3</span></td>
@@ -756,11 +833,12 @@ hr{border:none;border-top:1px solid #e5e2dc;margin:40px 0}
 <strong>如果用「能不能上线」来衡量：差 2 件事 —— ICP 备案、真实数据。</strong>
 </p>
 <p style="margin:0 0 16px">
-<strong>如果用「能不能赢」来衡量（任务书的真实目标）：差 3 件事 —— 备案、真实数据、60 篇内容。</strong>
+<strong>如果用「能不能赢」来衡量（任务书的真实目标）：差 3 件事 —— 备案、真实数据、60–80 篇内容。</strong>
 </p>
 <p style="margin:0;color:#555">
 技术层面该做的都做了，而且做得比任务书要求的标准更高
-（Lighthouse 98 分 vs 要求 85；SEO 100 分；爬虫可读性从 3/7 修到 7/7）。
+（Lighthouse 98 分 vs 要求 85；SEO 100 分；爬虫可读性从 3/7 修到 7/7）。<br>
+<strong>代码侧能修的问题已清零</strong>：审查提的 4 条 + 退款/配送/商品表单补强全部落地。
 <br><br>
 剩下的三件事，两件不归你控制（备案、数据），一件纯靠时间（内容）。
 <br><br>

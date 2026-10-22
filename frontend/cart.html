@@ -183,7 +183,7 @@
 </style>
 
 
-<script src="js/api.js" defer></script>
+<script src="js/api.js"></script>
 
 <!-- SEO-START -->
 <meta name="robots" content="noindex, nofollow">
@@ -206,20 +206,22 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#ffffff">
 <!-- SEO-END -->
+<link rel="stylesheet" href="css/motion.css?v=1792600969">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
 
 <header>
-  <div class="hd-top"><a href="#">Contact</a><a href="login.html">Login</a></div>
+  <div class="hd-top"><a href="contact.html">Contact</a><a href="login.html">Login</a></div>
   <div class="hd-brand">
     <a href="index.html"><div class="logo">跳舞兰</div><span class="en">Tiao Wu Lan</span></a>
   </div>
   <nav class="hd-nav">
     <ul>
       <li><a href="shop.html">全部花束</a></li>
-      <li><a href="#">日常</a></li>
-      <li><a href="#">告白</a></li>
-      <li><a href="#">生日</a></li>
+      <li><a href="shop.html?category=daily">日常</a></li>
+      <li><a href="shop.html?category=love">告白</a></li>
+      <li><a href="shop.html?category=birthday">生日</a></li>
       <li><a href="flower-language.html">花语</a></li>
       <li><a href="about.html">关于</a></li>
     </ul>
@@ -274,9 +276,9 @@
     <div class="ft-col">
       <h5>Shop</h5>
       <a href="shop.html">全部花束</a>
-      <a href="#">日常</a>
-      <a href="#">告白</a>
-      <a href="#">生日</a>
+      <a href="shop.html?category=daily">日常</a>
+      <a href="shop.html?category=love">告白</a>
+      <a href="shop.html?category=birthday">生日</a>
     </div>
     <div class="ft-col">
       <h5>Help</h5>
@@ -288,18 +290,18 @@
       <h5>About</h5>
       <a href="about.html">品牌故事</a>
       <a href="flower-language.html">花语百科</a>
-      <a href="#">企业合作</a>
+      <a href="contact.html">企业合作</a>
     </div>
     <div class="ft-col">
       <h5>Contact</h5>
       <a href="mailto:hello@tiaowulan.com">hello@tiaowulan.com</a>
       <a href="contact.html">联系客服</a>
-      <a href="#">9:00 – 21:00</a>
+      <a href="contact.html" title="营业时间与联系方式">9:00 – 21:00</a>
     </div>
   </div>
   <div class="ft-bottom">
     <div class="cr">© 深圳市跳舞兰科技有限公司 &nbsp;·&nbsp; 粤ICP备 00000000 号</div>
-    <div class="social"><a href="#">ig</a><a href="#">wx</a><a href="#">xhs</a><a href="#">dy</a></div>
+    <div class="social"><a href="contact.html" title="社交媒体账号请联系客服获取">ig</a><a href="contact.html" title="社交媒体账号请联系客服获取">wx</a><a href="contact.html" title="社交媒体账号请联系客服获取">xhs</a><a href="contact.html" title="社交媒体账号请联系客服获取">dy</a></div>
   </div>
 </footer>
 
@@ -337,11 +339,14 @@ const Cart = {
   }
 };
 
-/* 首次访问时给默认数据 */
-if (!localStorage.getItem('twl_cart_init')) {
+/* 演示数据：只在「从没初始化过」且「购物袋确实为空」时灌一次。
+   ⚠ 不能只看 twl_cart_init：
+   product.html 加购后会自动跳到本页（600ms），那时用户已经真的加过东西，
+   若这里无条件覆盖，用户买的花会被两束没选过的演示花顶掉。 */
+if (!localStorage.getItem('twl_cart_init') && !localStorage.getItem('twl_cart')) {
   localStorage.setItem('twl_cart', JSON.stringify([
     { id: 'TW-001', name: '晨光序曲', spec: '香槟玫瑰 20 枝 · 满天星', price: 299, qty: 1, img: "/images/01_chenguang.webp" },
-    { id: 'TW-004', name: '木星', spec: '向日葵 6 枝 · 尤加利叶', price: 219, qty: 1, img: "/images/02_xiaoman.webp" }
+    { id: 'TW-004', name: '木星', spec: '向日葵 6 枝 · 尤加利叶', price: 219, qty: 1, img: "/images/04_muxing.webp" }
   ]));
   localStorage.setItem('twl_cart_init', '1');
 }
@@ -368,7 +373,9 @@ function render() {
 
   list.innerHTML = items.map(it => `
     <div class="item" data-id="${it.id}">
-      <div class="pic"><img src="${it.img}" alt="${it.name}"></div>
+      <div class="pic">${it.img
+        ? `<img src="${it.img}" alt="${it.name}" onerror="this.remove()">`
+        : ''}</div>
       <div class="info">
         <h3>${it.name}</h3>
         <div class="spec">${it.spec}</div>
@@ -431,5 +438,6 @@ function updateBadge() {
 render();
 </script>
 
+<script src="js/motion.js?v=1792601108" defer></script>
 </body>
 </html>
